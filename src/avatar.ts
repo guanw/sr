@@ -1,10 +1,9 @@
 import * as PIXI from "pixi.js";
 
 
-export const avatarSpeed = 5;
+export const avatarSpeed: number = 5;
 
-
-export async function genCreateAvatar() {
+export async function genCreateAvatar(): Promise<PIXI.Sprite> {
     // Load the bunny texture.
     const asset = await PIXI.Assets.load('https://pixijs.com/assets/bunny.png');
     const avatar = new PIXI.Sprite(asset);
@@ -12,7 +11,7 @@ export async function genCreateAvatar() {
     return avatar;
 }
 
-export const avatarKeys = {
+export const avatarKeys: { [key: string]: boolean } = {
     ArrowLeft: false,
     ArrowRight: false,
     ArrowUp: false,
@@ -20,13 +19,13 @@ export const avatarKeys = {
 };
 
 // Handle keyboard events
-function handleKeyDown(e) {
+function handleKeyDown(e: KeyboardEvent): void {
     if (e.key in avatarKeys) {
         avatarKeys[e.key] = true;
     }
 }
 
-function handleKeyUp(e) {
+function handleKeyUp(e: KeyboardEvent): void {
     if (e.key in avatarKeys) {
         avatarKeys[e.key] = false;
     }

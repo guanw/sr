@@ -8,13 +8,13 @@ import { createEnvironmentReferences } from './environmentReference';
 
         // Intialize the application.
         await app.init({ background: '#1099bb', width: 800, height: 600 });
-        const appWidth = app.screen.width;
-        const appHeight = app.screen.height;
+        const appWidth: number = app.screen.width;
+        const appHeight: number = app.screen.height;
 
         // Then adding the application's canvas to the DOM body.
         document.body.appendChild(app.canvas);
 
-        const user = await genCreateAvatar();
+        const user: PIXI.Sprite = await genCreateAvatar();
         user.x = appWidth / 2;
         user.y = appHeight / 2;
         app.stage.addChild(user);
