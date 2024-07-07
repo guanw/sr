@@ -1,7 +1,11 @@
+// avatar.ts
+
 import * as PIXI from "pixi.js";
 
 
 export const avatarSpeed: number = 5;
+const SWORD_WIDTH = 5;
+const SWORD_LENGTH = 50;
 
 export async function genCreateAvatar(app: PIXI.Application<PIXI.Renderer>): Promise<PIXI.Sprite> {
     // Load the bunny texture.
@@ -41,4 +45,30 @@ function handleKeyUp(e: KeyboardEvent): void {
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
 
+export function performAttack(app: PIXI.Application<PIXI.Renderer>, avatar: PIXI.Sprite, enemies: PIXI.Graphics[]) {
+    if (avatar && avatar.parent) {
+        // Create sword swing effect (e.g., line)
+        const sword = new PIXI.Graphics();
+        sword.moveTo(avatar.x, avatar.y);
+        sword.lineTo(SWORD_LENGTH + avatar.x, avatar.y);
+        sword.stroke({ width: SWORD_WIDTH, color: 0xffd900 });
 
+
+        app.stage.addChild(sword);
+        // Remove sword after a short delay e.g 200ms
+        setTimeout(() => {
+            app.stage.removeChild(sword);
+        }, 200);
+
+        // Check for collision with enemies
+        for (const enemy of enemies) {
+            // need to check bounds of enemy points with enemy location + displacement of stage
+            const enemyPoint = new PIXI.Point(enemy.x + app.stage.x, enemy.y + app.stage.y);
+            console.log(`enemies: ${enemies}`);
+            if (sword.getBounds().containsPoint(enemyPoint.x, enemyPoint.y)) {
+                app.stage.removeChild(enemy);
+                enemies.splice(enemies.indexOf(enemy), 1);
+            }
+        }
+    }
+}

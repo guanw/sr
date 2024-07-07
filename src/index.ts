@@ -1,7 +1,13 @@
+// index.ts
+
 import * as PIXI from "pixi.js";
-import { genCreateAvatar, avatarSpeed, avatarKeys } from './avatar';
+import { genCreateAvatar, avatarSpeed, avatarKeys, performAttack } from './avatar';
 import { createEnvironmentReferences } from './environmentReference';
 import { createEnemies, enemySpeed } from './enemy';
+
+
+let lastAttackTime = 0;
+const ATTACK_INTERVAL = 2000;
 (async () =>
     {
         // Create a PixiJS application.
@@ -14,7 +20,7 @@ import { createEnemies, enemySpeed } from './enemy';
         document.body.appendChild(app.canvas);
 
         const user: PIXI.Sprite = await genCreateAvatar(app);
-        const enemies = await createEnemies(app);
+        const enemies = createEnemies(app);
 
         createEnvironmentReferences(app);
 
@@ -51,6 +57,13 @@ import { createEnemies, enemySpeed } from './enemy';
                 }
             }
 
+            // trigger attack if possible
+            const currentTime = Date.now();
+            if (currentTime - lastAttackTime >= ATTACK_INTERVAL) {
+                lastAttackTime = currentTime;
+                performAttack(app, user, enemies);
+            }
+
 
             // Render the stage
             app.renderer.render(app.stage);
@@ -62,3 +75,4 @@ import { createEnemies, enemySpeed } from './enemy';
         // Start the game loop
         gameLoop();
     })();
+

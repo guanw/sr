@@ -10,7 +10,6 @@ function addRandomItem(app: PIXI.Application<PIXI.Renderer>, appWidth: number, a
     item.y = Math.random() * appHeight;
     app.stage.addChild(item);
 }
-
 export function createEnvironmentReferences(app: PIXI.Application<PIXI.Renderer>) {
     const appWidth = app.screen.width;
     const appHeight = app.screen.height;
