@@ -45,7 +45,8 @@ const ATTACK_INTERVAL = 2000;
             }
 
             // move enemies based on location of user
-            for (const enemy of enemies) {
+            Object.keys(enemies).forEach((key) => {
+                const enemy = enemies[key];
                 if (enemy && user) {
                     const dx = user.x - enemy.x;
                     const dy = user.y - enemy.y;
@@ -55,7 +56,7 @@ const ATTACK_INTERVAL = 2000;
                     enemy.x += vx;
                     enemy.y += vy;
                 }
-            }
+            })
 
             // trigger attack if possible
             const currentTime = Date.now();

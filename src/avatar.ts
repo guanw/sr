@@ -1,6 +1,7 @@
 // avatar.ts
 
 import * as PIXI from "pixi.js";
+import { Enemies } from "./enemy";
 
 
 export const avatarSpeed: number = 5;
@@ -45,7 +46,9 @@ function handleKeyUp(e: KeyboardEvent): void {
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
 
-export function performAttack(app: PIXI.Application<PIXI.Renderer>, avatar: PIXI.Sprite, enemies: PIXI.Graphics[]) {
+
+
+export function performAttack(app: PIXI.Application<PIXI.Renderer>, avatar: PIXI.Sprite, enemies: Enemies) {
     if (avatar && avatar.parent) {
         // Create sword swing effect (e.g., line)
         const sword = new PIXI.Graphics();
@@ -61,14 +64,14 @@ export function performAttack(app: PIXI.Application<PIXI.Renderer>, avatar: PIXI
         }, 200);
 
         // Check for collision with enemies
-        for (const enemy of enemies) {
-            // need to check bounds of enemy points with enemy location + displacement of stage
+        const keys = Object.keys(enemies);
+        keys.forEach((key) => {
+            const enemy = enemies[key];
             const enemyPoint = new PIXI.Point(enemy.x + app.stage.x, enemy.y + app.stage.y);
-            console.log(`enemies: ${enemies}`);
             if (sword.getBounds().containsPoint(enemyPoint.x, enemyPoint.y)) {
                 app.stage.removeChild(enemy);
-                enemies.splice(enemies.indexOf(enemy), 1);
+                delete enemies[key];
             }
-        }
+        })
     }
 }

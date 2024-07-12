@@ -14,12 +14,16 @@ function createEnemy(app: PIXI.Application<PIXI.Renderer>, appWidth: number, app
     return item;
 }
 
-export function createEnemies(app: PIXI.Application<PIXI.Renderer>) {
+export function createEnemies(app: PIXI.Application<PIXI.Renderer>): Enemies {
     const appWidth = app.screen.width;
     const appHeight = app.screen.height;
-    const enemies = [];
+    const enemies: Enemies = {};
     for (let i = 0; i < 3; i++) {
-        enemies.push(createEnemy(app, appWidth, appHeight));
+        enemies[i] = createEnemy(app, appWidth, appHeight);
     }
     return enemies;
 }
+
+export type Enemies = {
+    [key: string]: PIXI.Graphics;
+};
