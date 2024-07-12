@@ -4,10 +4,14 @@ import * as PIXI from "pixi.js";
 import { genCreateAvatar, avatarSpeed, avatarKeys, performAttack } from './avatar';
 import { createEnvironmentReferences } from './environmentReference';
 import { createEnemies, enemySpeed } from './enemy';
+import { globalState } from './globalState';
+import { createMenu } from './menu';
 
 
 let lastAttackTime = 0;
 const ATTACK_INTERVAL = 2000;
+const WIDTH = 800;
+const HEIGHT = 600;
 (async () =>
     {
         // Create a PixiJS application.
@@ -21,11 +25,17 @@ const ATTACK_INTERVAL = 2000;
 
         const user: PIXI.Sprite = await genCreateAvatar(app);
         const enemies = createEnemies(app);
+        const updateMenuPosition = createMenu(app, user);
 
         createEnvironmentReferences(app);
 
         // Game loop
         function gameLoop() {
+            if (globalState.isGamePaused) {
+                requestAnimationFrame(gameLoop);
+                return;
+            }
+
             // Move user based on key states
             if (avatarKeys.ArrowLeft) {
                 app.stage.x += avatarSpeed;
@@ -64,7 +74,6 @@ const ATTACK_INTERVAL = 2000;
                 lastAttackTime = currentTime;
                 performAttack(app, user, enemies);
             }
-
 
             // Render the stage
             app.renderer.render(app.stage);
