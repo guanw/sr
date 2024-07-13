@@ -1,7 +1,7 @@
 // index.ts
 
 import * as PIXI from "pixi.js";
-import { genCreateAvatar, avatarSpeed, avatarKeys, performAttack } from './avatar';
+import { genCreateAvatar, avatarSpeed, avatarKeys, performAttack, updateAvatarHPPosition } from './avatar';
 import { createEnvironmentReferences } from './environmentReference';
 import { createEnemies, enemySpeed } from './enemy';
 import { globalState } from './globalState';
@@ -53,6 +53,9 @@ const HEIGHT = 600;
                 app.stage.y -= avatarSpeed;
                 user.y += avatarSpeed;
             }
+
+            // move hp based on key states
+            updateAvatarHPPosition(user.x, user.y);
 
             // move enemies based on location of user
             Object.keys(enemies).forEach((key) => {

@@ -3,10 +3,18 @@
 import * as PIXI from "pixi.js";
 import { Enemies } from "./enemy";
 
-
 export const avatarSpeed: number = 5;
 const SWORD_WIDTH = 5;
 const SWORD_LENGTH = 50;
+const MAX_HEALTH = 100;
+const HP_TEXT_X_OFFSET = 375;
+const HP_TEXT_Y_OFFSET = 275;
+const avatarMetaData = {
+    hp_system: {
+        value: MAX_HEALTH,
+        healthText: new PIXI.Text(""),
+    }
+};
 
 export async function genCreateAvatar(app: PIXI.Application<PIXI.Renderer>): Promise<PIXI.Sprite> {
     // Load the bunny texture.
@@ -19,7 +27,22 @@ export async function genCreateAvatar(app: PIXI.Application<PIXI.Renderer>): Pro
     avatar.x = appWidth / 2;
     avatar.y = appHeight / 2;
     app.stage.addChild(avatar);
+    renderAvatarHP(avatar);
+
+    avatarMetaData.hp_system.healthText = new PIXI.Text({ text: `HP: ${avatarMetaData.hp_system.value}` });
+    avatarMetaData.hp_system.healthText.x = 50;
+    avatarMetaData.hp_system.healthText.y = 100;
+    app.stage.addChild(avatarMetaData.hp_system.healthText);
     return avatar;
+}
+
+function renderAvatarHP(avatar: PIXI.Sprite) {
+    updateAvatarHPPosition(avatar.x, avatar.y);
+}
+
+export function updateAvatarHPPosition(displacementX: number, displacementY: number) {
+    avatarMetaData.hp_system.healthText.x = displacementX - HP_TEXT_X_OFFSET;
+    avatarMetaData.hp_system.healthText.y = displacementY - HP_TEXT_Y_OFFSET;
 }
 
 export const avatarKeys: { [key: string]: boolean } = {
