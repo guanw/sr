@@ -12,7 +12,7 @@ const HP_TEXT_Y_OFFSET = 275;
 const avatarMetaData = {
     hp_system: {
         value: MAX_HEALTH,
-        healthText: new PIXI.Text(""),
+        bar: new PIXI.Graphics(),
     }
 };
 
@@ -29,11 +29,40 @@ export async function genCreateAvatar(app: PIXI.Application<PIXI.Renderer>): Pro
     app.stage.addChild(avatar);
     renderAvatarHP(avatar);
 
-    avatarMetaData.hp_system.healthText = new PIXI.Text({ text: `HP: ${avatarMetaData.hp_system.value}` });
-    avatarMetaData.hp_system.healthText.x = 50;
-    avatarMetaData.hp_system.healthText.y = 100;
-    app.stage.addChild(avatarMetaData.hp_system.healthText);
+    initializeHPSystem(app);
+
     return avatar;
+}
+
+function initializeHPSystem(app: PIXI.Application<PIXI.Renderer>) {
+
+    const healthBarContainer = new PIXI.Graphics();
+    avatarMetaData.hp_system.bar = healthBarContainer;
+    healthBarContainer.beginFill(0xff0000);
+    healthBarContainer.drawRect(0, 0, 100, 10);
+    healthBarContainer.endFill();
+    healthBarContainer.x = 80;
+    healthBarContainer.y = 110;
+
+    const style = new PIXI.TextStyle({
+        fontSize: 12,
+    });
+    const healthText = new PIXI.Text({
+        text: 'hp',
+        style,
+    });
+    healthText.x = -20;
+    healthText.y = -2;
+    healthBarContainer.addChild(healthText);
+
+    const healthBar = new PIXI.Graphics();
+    healthBar.beginFill(0x00ff00);
+    healthBar.drawRect(0, 0, 100, 10);
+    healthBar.endFill();
+    healthBarContainer.addChild(healthBar);
+
+    // add health bar container
+    app.stage.addChild(avatarMetaData.hp_system.bar);
 }
 
 function renderAvatarHP(avatar: PIXI.Sprite) {
@@ -41,8 +70,8 @@ function renderAvatarHP(avatar: PIXI.Sprite) {
 }
 
 export function updateAvatarHPPosition(displacementX: number, displacementY: number) {
-    avatarMetaData.hp_system.healthText.x = displacementX - HP_TEXT_X_OFFSET;
-    avatarMetaData.hp_system.healthText.y = displacementY - HP_TEXT_Y_OFFSET;
+    avatarMetaData.hp_system.bar.x = displacementX - HP_TEXT_X_OFFSET;
+    avatarMetaData.hp_system.bar.y = displacementY - HP_TEXT_Y_OFFSET;
 }
 
 export const avatarKeys: { [key: string]: boolean } = {
