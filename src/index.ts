@@ -1,17 +1,17 @@
 // index.ts
 
 import * as PIXI from "pixi.js";
-import { genCreateAvatar, avatarSpeed, avatarKeys, performAttack, updateAvatarHPPosition } from './avatar';
+import { genCreateAvatar, avatarSpeed, avatarKeys, performAttack, updateAvatarHPPosition, checkCollisionAndReduceHealth } from './avatar';
 import { createEnvironmentReferences } from './environmentReference';
 import { createEnemies, enemySpeed } from './enemy';
 import { globalState } from './globalState';
 import { createMenu } from './menu';
 
 
-let lastAttackTime = 0;
-const ATTACK_INTERVAL = 2000;
-const WIDTH = 800;
-const HEIGHT = 600;
+let lastAvatarAttackTime = 0;
+let lastEnemyAttackTime = 0;
+const AVATAR_ATTACK_INTERVAL = 2000;
+const ENEMY_ATTACK_INTERVAL = 200;
 (async () =>
     {
         // Create a PixiJS application.
@@ -25,7 +25,7 @@ const HEIGHT = 600;
 
         const user: PIXI.Sprite = await genCreateAvatar(app);
         const enemies = createEnemies(app);
-        const updateMenuPosition = createMenu(app, user);
+        createMenu(app);
 
         createEnvironmentReferences(app);
 
@@ -72,10 +72,17 @@ const HEIGHT = 600;
             })
 
             // trigger attack if possible
-            const currentTime = Date.now();
-            if (currentTime - lastAttackTime >= ATTACK_INTERVAL) {
-                lastAttackTime = currentTime;
+            const avatarAttackTime = Date.now();
+            if (avatarAttackTime - lastAvatarAttackTime >= AVATAR_ATTACK_INTERVAL) {
+                lastAvatarAttackTime = avatarAttackTime;
                 performAttack(app, user, enemies);
+            }
+
+            // reduce health when enemy collides with avatar
+            const enemyAttackTime = Date.now();
+            if (enemyAttackTime - lastEnemyAttackTime >= ENEMY_ATTACK_INTERVAL) {
+                lastEnemyAttackTime = enemyAttackTime;
+                checkCollisionAndReduceHealth(app, user, enemies);
             }
 
             // Render the stage

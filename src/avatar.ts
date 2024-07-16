@@ -2,6 +2,7 @@
 
 import * as PIXI from "pixi.js";
 import { Enemies } from "./enemy";
+import { globalState } from './globalState';
 
 export const avatarSpeed: number = 5;
 const SWORD_WIDTH = 5;
@@ -34,9 +35,12 @@ export async function genCreateAvatar(app: PIXI.Application<PIXI.Renderer>): Pro
     return avatar;
 }
 
+const healthBarContainer = new PIXI.Graphics();
+const healthBar = new PIXI.Graphics();
+
 function initializeHPSystem(app: PIXI.Application<PIXI.Renderer>) {
 
-    const healthBarContainer = new PIXI.Graphics();
+
     avatarMetaData.hp_system.bar = healthBarContainer;
     healthBarContainer.beginFill(0xff0000);
     healthBarContainer.drawRect(0, 0, 100, 10);
@@ -55,7 +59,7 @@ function initializeHPSystem(app: PIXI.Application<PIXI.Renderer>) {
     healthText.y = -2;
     healthBarContainer.addChild(healthText);
 
-    const healthBar = new PIXI.Graphics();
+
     healthBar.beginFill(0x00ff00);
     healthBar.drawRect(0, 0, 100, 10);
     healthBar.endFill();
@@ -126,4 +130,34 @@ export function performAttack(app: PIXI.Application<PIXI.Renderer>, avatar: PIXI
             }
         })
     }
+}
+
+export function updateHealth(newHealth: number) {
+    avatarMetaData.hp_system.value = newHealth;
+    healthBar.width = (avatarMetaData.hp_system.value / 100) * 100;
+}
+
+export function checkCollisionAndReduceHealth(app: PIXI.Application<PIXI.Renderer>, avatar: PIXI.Sprite, enemies: Enemies) {
+    const keys = Object.keys(enemies);
+    keys.forEach((key) => {
+        const enemy = enemies[key];
+        const enemyPoint = new PIXI.Point(enemy.x, enemy.y);
+        const distance = Math.sqrt((avatar.x - enemyPoint.x) ** 2 + (avatar.y - enemyPoint.y) ** 2);
+        if (distance < 3) {
+            updateHealth(avatarMetaData.hp_system.value - 10);
+            if (avatarMetaData.hp_system.value <= 0) {
+                updateHealth(0);
+                globalState.isGamePaused = true;
+                const gameOverText = new PIXI.Text('Game Over', {
+                    fontSize: 48,
+                    fill: 0xff0000,
+                    align: 'center'
+                });
+                gameOverText.anchor.set(0.5);
+                gameOverText.x = (app.screen.width / 2) - app.stage.x;
+                gameOverText.y = (app.screen.height / 2) - app.stage.y;
+                app.stage.addChild(gameOverText);
+            }
+        }
+    })
 }

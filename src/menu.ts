@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { globalState } from './globalState';
 
-export function createMenu(app: PIXI.Application<PIXI.Renderer>, user: PIXI.Sprite ) {
+export function createMenu(app: PIXI.Application<PIXI.Renderer> ) {
     const menuContainer = new PIXI.Container();
     const menuBackground = new PIXI.Graphics();
     menuBackground.beginFill(0x000000, 0.5);
