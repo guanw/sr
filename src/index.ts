@@ -1,7 +1,7 @@
 // index.ts
 
 import * as PIXI from "pixi.js";
-import { genCreateAvatar, avatarSpeed, avatarKeys, performAttack, updateAvatarHPPosition, checkCollisionAndReduceHealth } from './avatar';
+import { AVATAR_SPEED, avatarKeys, Avatar } from './avatar';
 import { createEnvironmentReferences } from './environmentReference';
 import { createEnemies, enemySpeed } from './enemy';
 import { globalState } from './globalState';
@@ -23,7 +23,7 @@ const ENEMY_ATTACK_INTERVAL = 200;
         // Then adding the application's canvas to the DOM body.
         document.body.appendChild(app.canvas);
 
-        const user: PIXI.Sprite = await genCreateAvatar(app);
+        const user: Avatar = await Avatar.create(app);
         const enemies = createEnemies(app);
         createMenu(app);
 
@@ -38,31 +38,31 @@ const ENEMY_ATTACK_INTERVAL = 200;
 
             // Move user based on key states
             if (avatarKeys.ArrowLeft) {
-                app.stage.x += avatarSpeed;
-                user.x -= avatarSpeed;
+                app.stage.x += AVATAR_SPEED;
+                user.moveLeft();
             }
             if (avatarKeys.ArrowRight) {
-                app.stage.x -= avatarSpeed;
-                user.x += avatarSpeed;
+                app.stage.x -= AVATAR_SPEED;
+                user.moveRight();
             }
             if (avatarKeys.ArrowUp) {
-                app.stage.y += avatarSpeed;
-                user.y -= avatarSpeed;
+                app.stage.y += AVATAR_SPEED;
+                user.moveDown();
             }
             if (avatarKeys.ArrowDown) {
-                app.stage.y -= avatarSpeed;
-                user.y += avatarSpeed;
+                app.stage.y -= AVATAR_SPEED;
+                user.moveUp();
             }
 
             // move hp based on key states
-            updateAvatarHPPosition(user.x, user.y);
+            user.updateHPPosition();
 
             // move enemies based on location of user
             Object.keys(enemies).forEach((key) => {
                 const enemy = enemies[key];
                 if (enemy && user) {
-                    const dx = user.x - enemy.x;
-                    const dy = user.y - enemy.y;
+                    const dx = user.getX() - enemy.x;
+                    const dy = user.getY() - enemy.y;
                     const angle = Math.atan2(dy, dx);
                     const vx = Math.cos(angle) * enemySpeed;
                     const vy = Math.sin(angle) * enemySpeed;
@@ -75,14 +75,14 @@ const ENEMY_ATTACK_INTERVAL = 200;
             const avatarAttackTime = Date.now();
             if (avatarAttackTime - lastAvatarAttackTime >= AVATAR_ATTACK_INTERVAL) {
                 lastAvatarAttackTime = avatarAttackTime;
-                performAttack(app, user, enemies);
+                user.performAttack(enemies);
             }
 
             // reduce health when enemy collides with avatar
             const enemyAttackTime = Date.now();
             if (enemyAttackTime - lastEnemyAttackTime >= ENEMY_ATTACK_INTERVAL) {
                 lastEnemyAttackTime = enemyAttackTime;
-                checkCollisionAndReduceHealth(app, user, enemies);
+                user.checkCollisionAndReduceHealth(app, enemies);
             }
 
             // Render the stage
