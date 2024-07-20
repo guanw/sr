@@ -1,7 +1,7 @@
 // avatar.ts
 
 import * as PIXI from "pixi.js";
-import { Enemies } from "./enemy";
+import { Enemy } from "./enemy";
 import { globalState } from './globalState';
 
 export const AVATAR_SPEED: number = 5;
@@ -69,7 +69,7 @@ export class Avatar {
         return this.sprite.y;
     }
 
-    public performAttack( enemies: Enemies) {
+    public performAttack( enemies: Map<string, Enemy>) {
         if (this.sprite && this.sprite.parent) {
             // Create sword swing effect (e.g., line)
             const sword = new PIXI.Graphics();
@@ -85,23 +85,27 @@ export class Avatar {
             }, 200);
 
             // Check for collision with enemies
-            const keys = Object.keys(enemies);
-            keys.forEach((key) => {
-                const enemy = enemies[key];
-                const enemyPoint = new PIXI.Point(enemy.x + this.app.stage.x, enemy.y + this.app.stage.y);
+            enemies.forEach((_, key) => {
+                const enemy = enemies.get(key);
+                if (enemy === undefined) {
+                    return;
+                }
+                const enemyPoint = new PIXI.Point(enemy.getX() + this.app.stage.x, enemy.getY() + this.app.stage.y);
                 if (sword.getBounds().containsPoint(enemyPoint.x, enemyPoint.y)) {
-                    this.app.stage.removeChild(enemy);
-                    delete enemies[key];
+                    enemies.delete(key);
+                    enemy.destroy();
                 }
             })
         }
     }
 
-    public checkCollisionAndReduceHealth(app: PIXI.Application<PIXI.Renderer>, enemies: Enemies) {
-        const keys = Object.keys(enemies);
-        keys.forEach((key) => {
-            const enemy = enemies[key];
-            const enemyPoint = new PIXI.Point(enemy.x, enemy.y);
+    public checkCollisionAndReduceHealth(app: PIXI.Application<PIXI.Renderer>, enemies: Map<string, Enemy>) {
+        enemies.forEach((_, key) => {
+            const enemy = enemies.get(key);
+            if (enemy === undefined) {
+                return;
+            }
+            const enemyPoint = new PIXI.Point(enemy.getX(), enemy.getY());
             const distance = Math.sqrt((this.sprite.x - enemyPoint.x) ** 2 + (this.sprite.y - enemyPoint.y) ** 2);
             if (distance < ENEMY_ATTACK_RANGE) {
                 this.updateHealth(avatarMetaData.hp_system.value - 10);

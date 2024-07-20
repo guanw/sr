@@ -3,7 +3,7 @@
 import * as PIXI from "pixi.js";
 import { AVATAR_SPEED, avatarKeys, Avatar } from './avatar';
 import { createEnvironmentReferences } from './environmentReference';
-import { createEnemies, enemySpeed } from './enemy';
+import { enemySpeed, EnemyFactory } from './enemy';
 import { globalState } from './globalState';
 import { createMenu } from './menu';
 
@@ -12,6 +12,7 @@ let lastAvatarAttackTime = 0;
 let lastEnemyAttackTime = 0;
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_ATTACK_INTERVAL = 200;
+
 (async () =>
     {
         // Create a PixiJS application.
@@ -24,7 +25,12 @@ const ENEMY_ATTACK_INTERVAL = 200;
         document.body.appendChild(app.canvas);
 
         const user: Avatar = await Avatar.create(app);
-        const enemies = createEnemies(app);
+
+        const enemyFactory = new EnemyFactory(app);
+        enemyFactory.addEnemy();
+        enemyFactory.addEnemy();
+        enemyFactory.addEnemy();
+
         createMenu(app);
 
         createEnvironmentReferences(app);
@@ -57,18 +63,11 @@ const ENEMY_ATTACK_INTERVAL = 200;
             // move hp based on key states
             user.updateHPPosition();
 
+            const enemies = enemyFactory.getEnemies();
             // move enemies based on location of user
-            Object.keys(enemies).forEach((key) => {
-                const enemy = enemies[key];
-                if (enemy && user) {
-                    const dx = user.getX() - enemy.x;
-                    const dy = user.getY() - enemy.y;
-                    const angle = Math.atan2(dy, dx);
-                    const vx = Math.cos(angle) * enemySpeed;
-                    const vy = Math.sin(angle) * enemySpeed;
-                    enemy.x += vx;
-                    enemy.y += vy;
-                }
+            enemies.forEach((enemy) => {
+                if (enemy !== undefined)
+                    enemy.moveTowardsPlayer(user.getX(), user.getY())
             })
 
             // trigger attack if possible
