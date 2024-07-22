@@ -2,7 +2,7 @@
 
 import * as PIXI from "pixi.js";
 import { Enemy } from "./enemy";
-import { globalState } from './globalState';
+import { globalState } from "./events";
 
 export const AVATAR_SPEED: number = 5;
 const ENEMY_ATTACK_RANGE = 3;
@@ -169,27 +169,3 @@ function renderAvatarHP(avatar: PIXI.Sprite) {
     avatarMetaData.hp_system.bar.x = avatar.x - HP_TEXT_X_OFFSET;
     avatarMetaData.hp_system.bar.y = avatar.y - HP_TEXT_Y_OFFSET;
 }
-
-export const avatarKeys: { [key: string]: boolean } = {
-    ArrowLeft: false,
-    ArrowRight: false,
-    ArrowUp: false,
-    ArrowDown: false
-};
-
-// Handle keyboard events
-function handleKeyDown(e: KeyboardEvent): void {
-    if (e.key in avatarKeys) {
-        avatarKeys[e.key] = true;
-    }
-}
-
-function handleKeyUp(e: KeyboardEvent): void {
-    if (e.key in avatarKeys) {
-        avatarKeys[e.key] = false;
-    }
-}
-
-// Add event listeners for keydown and keyup events
-window.addEventListener('keydown', handleKeyDown);
-window.addEventListener('keyup', handleKeyUp);

@@ -1,11 +1,11 @@
 // index.ts
 
 import * as PIXI from "pixi.js";
-import { AVATAR_SPEED, avatarKeys, Avatar } from './avatar';
+import { AVATAR_SPEED, Avatar } from './avatar';
+import { avatarMoveKeys, globalState } from './events';
 import { createEnvironmentReferences } from './environmentReference';
 import { EnemyFactory } from './enemy';
-import { globalState } from './globalState';
-import { createMenu } from './menu';
+import { Menu } from './menu';
 
 
 let lastAvatarAttackTime = 0;
@@ -33,31 +33,39 @@ const ENEMY_ATTACK_INTERVAL = 200;
         enemyFactory.addEnemy();
         enemyFactory.addEnemy();
 
-        createMenu(app);
+        const menuContainer = new Menu(app);
 
         createEnvironmentReferences(app);
 
         // Game loop
         function gameLoop() {
-            if (globalState.isGamePaused) {
+            const isGamePaused = globalState.isGamePaused;
+            // if paused, show menu
+            menuContainer.setMenuVisibility(isGamePaused);
+            if (isGamePaused) {
+                menuContainer.updateMenuPosition();
+            }
+
+            if (isGamePaused) {
                 requestAnimationFrame(gameLoop);
                 return;
             }
 
+
             // Move user based on key states
-            if (avatarKeys.ArrowLeft) {
+            if (avatarMoveKeys.ArrowLeft) {
                 app.stage.x += AVATAR_SPEED;
                 user.moveLeft();
             }
-            if (avatarKeys.ArrowRight) {
+            if (avatarMoveKeys.ArrowRight) {
                 app.stage.x -= AVATAR_SPEED;
                 user.moveRight();
             }
-            if (avatarKeys.ArrowUp) {
+            if (avatarMoveKeys.ArrowUp) {
                 app.stage.y += AVATAR_SPEED;
                 user.moveDown();
             }
-            if (avatarKeys.ArrowDown) {
+            if (avatarMoveKeys.ArrowDown) {
                 app.stage.y -= AVATAR_SPEED;
                 user.moveUp();
             }
