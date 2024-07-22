@@ -3,14 +3,16 @@
 import * as PIXI from "pixi.js";
 import { AVATAR_SPEED, avatarKeys, Avatar } from './avatar';
 import { createEnvironmentReferences } from './environmentReference';
-import { enemySpeed, EnemyFactory } from './enemy';
+import { EnemyFactory } from './enemy';
 import { globalState } from './globalState';
 import { createMenu } from './menu';
 
 
 let lastAvatarAttackTime = 0;
+let lastEnemyAppearTime = 0;
 let lastEnemyAttackTime = 0;
 const AVATAR_ATTACK_INTERVAL = 2000;
+const ENEMY_APPEAR_INTERVAL = 1500;
 const ENEMY_ATTACK_INTERVAL = 200;
 
 (async () =>
@@ -69,6 +71,13 @@ const ENEMY_ATTACK_INTERVAL = 200;
                 if (enemy !== undefined)
                     enemy.moveTowardsPlayer(user.getX(), user.getY())
             })
+
+            // add new enemy if possible
+            const newEnemyAppearTime = Date.now();
+            if (newEnemyAppearTime - lastEnemyAppearTime >= ENEMY_APPEAR_INTERVAL) {
+                lastEnemyAppearTime = newEnemyAppearTime;
+                enemyFactory.addEnemy();
+            }
 
             // trigger attack if possible
             const avatarAttackTime = Date.now();

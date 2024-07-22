@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export const enemySpeed: number = 1;
 
@@ -13,7 +14,8 @@ export class EnemyFactory {
     }
 
     public addEnemy() {
-        this.enemies.set(this.enemies.size.toString(), new Enemy(this.app));
+        const uuid = uuidv4();
+        this.enemies.set(uuid, new Enemy(this.app));
     }
 
     public getEnemies(): Map<string, Enemy> {
@@ -35,8 +37,8 @@ export class Enemy {
         this.sprite.beginFill(0xff33ee);
         this.sprite.drawCircle(0, 0, 10);
         this.sprite.endFill();
-        this.sprite.x = Math.random() * appWidth;
-        this.sprite.y = Math.random() * appHeight;
+        this.sprite.x = Math.random() * appWidth - app.stage.x;
+        this.sprite.y = Math.random() * appHeight - app.stage.y;
         app.stage.addChild(this.sprite);
     }
 
