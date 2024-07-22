@@ -111,7 +111,7 @@ export class Avatar {
                 this.updateHealth(avatarMetaData.hp_system.value - 10);
                 if (avatarMetaData.hp_system.value <= 0) {
                     this.updateHealth(0);
-                    globalState.isGamePaused = true;
+                    globalState.isGameOver = true;
                     const gameOverText = new PIXI.Text('Game Over', {
                         fontSize: 48,
                         fill: 0xff0000,

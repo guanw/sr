@@ -6,7 +6,8 @@ export const avatarMoveKeys: { [key: string]: boolean } = {
 };
 
 export const globalState = {
-    isGamePaused: false
+    isGamePaused: false,
+    isGameOver: false
 };
 
 // Handle keyboard events to move avatar

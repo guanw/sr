@@ -40,13 +40,14 @@ const ENEMY_ATTACK_INTERVAL = 200;
         // Game loop
         function gameLoop() {
             const isGamePaused = globalState.isGamePaused;
+            const isGameOver = globalState.isGameOver;
             // if paused, show menu
             menuContainer.setMenuVisibility(isGamePaused);
             if (isGamePaused) {
                 menuContainer.updateMenuPosition();
             }
 
-            if (isGamePaused) {
+            if (isGamePaused || isGameOver) {
                 requestAnimationFrame(gameLoop);
                 return;
             }
