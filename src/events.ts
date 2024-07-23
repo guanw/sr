@@ -1,4 +1,7 @@
-export const avatarMoveKeys: { [key: string]: boolean } = {
+import * as PIXI from "pixi.js";
+import { Avatar, AVATAR_SPEED } from './avatar';
+
+const avatarMoveKeys: { [key: string]: boolean } = {
     ArrowLeft: false,
     ArrowRight: false,
     ArrowUp: false,
@@ -26,6 +29,26 @@ function handleMoveKeyUp(e: KeyboardEvent): void {
 function handleToggleMenu(e: KeyboardEvent): void {
     if (e.key === 'm' || e.key === 'M') {
         globalState.isGamePaused = !globalState.isGamePaused;
+    }
+}
+
+export function moveUser(app: PIXI.Application<PIXI.Renderer>, user: Avatar) {
+    // Move user based on key states
+    if (avatarMoveKeys.ArrowLeft) {
+        app.stage.x += AVATAR_SPEED;
+        user.moveLeft();
+    }
+    if (avatarMoveKeys.ArrowRight) {
+        app.stage.x -= AVATAR_SPEED;
+        user.moveRight();
+    }
+    if (avatarMoveKeys.ArrowUp) {
+        app.stage.y += AVATAR_SPEED;
+        user.moveDown();
+    }
+    if (avatarMoveKeys.ArrowDown) {
+        app.stage.y -= AVATAR_SPEED;
+        user.moveUp();
     }
 }
 

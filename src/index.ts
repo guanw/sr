@@ -1,8 +1,8 @@
 // index.ts
 
 import * as PIXI from "pixi.js";
-import { AVATAR_SPEED, Avatar } from './avatar';
-import { avatarMoveKeys, globalState } from './events';
+import { Avatar } from './avatar';
+import { globalState, moveUser } from './events';
 import { createEnvironmentReferences } from './environmentReference';
 import { EnemyFactory } from './enemy';
 import { Menu } from './menu';
@@ -68,23 +68,7 @@ const ENEMY_ATTACK_INTERVAL = 200;
             }
 
 
-            // Move user based on key states
-            if (avatarMoveKeys.ArrowLeft) {
-                app.stage.x += AVATAR_SPEED;
-                user.moveLeft();
-            }
-            if (avatarMoveKeys.ArrowRight) {
-                app.stage.x -= AVATAR_SPEED;
-                user.moveRight();
-            }
-            if (avatarMoveKeys.ArrowUp) {
-                app.stage.y += AVATAR_SPEED;
-                user.moveDown();
-            }
-            if (avatarMoveKeys.ArrowDown) {
-                app.stage.y -= AVATAR_SPEED;
-                user.moveUp();
-            }
+            moveUser(app, user);
 
             // move hp based on key states
             user.updateHPPosition();
