@@ -73,7 +73,3 @@ export class Enemy {
         this.setPos(enemyX+vx, enemyY+vy);
     }
 }
-
-type Enemies = {
-    [key: string]: PIXI.Graphics;
-};
