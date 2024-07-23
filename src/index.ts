@@ -6,11 +6,9 @@ import { avatarMoveKeys, globalState } from './events';
 import { createEnvironmentReferences } from './environmentReference';
 import { EnemyFactory } from './enemy';
 import { Menu } from './menu';
+import { timedEventsManager } from './timeEventsManager';
 
 
-let lastAvatarAttackTime = 0;
-let lastEnemyAppearTime = 0;
-let lastEnemyAttackTime = 0;
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 1500;
 const ENEMY_ATTACK_INTERVAL = 200;
@@ -36,6 +34,23 @@ const ENEMY_ATTACK_INTERVAL = 200;
         const menuContainer = new Menu(app);
 
         createEnvironmentReferences(app);
+
+        // add new enemy if possible
+        timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, () => {
+            enemyFactory.addEnemy();
+        });
+
+        // trigger attack if possible
+        timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, () => {
+            const enemies = enemyFactory.getEnemies();
+            user.performAttack(enemies);
+        });
+
+        // reduce health when enemy collides with avatar
+        timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, () => {
+            const enemies = enemyFactory.getEnemies();
+            user.checkCollisionAndReduceHealth(app, enemies);
+        });
 
         // Game loop
         function gameLoop() {
@@ -81,26 +96,7 @@ const ENEMY_ATTACK_INTERVAL = 200;
                     enemy.moveTowardsPlayer(user.getX(), user.getY())
             })
 
-            // add new enemy if possible
-            const newEnemyAppearTime = Date.now();
-            if (newEnemyAppearTime - lastEnemyAppearTime >= ENEMY_APPEAR_INTERVAL) {
-                lastEnemyAppearTime = newEnemyAppearTime;
-                enemyFactory.addEnemy();
-            }
-
-            // trigger attack if possible
-            const avatarAttackTime = Date.now();
-            if (avatarAttackTime - lastAvatarAttackTime >= AVATAR_ATTACK_INTERVAL) {
-                lastAvatarAttackTime = avatarAttackTime;
-                user.performAttack(enemies);
-            }
-
-            // reduce health when enemy collides with avatar
-            const enemyAttackTime = Date.now();
-            if (enemyAttackTime - lastEnemyAttackTime >= ENEMY_ATTACK_INTERVAL) {
-                lastEnemyAttackTime = enemyAttackTime;
-                user.checkCollisionAndReduceHealth(app, enemies);
-            }
+            timedEventsManager.update();
 
             // Render the stage
             app.renderer.render(app.stage);
