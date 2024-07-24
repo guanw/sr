@@ -7,11 +7,13 @@ import { createEnvironmentReferences } from './environmentReference';
 import { EnemyFactory } from './enemy';
 import { Menu } from './menu';
 import { timedEventsManager } from './timeEventsManager';
+import { ItemFactory } from './items';
 
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 1500;
 const ENEMY_ATTACK_INTERVAL = 200;
+const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
 (async () =>
     {
@@ -31,6 +33,8 @@ const ENEMY_ATTACK_INTERVAL = 200;
         enemyFactory.addEnemy();
         enemyFactory.addEnemy();
 
+        const itemFactory = new ItemFactory(app, user);
+
         const menuContainer = new Menu(app);
 
         createEnvironmentReferences(app);
@@ -49,7 +53,11 @@ const ENEMY_ATTACK_INTERVAL = 200;
         // reduce health when enemy collides with avatar
         timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, () => {
             const enemies = enemyFactory.getEnemies();
-            user.checkCollisionAndReduceHealth(app, enemies);
+            user.checkCollisionAndReduceHealth(enemies);
+        });
+
+        timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, () => {
+            itemFactory.addItem();
         });
 
         // Game loop

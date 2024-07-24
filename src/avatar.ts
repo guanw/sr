@@ -3,6 +3,7 @@
 import * as PIXI from "pixi.js";
 import { Enemy } from "./enemy";
 import { globalState } from "./events";
+import { Item } from './items';
 
 export const AVATAR_SPEED: number = 5;
 const ENEMY_ATTACK_RANGE = 3;
@@ -99,7 +100,7 @@ export class Avatar {
         }
     }
 
-    public checkCollisionAndReduceHealth(app: PIXI.Application<PIXI.Renderer>, enemies: Map<string, Enemy>) {
+    public checkCollisionAndReduceHealth(enemies: Map<string, Enemy>) {
         enemies.forEach((_, key) => {
             const enemy = enemies.get(key);
             if (enemy === undefined) {
@@ -118,12 +119,16 @@ export class Avatar {
                         align: 'center'
                     });
                     gameOverText.anchor.set(0.5);
-                    gameOverText.x = (app.screen.width / 2) - app.stage.x;
-                    gameOverText.y = (app.screen.height / 2) - app.stage.y;
-                    app.stage.addChild(gameOverText);
+                    gameOverText.x = (this.app.screen.width / 2) - this.app.stage.x;
+                    gameOverText.y = (this.app.screen.height / 2) - this.app.stage.y;
+                    this.app.stage.addChild(gameOverText);
                 }
             }
         })
+    }
+
+    public tryCollectItems(items: Map<string, Item>) {
+
     }
 
     private updateHealth(newHealth: number) {
