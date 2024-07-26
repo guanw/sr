@@ -1,18 +1,18 @@
 import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from 'uuid';
 import { Avatar } from './avatar';
+import { Entity } from './Entity';
 
-export interface Item {
-    name: string;
+export abstract class CollectableItem extends Entity {
 }
 
 export class ItemFactory {
-    private items: Map<string, Item>;
+    private items: Map<string, CollectableItem>;
     private app: PIXI.Application;
     private user: Avatar;
     public constructor(app: PIXI.Application, user: Avatar) {
         this.app = app;
-        this.items = new Map<string, Item>();
+        this.items = new Map<string, CollectableItem>();
         this.user = user;
     }
 
@@ -21,15 +21,16 @@ export class ItemFactory {
         this.items.set(uuid, new Bomb(this.app, this.user));
     }
 
-    public getItems(): Map<string, Item> {
+    public getItems(): Map<string, CollectableItem> {
         return this.items;
     }
 }
 
-class Bomb implements Item {
+class Bomb extends CollectableItem {
     name = "bomb";
     private instance: PIXI.Graphics;
     constructor(app: PIXI.Application, avatar: Avatar) {
+        super();
         this.instance = new PIXI.Graphics();
         this.instance.fill(0x002200);
         this.instance.beginFill(0x002200);
@@ -38,5 +39,13 @@ class Bomb implements Item {
         this.instance.x = (avatar.getX() - 400) + Math.random() * 800;
         this.instance.y = (avatar.getY() - 300) + Math.random() * 600;
         app.stage.addChild(this.instance);
+    }
+
+    getX(): number {
+        return this.instance.x;
+    }
+
+    getY(): number {
+        return this.instance.y;
     }
 }

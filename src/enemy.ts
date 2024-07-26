@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from 'uuid';
+import { Entity } from './Entity';
 
 export const enemySpeed: number = 1;
 
@@ -23,12 +24,13 @@ export class EnemyFactory {
     }
 }
 
-export class Enemy {
+export class Enemy extends Entity {
     private sprite: PIXI.Graphics;
     private app: PIXI.Application;
 
     constructor(app: PIXI.Application) {
 
+        super();
         this.app = app;
         const appWidth = app.stage.width;
         const appHeight = app.stage.height;

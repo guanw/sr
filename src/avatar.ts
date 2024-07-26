@@ -3,10 +3,11 @@
 import * as PIXI from "pixi.js";
 import { Enemy } from "./enemy";
 import { globalState } from "./events";
-import { Item } from './items';
+import { CollectableItem } from './items';
+import { Entity } from './Entity';
+const ENEMY_ATTACK_RANGE = 3;
 
 export const AVATAR_SPEED: number = 5;
-const ENEMY_ATTACK_RANGE = 3;
 const SWORD_WIDTH = 5;
 const SWORD_LENGTH = 50;
 const MAX_HEALTH = 100;
@@ -19,11 +20,12 @@ const avatarMetaData = {
     }
 };
 
-export class Avatar {
+export class Avatar extends Entity {
     private sprite: PIXI.Sprite;
     private app: PIXI.Application;
 
     private constructor(app: PIXI.Application, texture: PIXI.Texture) {
+        super();
         this.app = app;
         const appWidth: number = app.screen.width;
         const appHeight: number = app.screen.height;
@@ -127,7 +129,7 @@ export class Avatar {
         })
     }
 
-    public tryCollectItems(items: Map<string, Item>) {
+    public tryCollectItems(items: Map<string, CollectableItem>) {
 
     }
 
