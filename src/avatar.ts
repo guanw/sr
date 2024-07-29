@@ -108,9 +108,7 @@ export class Avatar extends Entity {
             if (enemy === undefined) {
                 return;
             }
-            const enemyPoint = new PIXI.Point(enemy.getX(), enemy.getY());
-            const distance = Math.sqrt((this.sprite.x - enemyPoint.x) ** 2 + (this.sprite.y - enemyPoint.y) ** 2);
-            if (distance < ENEMY_ATTACK_RANGE) {
+            if (enemy.collide(this)) {
                 this.updateHealth(avatarMetaData.hp_system.value - 10);
                 if (avatarMetaData.hp_system.value <= 0) {
                     this.updateHealth(0);
