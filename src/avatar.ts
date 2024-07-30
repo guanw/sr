@@ -5,7 +5,7 @@ import { Enemy } from "./enemy";
 import { globalState } from "./events";
 import { CollectableItem } from './items';
 import { Entity } from './Entity';
-const ENEMY_ATTACK_RANGE = 3;
+const COLLECT_ITEM_RANGE = 15;
 
 export const AVATAR_SPEED: number = 5;
 const SWORD_WIDTH = 5;
@@ -104,7 +104,7 @@ export class Avatar extends Entity {
             if (item === undefined) {
                 return;
             }
-            if (item.collide(avatar, 10)) {
+            if (item.collide(avatar, COLLECT_ITEM_RANGE)) {
                 item.effectCallback();
                 item.destroy();
                 items.delete(key);
