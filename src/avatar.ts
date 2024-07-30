@@ -72,36 +72,6 @@ export class Avatar extends Entity {
         return this.sprite.y;
     }
 
-    public performAttack( enemies: Map<string, Enemy>) {
-        if (this.sprite && this.sprite.parent) {
-            // Create sword swing effect (e.g., line)
-            const sword = new PIXI.Graphics();
-            sword.moveTo(this.sprite.x, this.sprite.y);
-            sword.lineTo(SWORD_LENGTH + this.sprite.x, this.sprite.y);
-            sword.stroke({ width: SWORD_WIDTH, color: 0xffd900 });
-
-
-            this.app.stage.addChild(sword);
-            // Remove sword after a short delay e.g 200ms
-            setTimeout(() => {
-                this.app.stage.removeChild(sword);
-            }, 200);
-
-            // Check for collision with enemies
-            enemies.forEach((_, key) => {
-                const enemy = enemies.get(key);
-                if (enemy === undefined) {
-                    return;
-                }
-                const enemyPoint = new PIXI.Point(enemy.getX() + this.app.stage.x, enemy.getY() + this.app.stage.y);
-                if (sword.getBounds().containsPoint(enemyPoint.x, enemyPoint.y)) {
-                    enemies.delete(key);
-                    enemy.destroy();
-                }
-            })
-        }
-    }
-
     public checkCollisionAndReduceHealth(enemies: Map<string, Enemy>) {
         enemies.forEach((_, key) => {
             const enemy = enemies.get(key);
@@ -134,6 +104,55 @@ export class Avatar extends Entity {
     private updateHealth(newHealth: number) {
         avatarMetaData.hp_system.value = newHealth;
         healthBar.width = (avatarMetaData.hp_system.value / 100) * 100;
+    }
+
+    public performAttack( enemies: Map<string, Enemy>) {
+        if (this.sprite && this.sprite.parent) {
+            const sword = new Avatar.Sword(this.app, this.sprite);
+
+            // Check for collision with enemies
+            enemies.forEach((_, key) => {
+                const enemy = enemies.get(key);
+                if (enemy === undefined) {
+                    return;
+                }
+
+                if (sword.collide(enemy)) {
+                    enemies.delete(key);
+                    enemy.destroy();
+                }
+            })
+        }
+    }
+
+    static Sword = class extends Entity {
+        private app: PIXI.Application;
+        private instance: PIXI.Graphics;
+        public constructor(app: PIXI.Application, avatar: PIXI.Sprite) {
+            super();
+            this.app = app;
+            this.instance = new PIXI.Graphics();
+            this.instance.moveTo(avatar.x, avatar.y);
+            this.instance.lineTo(SWORD_LENGTH + avatar.x, avatar.y);
+            this.instance.stroke({ width: SWORD_WIDTH, color: 0xffd900 });
+            this.app.stage.addChild(this.instance);
+            // Remove sword after a short delay e.g 200ms
+            setTimeout(() => {
+                this.app.stage.removeChild(this.instance);
+            }, 200);
+        }
+
+        getX(): number {
+            throw new Error("should not be called with collide being overriden");
+        }
+        getY(): number {
+            throw new Error("should not be called with collide being overriden");
+        }
+
+        collide(ent: Entity): boolean {
+            const enemyPoint = new PIXI.Point(ent.getX() + this.app.stage.x, ent.getY() + this.app.stage.y);
+            return this.instance.getBounds().containsPoint(enemyPoint.x, enemyPoint.y)
+        }
     }
 }
 
