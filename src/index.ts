@@ -11,8 +11,9 @@ import { ItemFactory } from './items';
 
 
 const AVATAR_ATTACK_INTERVAL = 2000;
-const ENEMY_APPEAR_INTERVAL = 1500;
-const ENEMY_ATTACK_INTERVAL = 200;
+const ENEMY_APPEAR_INTERVAL = 3000;
+const ENEMY_ATTACK_INTERVAL = 500;
+const COLLECT_ITEM_INTERVAL = 10;
 const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
 (async () =>
@@ -27,14 +28,8 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
         document.body.appendChild(app.canvas);
 
         const user: Avatar = await Avatar.create(app);
-
         const enemyFactory = new EnemyFactory(app);
-        enemyFactory.addEnemy();
-        enemyFactory.addEnemy();
-        enemyFactory.addEnemy();
-
         const itemFactory = new ItemFactory(app, user);
-
         const menuContainer = new Menu(app);
 
         createEnvironmentReferences(app);
@@ -59,6 +54,11 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
         timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, () => {
             itemFactory.addItem();
         });
+
+        timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, () => {
+            const items = itemFactory.getItems();
+            user.tryCollectItems(items);
+        })
 
         // Game loop
         function gameLoop() {

@@ -98,7 +98,18 @@ export class Avatar extends Entity {
     }
 
     public tryCollectItems(items: Map<string, CollectableItem>) {
-
+        const avatar = this;
+        items.forEach((_, key) => {
+            const item = items.get(key);
+            if (item === undefined) {
+                return;
+            }
+            if (item.collide(avatar, 10)) {
+                item.effectCallback();
+                item.destroy();
+                items.delete(key);
+            }
+        });
     }
 
     private updateHealth(newHealth: number) {
