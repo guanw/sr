@@ -8,7 +8,7 @@ import { CollectableItem } from '../items';
 import { Entity } from '../Entity';
 const COLLECT_ITEM_RANGE = 15;
 
-export const AVATAR_SPEED: number = 5;
+const AVATAR_SPEED = 5;
 const SWORD_WIDTH = 5;
 const SWORD_LENGTH = 50;
 const MAX_HEALTH = 100;
@@ -46,18 +46,22 @@ export class Avatar extends Entity {
 
     public moveLeft() {
         this.sprite.x -= AVATAR_SPEED;
+        this.app.stage.x += AVATAR_SPEED;
     }
 
     public moveRight() {
         this.sprite.x += AVATAR_SPEED;
+        this.app.stage.x -= AVATAR_SPEED;
     }
 
     public moveDown() {
         this.sprite.y -= AVATAR_SPEED;
+        this.app.stage.y += AVATAR_SPEED;
     }
 
     public moveUp() {
         this.sprite.y += AVATAR_SPEED;
+        this.app.stage.y -= AVATAR_SPEED;
     }
 
     public updateHPPosition() {
