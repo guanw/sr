@@ -81,9 +81,9 @@ export class Avatar extends Entity {
     }
 
     /**
-     * collision with entity
+     * collision with enemy
      */
-    public checkCollisionAndReduceHealth(enemies: Map<string, Enemy>) {
+    public checkCollisionWithEnemyAndReduceHealth(enemies: Map<string, Enemy>) {
         enemies.forEach((_, key) => {
             const enemy = enemies.get(key);
             if (enemy === undefined) {
@@ -113,7 +113,7 @@ export class Avatar extends Entity {
         }
     }
 
-    public tryCollectItems(items: Map<string, Entity>) {
+    public CheckCollectingItems(items: Map<string, Entity>) {
         const avatar = this;
         items.forEach((_, key) => {
             const item = items.get(key);

@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/pixi.js": "^5.0.0",
+    "@types/uuid": "^10.0.0",
     "parcel": "^2.12.0",
     "typescript": "^5.5.3"
   }

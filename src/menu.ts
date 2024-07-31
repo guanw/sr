@@ -2,10 +2,8 @@ import * as PIXI from "pixi.js";
 
 export class Menu {
     private container: PIXI.Container;
-    private app: PIXI.Application;
     constructor(app: PIXI.Application<PIXI.Renderer>) {
         this.container = new PIXI.Container();
-        this.app = app;
         const menuBackground = new PIXI.Graphics();
         menuBackground.beginFill(0x000000, 0.5);
         menuBackground.drawRect(-app.stage.x, -app.stage.y, app.screen.width, app.screen.height);
@@ -26,9 +24,9 @@ export class Menu {
         this.container.visible = false; // Hide the menu initially
     }
 
-    public updateMenuPosition() {
-        this.container.x = -this.app.stage.x;
-        this.container.y = -this.app.stage.y;
+    public updateMenuPosition(app: PIXI.Application) {
+        this.container.x = -app.stage.x;
+        this.container.y = -app.stage.y;
     }
 
     public setMenuVisibility(isVisible: boolean) {

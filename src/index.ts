@@ -7,7 +7,7 @@ import { createEnvironmentReferences } from './environmentReference';
 import enemiesStateManager from './states/EnemyStateManager';
 import { Menu } from './menu';
 import { timedEventsManager } from './timeEventsManager';
-import { ItemFactory } from './items';
+import { itemsStateManager } from './states/ItemsStateManager';
 import { DebugTool } from "./internal/DebugTool";
 
 
@@ -31,34 +31,30 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
         const user: Avatar = await Avatar.create(app);
         const debugTool = new DebugTool(app, user);
-        const itemFactory = new ItemFactory(app, user);
+
         const menuContainer = new Menu(app);
 
 
-        // add new enemy if possible
+        // enemy related events
         timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, () => {
             enemiesStateManager.addEnemy(app);
         });
-
-        // trigger attack if possible
         timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, () => {
             const enemies = enemiesStateManager.getEnemies();
             user.performAttack(enemies);
         });
-
-        // reduce health when enemy collides with avatar
         timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, () => {
             const enemies = enemiesStateManager.getEnemies();
-            user.checkCollisionAndReduceHealth(enemies);
+            user.checkCollisionWithEnemyAndReduceHealth(enemies);
         });
 
+        // item related events
         timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, () => {
-            itemFactory.addItem();
+            itemsStateManager.addItem(app, user);
         });
-
         timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, () => {
-            const items = itemFactory.getItems();
-            user.tryCollectItems(items);
+            const items = itemsStateManager.getItems();
+            user.CheckCollectingItems(items);
         })
 
         // Game loop
@@ -68,7 +64,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
             // if paused, show menu
             menuContainer.setMenuVisibility(isGamePaused);
             if (isGamePaused) {
-                menuContainer.updateMenuPosition();
+                menuContainer.updateMenuPosition(app);
             }
 
             if (isGamePaused || isGameOver) {
