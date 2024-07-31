@@ -27,13 +27,13 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
         // Then adding the application's canvas to the DOM body.
         document.body.appendChild(app.canvas);
+        createEnvironmentReferences(app);
 
         const user: Avatar = await Avatar.create(app);
         const debugTool = new DebugTool(app, user);
         const itemFactory = new ItemFactory(app, user);
         const menuContainer = new Menu(app);
 
-        createEnvironmentReferences(app);
 
         // add new enemy if possible
         timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, () => {
@@ -76,17 +76,15 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
                 return;
             }
 
-
             moveUser(app, user);
 
             // move hp based on key states
             user.updateHPPosition();
 
             const enemies = enemiesStateManager.getEnemies();
-            // move enemies based on location of user
             enemies.forEach((enemy) => {
                 if (enemy !== undefined)
-                    enemy.moveTowardsPlayer(user.getX(), user.getY())
+                    enemy.moveTowards(user.getX(), user.getY())
             })
 
             timedEventsManager.update();

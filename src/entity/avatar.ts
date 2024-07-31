@@ -2,13 +2,13 @@
 
 import * as PIXI from "pixi.js";
 import { Enemy } from "./Enemy";
-import enemiesStateManager from "../states/EnemyStateManager";
 import { globalState } from "../states/events";
-import { CollectableItem } from '../items';
-import { Entity } from '../Entity';
+import { Entity } from './Entity';
+
 const COLLECT_ITEM_RANGE = 15;
 
 const AVATAR_SPEED = 5;
+const ENEMY_ATTACK_VALUE = 10;
 const SWORD_WIDTH = 5;
 const SWORD_LENGTH = 50;
 const MAX_HEALTH = 100;
@@ -24,6 +24,9 @@ const avatarMetaData = {
 export class Avatar extends Entity {
     private sprite: PIXI.Sprite;
     private app: PIXI.Application;
+    private healthBarContainer = new PIXI.Graphics();
+    private healthBar = new PIXI.Graphics();
+
 
     private constructor(app: PIXI.Application, texture: PIXI.Texture) {
         super();
@@ -35,8 +38,8 @@ export class Avatar extends Entity {
         this.sprite.x = appWidth / 2;
         this.sprite.y = appHeight / 2;
         app.stage.addChild(this.sprite);
-        renderAvatarHP(this.sprite);
-        initializeHPSystem(app);
+        this.renderAvatarHP();
+        this.initializeHPSystem();
     }
 
     public static async create(app: PIXI.Application) :Promise<Avatar> {
@@ -77,49 +80,90 @@ export class Avatar extends Entity {
         return this.sprite.y;
     }
 
+    /**
+     * collision with entity
+     */
     public checkCollisionAndReduceHealth(enemies: Map<string, Enemy>) {
         enemies.forEach((_, key) => {
             const enemy = enemies.get(key);
             if (enemy === undefined) {
                 return;
             }
-            if (enemy.collide(this)) {
-                this.updateHealth(avatarMetaData.hp_system.value - 10);
-                if (avatarMetaData.hp_system.value <= 0) {
-                    this.updateHealth(0);
-                    globalState.isGameOver = true;
-                    const gameOverText = new PIXI.Text('Game Over', {
-                        fontSize: 48,
-                        fill: 0xff0000,
-                        align: 'center'
-                    });
-                    gameOverText.anchor.set(0.5);
-                    gameOverText.x = (this.app.screen.width / 2) - this.app.stage.x;
-                    gameOverText.y = (this.app.screen.height / 2) - this.app.stage.y;
-                    this.app.stage.addChild(gameOverText);
-                }
+            if (enemy.isCollidedWith(this)) {
+                this.uponCollide(this.app);
             }
         })
     }
 
-    public tryCollectItems(items: Map<string, CollectableItem>) {
+    // override avatar uponCollide with enemy
+    uponCollide(app: PIXI.Application): void {
+        this.updateHealth(avatarMetaData.hp_system.value - ENEMY_ATTACK_VALUE);
+        if (avatarMetaData.hp_system.value <= 0) {
+            this.updateHealth(0);
+            globalState.isGameOver = true;
+            const gameOverText = new PIXI.Text('Game Over', {
+                fontSize: 48,
+                fill: 0xff0000,
+                align: 'center'
+            });
+            gameOverText.anchor.set(0.5);
+            gameOverText.x = (app.screen.width / 2) - app.stage.x;
+            gameOverText.y = (app.screen.height / 2) - app.stage.y;
+            app.stage.addChild(gameOverText);
+        }
+    }
+
+    public tryCollectItems(items: Map<string, Entity>) {
         const avatar = this;
         items.forEach((_, key) => {
             const item = items.get(key);
             if (item === undefined) {
                 return;
             }
-            if (item.collide(avatar, COLLECT_ITEM_RANGE)) {
-                enemiesStateManager.destroyAllEnemies(this.app)
-                item.destroy();
+            if (item.isCollidedWith(avatar, COLLECT_ITEM_RANGE)) {
+                item.uponCollide(this.app);
                 items.delete(key);
             }
         });
     }
 
+    public initializeHPSystem() {
+        avatarMetaData.hp_system.bar = this.healthBarContainer;
+        this.healthBarContainer.beginFill(0xff0000);
+        this.healthBarContainer.drawRect(0, 0, 100, 10);
+        this.healthBarContainer.endFill();
+        this.healthBarContainer.x = 80;
+        this.healthBarContainer.y = 110;
+
+        const style = new PIXI.TextStyle({
+            fontSize: 12,
+        });
+        const healthText = new PIXI.Text({
+            text: 'hp',
+            style,
+        });
+        healthText.x = -20;
+        healthText.y = -2;
+        this.healthBarContainer.addChild(healthText);
+
+
+        this.healthBar.beginFill(0x00ff00);
+        this.healthBar.drawRect(0, 0, 100, 10);
+        this.healthBar.endFill();
+        this.healthBarContainer.addChild(this.healthBar);
+
+        // add health bar container
+        this.app.stage.addChild(avatarMetaData.hp_system.bar);
+    }
+
     private updateHealth(newHealth: number) {
         avatarMetaData.hp_system.value = newHealth;
-        healthBar.width = (avatarMetaData.hp_system.value / 100) * 100;
+        this.healthBar.width = (avatarMetaData.hp_system.value / 100) * 100;
+    }
+
+    private renderAvatarHP() {
+        avatarMetaData.hp_system.bar.x = this.sprite.x - HP_TEXT_X_OFFSET;
+        avatarMetaData.hp_system.bar.y = this.sprite.y - HP_TEXT_Y_OFFSET;
     }
 
     public performAttack(enemies: Map<string, Enemy>) {
@@ -133,9 +177,9 @@ export class Avatar extends Entity {
                     return;
                 }
 
-                if (sword.collide(enemy)) {
-                    enemies.delete(key);
+                if (sword.isCollidedWith(enemy)) {
                     enemy.destroy(this.app);
+                    enemies.delete(key);
                 }
             })
         }
@@ -146,8 +190,10 @@ export class Avatar extends Entity {
     }
 
     static Sword = class extends Entity {
+        uponCollide(_app: PIXI.Application): void {
+            throw new Error("sword should not be affected by collide.");
+        }
         private app: PIXI.Application;
-        private instance: PIXI.Graphics;
         public constructor(app: PIXI.Application, avatar: PIXI.Sprite) {
             super();
             this.app = app;
@@ -163,53 +209,15 @@ export class Avatar extends Entity {
         }
 
         getX(): number {
-            throw new Error("should not be called with collide being overriden");
+            throw new Error("should not be called with collide(ent: Entity) being overriden");
         }
         getY(): number {
-            throw new Error("should not be called with collide being overriden");
+            throw new Error("should not be called with collide(ent: Entity) being overriden");
         }
 
-        collide(ent: Entity): boolean {
+        isCollidedWith(ent: Entity): boolean {
             const enemyPoint = new PIXI.Point(ent.getX() + this.app.stage.x, ent.getY() + this.app.stage.y);
             return this.instance.getBounds().containsPoint(enemyPoint.x, enemyPoint.y)
         }
     }
-}
-
-const healthBarContainer = new PIXI.Graphics();
-const healthBar = new PIXI.Graphics();
-
-
-function initializeHPSystem(app: PIXI.Application<PIXI.Renderer>) {
-    avatarMetaData.hp_system.bar = healthBarContainer;
-    healthBarContainer.beginFill(0xff0000);
-    healthBarContainer.drawRect(0, 0, 100, 10);
-    healthBarContainer.endFill();
-    healthBarContainer.x = 80;
-    healthBarContainer.y = 110;
-
-    const style = new PIXI.TextStyle({
-        fontSize: 12,
-    });
-    const healthText = new PIXI.Text({
-        text: 'hp',
-        style,
-    });
-    healthText.x = -20;
-    healthText.y = -2;
-    healthBarContainer.addChild(healthText);
-
-
-    healthBar.beginFill(0x00ff00);
-    healthBar.drawRect(0, 0, 100, 10);
-    healthBar.endFill();
-    healthBarContainer.addChild(healthBar);
-
-    // add health bar container
-    app.stage.addChild(avatarMetaData.hp_system.bar);
-}
-
-function renderAvatarHP(avatar: PIXI.Sprite) {
-    avatarMetaData.hp_system.bar.x = avatar.x - HP_TEXT_X_OFFSET;
-    avatarMetaData.hp_system.bar.y = avatar.y - HP_TEXT_Y_OFFSET;
 }

@@ -1,43 +1,41 @@
 import * as PIXI from "pixi.js";
-import { Entity } from '../Entity';
+import { Entity } from './Entity';
 
 export const enemySpeed: number = 1;
 
 class Enemy extends Entity {
-    private sprite: PIXI.Graphics;
-
     constructor(app: PIXI.Application) {
         super();
         const appWidth = app.stage.width;
         const appHeight = app.stage.height;
-        this.sprite = new PIXI.Graphics();
-        this.sprite.fill(0xff0000)
-        this.sprite.beginFill(0xff33ee);
-        this.sprite.drawCircle(0, 0, 10);
-        this.sprite.endFill();
-        this.sprite.x = Math.random() * appWidth - app.stage.x;
-        this.sprite.y = Math.random() * appHeight - app.stage.y;
-        app.stage.addChild(this.sprite);
+        this.instance = new PIXI.Graphics();
+        this.instance.fill(0xff0000)
+        this.instance.beginFill(0xff33ee);
+        this.instance.drawCircle(0, 0, 10);
+        this.instance.endFill();
+        this.instance.x = Math.random() * appWidth - app.stage.x;
+        this.instance.y = Math.random() * appHeight - app.stage.y;
+        app.stage.addChild(this.instance);
     }
 
     public getX(): number {
-        return this.sprite.x;
+        return this.instance.x;
     }
 
     public getY(): number {
-        return this.sprite.y;
+        return this.instance.y;
     }
 
     public setPos(x: number, y: number) {
-        this.sprite.x = x;
-        this.sprite.y = y;
+        this.instance.x = x;
+        this.instance.y = y;
     }
 
     public destroy(app: PIXI.Application) {
-        app.stage.removeChild(this.sprite);
+        app.stage.removeChild(this.instance);
     }
 
-    public moveTowardsPlayer(
+    public moveTowards(
         playerX: number,
         playerY: number,
     ) {
