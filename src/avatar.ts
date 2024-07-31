@@ -1,7 +1,8 @@
 // avatar.ts
 
 import * as PIXI from "pixi.js";
-import { Enemy } from "./enemy";
+import { Enemy } from "./entity/Enemy";
+import enemiesStateManager from "./states/EnemyStateManager";
 import { globalState } from "./events";
 import { CollectableItem } from './items';
 import { Entity } from './Entity';
@@ -105,7 +106,7 @@ export class Avatar extends Entity {
                 return;
             }
             if (item.collide(avatar, COLLECT_ITEM_RANGE)) {
-                item.effectCallback();
+                enemiesStateManager.destroyAllEnemies(this.app)
                 item.destroy();
                 items.delete(key);
             }
@@ -117,7 +118,7 @@ export class Avatar extends Entity {
         healthBar.width = (avatarMetaData.hp_system.value / 100) * 100;
     }
 
-    public performAttack( enemies: Map<string, Enemy>) {
+    public performAttack(enemies: Map<string, Enemy>) {
         if (this.sprite && this.sprite.parent) {
             const sword = new Avatar.Sword(this.app, this.sprite);
 
@@ -130,7 +131,7 @@ export class Avatar extends Entity {
 
                 if (sword.collide(enemy)) {
                     enemies.delete(key);
-                    enemy.destroy();
+                    enemy.destroy(this.app);
                 }
             })
         }

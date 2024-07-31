@@ -6,7 +6,6 @@ import { Entity } from './Entity';
 export abstract class CollectableItem extends Entity {
     protected app!: PIXI.Application;
     protected instance!: PIXI.Graphics;
-    public abstract effectCallback(): void;
     public destroy() {
         this.app.stage.removeChild(this.instance);
     }
@@ -38,7 +37,6 @@ class Bomb extends CollectableItem {
     constructor(app: PIXI.Application, avatar: Avatar, callback: () => void) {
         super();
         this.app = app;
-        this.effectCallback = callback;
         this.instance = new PIXI.Graphics();
         this.instance.fill(0x002200);
         this.instance.beginFill(0x002200);
@@ -55,9 +53,5 @@ class Bomb extends CollectableItem {
 
     getY(): number {
         return this.instance.y;
-    }
-
-    public effectCallback(): void {
-
     }
 }

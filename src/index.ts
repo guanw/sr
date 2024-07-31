@@ -4,7 +4,7 @@ import * as PIXI from "pixi.js";
 import { Avatar } from './avatar';
 import { globalState, moveUser } from './events';
 import { createEnvironmentReferences } from './environmentReference';
-import { EnemyFactory } from './enemy';
+import enemiesStateManager from './states/EnemyStateManager';
 import { Menu } from './menu';
 import { timedEventsManager } from './timeEventsManager';
 import { ItemFactory } from './items';
@@ -28,7 +28,6 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
         document.body.appendChild(app.canvas);
 
         const user: Avatar = await Avatar.create(app);
-        const enemyFactory = new EnemyFactory(app);
         const itemFactory = new ItemFactory(app, user);
         const menuContainer = new Menu(app);
 
@@ -36,18 +35,18 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
         // add new enemy if possible
         timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, () => {
-            enemyFactory.addEnemy();
+            enemiesStateManager.addEnemy(app);
         });
 
         // trigger attack if possible
         timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, () => {
-            const enemies = enemyFactory.getEnemies();
+            const enemies = enemiesStateManager.getEnemies();
             user.performAttack(enemies);
         });
 
         // reduce health when enemy collides with avatar
         timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, () => {
-            const enemies = enemyFactory.getEnemies();
+            const enemies = enemiesStateManager.getEnemies();
             user.checkCollisionAndReduceHealth(enemies);
         });
 
@@ -81,7 +80,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
             // move hp based on key states
             user.updateHPPosition();
 
-            const enemies = enemyFactory.getEnemies();
+            const enemies = enemiesStateManager.getEnemies();
             // move enemies based on location of user
             enemies.forEach((enemy) => {
                 if (enemy !== undefined)

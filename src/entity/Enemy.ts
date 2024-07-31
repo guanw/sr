@@ -1,37 +1,13 @@
 import * as PIXI from "pixi.js";
-import { v4 as uuidv4 } from 'uuid';
-import { Entity } from './Entity';
+import { Entity } from '../Entity';
 
 export const enemySpeed: number = 1;
 
-
-export class EnemyFactory {
-    private enemies: Map<string, Enemy>;
-    private app: PIXI.Application;
-
-    public constructor(app: PIXI.Application) {
-        this.app = app;
-        this.enemies = new Map<string, Enemy>();
-    }
-
-    public addEnemy() {
-        const uuid = uuidv4();
-        this.enemies.set(uuid, new Enemy(this.app));
-    }
-
-    public getEnemies(): Map<string, Enemy> {
-        return this.enemies;
-    }
-}
-
-export class Enemy extends Entity {
+class Enemy extends Entity {
     private sprite: PIXI.Graphics;
-    private app: PIXI.Application;
 
     constructor(app: PIXI.Application) {
-
         super();
-        this.app = app;
         const appWidth = app.stage.width;
         const appHeight = app.stage.height;
         this.sprite = new PIXI.Graphics();
@@ -57,8 +33,8 @@ export class Enemy extends Entity {
         this.sprite.y = y;
     }
 
-    public destroy() {
-        this.app.stage.removeChild(this.sprite);
+    public destroy(app: PIXI.Application) {
+        app.stage.removeChild(this.sprite);
     }
 
     public moveTowardsPlayer(
@@ -75,3 +51,5 @@ export class Enemy extends Entity {
         this.setPos(enemyX+vx, enemyY+vy);
     }
 }
+
+export { Enemy };
