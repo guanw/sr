@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from 'uuid';
-import { Avatar } from './avatar';
+import { Avatar } from './entity/avatar';
 import { Entity } from './Entity';
 
 export abstract class CollectableItem extends Entity {

@@ -1,11 +1,11 @@
 // avatar.ts
 
 import * as PIXI from "pixi.js";
-import { Enemy } from "./entity/Enemy";
-import enemiesStateManager from "./states/EnemyStateManager";
-import { globalState } from "./events";
-import { CollectableItem } from './items';
-import { Entity } from './Entity';
+import { Enemy } from "./Enemy";
+import enemiesStateManager from "../states/EnemyStateManager";
+import { globalState } from "../states/events";
+import { CollectableItem } from '../items';
+import { Entity } from '../Entity';
 const COLLECT_ITEM_RANGE = 15;
 
 export const AVATAR_SPEED: number = 5;
@@ -135,6 +135,10 @@ export class Avatar extends Entity {
                 }
             })
         }
+    }
+
+    public getHealth_DEBUG_TOOL_ONLY(): number {
+        return avatarMetaData.hp_system.value;
     }
 
     static Sword = class extends Entity {

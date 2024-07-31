@@ -1,13 +1,14 @@
 // index.ts
 
 import * as PIXI from "pixi.js";
-import { Avatar } from './avatar';
-import { globalState, moveUser } from './events';
+import { Avatar } from './entity/avatar';
+import { globalState, moveUser } from './states/events';
 import { createEnvironmentReferences } from './environmentReference';
 import enemiesStateManager from './states/EnemyStateManager';
 import { Menu } from './menu';
 import { timedEventsManager } from './timeEventsManager';
 import { ItemFactory } from './items';
+import { DebugTool } from "./internal/DebugTool";
 
 
 const AVATAR_ATTACK_INTERVAL = 2000;
@@ -28,6 +29,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
         document.body.appendChild(app.canvas);
 
         const user: Avatar = await Avatar.create(app);
+        const debugTool = new DebugTool(app, user);
         const itemFactory = new ItemFactory(app, user);
         const menuContainer = new Menu(app);
 
@@ -88,6 +90,8 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
             })
 
             timedEventsManager.update();
+
+            debugTool.update(app);
 
             // Render the stage
             app.renderer.render(app.stage);

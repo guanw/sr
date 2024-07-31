@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { Avatar, AVATAR_SPEED } from './avatar';
+import { Avatar, AVATAR_SPEED } from '../entity/avatar';
 
 const avatarMoveKeys: { [key: string]: boolean } = {
     ArrowLeft: false,
@@ -10,7 +10,8 @@ const avatarMoveKeys: { [key: string]: boolean } = {
 
 export const globalState = {
     isGamePaused: false,
-    isGameOver: false
+    isGameOver: false,
+    isDebugToolVisible: false,
 };
 
 // Handle keyboard events to move avatar
@@ -29,6 +30,12 @@ function handleMoveKeyUp(e: KeyboardEvent): void {
 function handleToggleMenu(e: KeyboardEvent): void {
     if (e.key === 'm' || e.key === 'M') {
         globalState.isGamePaused = !globalState.isGamePaused;
+    }
+}
+
+function handleToggleDebugTool(e: KeyboardEvent): void {
+    if (e.key === 'd' || e.key === 'D') {
+        globalState.isDebugToolVisible = !globalState.isDebugToolVisible;
     }
 }
 
@@ -57,4 +64,5 @@ export function moveUser(app: PIXI.Application<PIXI.Renderer>, user: Avatar) {
     window.addEventListener('keydown', handleMoveKeyDown);
     window.addEventListener('keyup', handleMoveKeyUp);
     window.addEventListener('keydown', handleToggleMenu);
+    window.addEventListener('keydown', handleToggleDebugTool);
 }());
