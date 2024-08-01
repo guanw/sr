@@ -7,13 +7,13 @@ import { Entity } from './Entity';
 
 const COLLECT_ITEM_RANGE = 15;
 
-const AVATAR_SPEED = 5;
+const AVATAR_SPEED = 3;
 const ENEMY_ATTACK_VALUE = 10;
 const SWORD_WIDTH = 5;
 const SWORD_LENGTH = 50;
 const MAX_HEALTH = 100;
-const HP_TEXT_X_OFFSET = 375;
-const HP_TEXT_Y_OFFSET = 275;
+const HP_TEXT_X_OFFSET = 500;
+const HP_TEXT_Y_OFFSET = 500;
 const avatarMetaData = {
     hp_system: {
         value: MAX_HEALTH,
@@ -47,29 +47,24 @@ export class Avatar extends Entity {
         return new Avatar(app, asset)
     }
 
-    public moveLeft() {
+    public moveLeft(tilingSprite: PIXI.TilingSprite) {
         this.sprite.x -= AVATAR_SPEED;
-        this.app.stage.x += AVATAR_SPEED;
+        tilingSprite.tilePosition.x += AVATAR_SPEED;
     }
 
-    public moveRight() {
+    public moveRight(tilingSprite: PIXI.TilingSprite) {
         this.sprite.x += AVATAR_SPEED;
-        this.app.stage.x -= AVATAR_SPEED;
+        tilingSprite.tilePosition.x -= AVATAR_SPEED;
     }
 
-    public moveDown() {
+    public moveDown(tilingSprite: PIXI.TilingSprite) {
         this.sprite.y -= AVATAR_SPEED;
-        this.app.stage.y += AVATAR_SPEED;
+        tilingSprite.tilePosition.y += AVATAR_SPEED;
     }
 
-    public moveUp() {
+    public moveUp(tilingSprite: PIXI.TilingSprite) {
         this.sprite.y += AVATAR_SPEED;
-        this.app.stage.y -= AVATAR_SPEED;
-    }
-
-    public updateHPPosition() {
-        avatarMetaData.hp_system.bar.x = this.sprite.x - HP_TEXT_X_OFFSET;
-        avatarMetaData.hp_system.bar.y = this.sprite.y - HP_TEXT_Y_OFFSET;
+        tilingSprite.tilePosition.y -= AVATAR_SPEED;
     }
 
     public getX() {

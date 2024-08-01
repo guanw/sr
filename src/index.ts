@@ -27,7 +27,17 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
         // Then adding the application's canvas to the DOM body.
         document.body.appendChild(app.canvas);
-        createEnvironmentReferences(app);
+
+        const texture = await PIXI.Assets.load('https://pixijs.com/assets/p2.jpeg');
+        const tilingSprite = new PIXI.TilingSprite({
+            texture,
+            width: app.screen.width,
+            height: app.screen.height,
+        });
+        app.stage.addChild(tilingSprite);
+
+        // TODO add reference to the game
+        // createEnvironmentReferences(app);
 
         const user: Avatar = await Avatar.create(app);
         const debugTool = new DebugTool(app, user);
@@ -72,10 +82,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
                 return;
             }
 
-            moveUser(user);
-
-            // move hp based on key states
-            user.updateHPPosition();
+            moveUser(user, tilingSprite);
 
             const enemies = enemiesStateManager.getEnemies();
             enemies.forEach((enemy) => {

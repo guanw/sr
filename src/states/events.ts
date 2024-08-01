@@ -1,3 +1,4 @@
+import * as PIXI from "pixi.js";
 import { Avatar } from '../entity/avatar';
 
 const avatarMoveKeys: { [key: string]: boolean } = {
@@ -38,19 +39,19 @@ function handleToggleDebugTool(e: KeyboardEvent): void {
     }
 }
 
-export function moveUser(user: Avatar) {
+export function moveUser(user: Avatar, background: PIXI.TilingSprite) {
     // Move user based on key states
     if (avatarMoveKeys.ArrowLeft) {
-        user.moveLeft();
+        user.moveLeft(background);
     }
     if (avatarMoveKeys.ArrowRight) {
-        user.moveRight();
+        user.moveRight(background);
     }
     if (avatarMoveKeys.ArrowUp) {
-        user.moveDown();
+        user.moveDown(background);
     }
     if (avatarMoveKeys.ArrowDown) {
-        user.moveUp();
+        user.moveUp(background);
     }
 }
 
