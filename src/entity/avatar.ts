@@ -114,13 +114,12 @@ export class Avatar extends Entity {
     }
 
     public CheckCollectingItems(items: Map<string, Entity>) {
-        const avatar = this;
         items.forEach((_, key) => {
             const item = items.get(key);
             if (item === undefined) {
                 return;
             }
-            if (item.isCollidedWith(avatar, COLLECT_ITEM_RANGE)) {
+            if (item.isCollidedWith(this, COLLECT_ITEM_RANGE)) {
                 item.uponCollide(this.app);
                 items.delete(key);
             }
@@ -190,9 +189,6 @@ export class Avatar extends Entity {
     }
 
     static Sword = class extends Entity {
-        uponCollide(_app: PIXI.Application): void {
-            throw new Error("sword should not be affected by collide.");
-        }
         private app: PIXI.Application;
         public constructor(app: PIXI.Application, avatar: PIXI.Sprite) {
             super();

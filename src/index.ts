@@ -72,7 +72,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
                 return;
             }
 
-            moveUser(app, user);
+            moveUser(user);
 
             // move hp based on key states
             user.updateHPPosition();

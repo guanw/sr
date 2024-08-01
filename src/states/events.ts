@@ -1,4 +1,3 @@
-import * as PIXI from "pixi.js";
 import { Avatar } from '../entity/avatar';
 
 const avatarMoveKeys: { [key: string]: boolean } = {
@@ -39,7 +38,7 @@ function handleToggleDebugTool(e: KeyboardEvent): void {
     }
 }
 
-export function moveUser(app: PIXI.Application<PIXI.Renderer>, user: Avatar) {
+export function moveUser(user: Avatar) {
     // Move user based on key states
     if (avatarMoveKeys.ArrowLeft) {
         user.moveLeft();
