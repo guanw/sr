@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import Application from "./entity/Application";
 
 export class Menu {
     private container: PIXI.Container;
@@ -24,9 +25,10 @@ export class Menu {
         this.container.visible = false; // Hide the menu initially
     }
 
-    public updateMenuPosition(app: PIXI.Application) {
-        this.container.x = -app.stage.x;
-        this.container.y = -app.stage.y;
+    public async genUpdateMenuPosition() {
+        const instance = await Application.getInstance();
+        this.container.x = -instance.app.stage.x;
+        this.container.y = -instance.app.stage.y;
     }
 
     public setMenuVisibility(isVisible: boolean) {
