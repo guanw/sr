@@ -8,7 +8,7 @@ class Application {
     this.app = new PIXI.Application();
   }
 
-  public static async getInstance(): Promise<Application> {
+  public static async genInstance(): Promise<Application> {
     if (!Application.instance) {
         Application.instance = new Application();
         await Application.instance.app.init({

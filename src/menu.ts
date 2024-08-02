@@ -26,7 +26,7 @@ export class Menu {
     }
 
     public async genUpdateMenuPosition() {
-        const instance = await Application.getInstance();
+        const instance = await Application.genInstance();
         this.container.x = -instance.app.stage.x;
         this.container.y = -instance.app.stage.y;
     }

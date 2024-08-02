@@ -14,7 +14,7 @@ class ItemsStateManager {
     }
 
     public async genAddItem(user: Avatar) {
-        const instance = await Application.getInstance();
+        const instance = await Application.genInstance();
         const uuid = uuidv4();
         // only add Bomb for now (this needs refactoring as ItemFactory (parent class) should not know what kind of item (child) this is)
         this.items.set(uuid, new Bomb(instance.app, user));

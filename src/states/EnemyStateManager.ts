@@ -10,7 +10,7 @@ class EnemiesStateManager {
     }
 
     public async genAddEnemy() {
-        const instance = await Application.getInstance();
+        const instance = await Application.genInstance();
         const uuid = uuidv4();
         this.enemies.set(uuid, new Enemy(instance.app));
     }
@@ -20,7 +20,7 @@ class EnemiesStateManager {
     }
 
     public async destroyAllEnemies(): Promise<void> {
-        const instance = await Application.getInstance();
+        const instance = await Application.genInstance();
         this.enemies.forEach((enemy) => {
             enemy.destroy(instance.app);
         });

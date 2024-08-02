@@ -19,13 +19,13 @@ export class DebugTool {
 
   public static async create(user: Avatar) {
     const tool = new DebugTool(user);
-    const instance = await Application.getInstance();
+    const instance = await Application.genInstance();
     instance.app.stage.addChild(tool.container);
     return tool;
   }
 
   public async genUpdate() {
-    const instance = await Application.getInstance();
+    const instance = await Application.genInstance();
     const visible = globalState.isDebugToolVisible;
     this.container.visible = visible;
     if (visible) {

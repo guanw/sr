@@ -21,7 +21,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 (async () =>
     {
         // initialize app instance
-        const instance = await Application.getInstance();
+        const instance = await Application.genInstance();
 
         const tiling = await Tiling.create();
 
@@ -41,18 +41,18 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
             const enemies = enemiesStateManager.getEnemies();
             user.performAttack(enemies);
         });
-        timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, () => {
+        timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, async () => {
             const enemies = enemiesStateManager.getEnemies();
-            user.checkCollisionWithEnemyAndReduceHealth(enemies);
+            await user.genCheckCollisionWithEnemyAndReduceHealth(enemies);
         });
 
         // item related events
         timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, async () => {
             await itemsStateManager.genAddItem(user);
         });
-        timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, () => {
+        timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, async () => {
             const items = itemsStateManager.getItems();
-            user.CheckCollectingItems(items);
+            await user.genCheckCollectingItems(items);
         })
 
         // Game loop

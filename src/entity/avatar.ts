@@ -43,7 +43,7 @@ export class Avatar extends Entity {
     }
 
     public static async create() :Promise<Avatar> {
-        const instance = await Application.getInstance();
+        const instance = await Application.genInstance();
         const asset = await PIXI.Assets.load('https://pixijs.com/assets/bunny.png');
         return new Avatar(instance.app, asset)
     }
@@ -59,20 +59,22 @@ export class Avatar extends Entity {
     /**
      * collision with enemy
      */
-    public checkCollisionWithEnemyAndReduceHealth(enemies: Map<string, Enemy>) {
-        enemies.forEach((_, key) => {
+    public async genCheckCollisionWithEnemyAndReduceHealth(enemies: Map<string, Enemy>) {
+        enemies.forEach(async (_, key) => {
             const enemy = enemies.get(key);
             if (enemy === undefined) {
                 return;
             }
             if (enemy.isCollidedWith(this)) {
-                this.uponCollide(this.app);
+                await this.genUponCollide();
             }
         })
     }
 
-    // override avatar uponCollide with enemy
-    uponCollide(app: PIXI.Application): void {
+    // override avatar genUponCollide with enemy
+    async genUponCollide(): Promise<void> {
+        const instance = await Application.genInstance();
+        const app = instance.app;
         this.updateHealth(avatarMetaData.hp_system.value - ENEMY_ATTACK_VALUE);
         if (avatarMetaData.hp_system.value <= 0) {
             this.updateHealth(0);
@@ -89,14 +91,14 @@ export class Avatar extends Entity {
         }
     }
 
-    public CheckCollectingItems(items: Map<string, Entity>) {
-        items.forEach((_, key) => {
+    public async genCheckCollectingItems(items: Map<string, Entity>) {
+        items.forEach(async (_, key) => {
             const item = items.get(key);
             if (item === undefined) {
                 return;
             }
             if (item.isCollidedWith(this, COLLECT_ITEM_RANGE)) {
-                item.uponCollide(this.app);
+                await item.genUponCollide();
                 items.delete(key);
             }
         });

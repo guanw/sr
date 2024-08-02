@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { Entity } from "./Entity";
 import enemiesStateManager from "../states/EnemyStateManager";
 import { Avatar } from "./avatar";
+import Application from "./Application";
 
 export class Bomb extends Entity {
     name = "bomb";
@@ -25,8 +26,9 @@ export class Bomb extends Entity {
         return this.instance.y;
     }
 
-    uponCollide(app: PIXI.Application): void {
-        this.destroy(app);
+    async genUponCollide(): Promise<void> {
+        const instance = await Application.genInstance();
+        this.destroy(instance.app);
         enemiesStateManager.destroyAllEnemies();
     }
 }

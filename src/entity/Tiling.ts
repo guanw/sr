@@ -14,7 +14,7 @@ export class Tiling {
     }
 
     public static async create() {
-        const instance = await Application.getInstance();
+        const instance = await Application.genInstance();
         const texture = await PIXI.Assets.load('https://pixijs.com/assets/p2.jpeg');
         return new Tiling(instance.app, texture);
     }

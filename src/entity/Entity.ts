@@ -2,6 +2,7 @@
 
 import * as PIXI from "pixi.js";
 import { AVATAR_SPEED } from '../utils/Constants';
+import Application from "./Application";
 
 const ENTITY_COLLIDE_RANGE = 3;
 export abstract class Entity {
@@ -32,8 +33,9 @@ export abstract class Entity {
     }
 
     // override this function for special effect
-    uponCollide(app: PIXI.Application): void {
-        this.destroy(app);
+    async genUponCollide(): Promise<void> {
+        const instance = await Application.genInstance();
+        this.destroy(instance.app);
     }
 
     public destroy(app: PIXI.Application) {
