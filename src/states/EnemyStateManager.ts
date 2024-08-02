@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import * as PIXI from "pixi.js";
 import { Enemy } from '../entity/Enemy';
+import Application from '../entity/Application';
 
 class EnemiesStateManager {
     private enemies: Map<string, Enemy>;
@@ -9,18 +9,20 @@ class EnemiesStateManager {
         this.enemies = new Map<string, Enemy>();
     }
 
-    public addEnemy(app: PIXI.Application) {
+    public async genAddEnemy() {
+        const instance = await Application.getInstance();
         const uuid = uuidv4();
-        this.enemies.set(uuid, new Enemy(app));
+        this.enemies.set(uuid, new Enemy(instance.app));
     }
 
     public getEnemies(): Map<string, Enemy> {
         return this.enemies;
     }
 
-    public destroyAllEnemies(app: PIXI.Application): void {
+    public async destroyAllEnemies(): Promise<void> {
+        const instance = await Application.getInstance();
         this.enemies.forEach((enemy) => {
-            enemy.destroy(app);
+            enemy.destroy(instance.app);
         });
         this.enemies.clear();
     }

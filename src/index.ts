@@ -10,6 +10,7 @@ import { timedEventsManager } from './timeEventsManager';
 import { itemsStateManager } from './states/ItemsStateManager';
 import { DebugTool } from "./internal/DebugTool";
 import { Tiling } from "./entity/Tiling";
+import Application from './entity/Application';
 
 
 const AVATAR_ATTACK_INTERVAL = 2000;
@@ -20,29 +21,22 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
 (async () =>
     {
-        // Create a PixiJS application.
-        const app = new PIXI.Application();
+        // initialize app instance
+        const instance = await Application.getInstance();
 
-        // Intialize the application.
-        await app.init({ background: '#1099bb', width: 800, height: 600 });
-
-        // Then adding the application's canvas to the DOM body.
-        document.body.appendChild(app.canvas);
-
-        const tiling = await Tiling.create(app);
+        const tiling = await Tiling.create();
 
         // TODO add reference to the game
         // createEnvironmentReferences(app);
 
-        const user: Avatar = await Avatar.create(app);
-        const debugTool = new DebugTool(app, user);
-
-        const menuContainer = new Menu(app);
+        const user: Avatar = await Avatar.create();
+        const debugTool = new DebugTool(instance.app, user);
+        const menuContainer = new Menu(instance.app);
 
 
         // enemy related events
-        timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, () => {
-            enemiesStateManager.addEnemy(app);
+        timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
+            await enemiesStateManager.genAddEnemy();
         });
         timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, () => {
             const enemies = enemiesStateManager.getEnemies();
@@ -54,8 +48,8 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
         });
 
         // item related events
-        timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, () => {
-            itemsStateManager.addItem(app, user);
+        timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, async () => {
+            await itemsStateManager.genAddItem(user);
         });
         timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, () => {
             const items = itemsStateManager.getItems();
@@ -69,7 +63,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
             // if paused, show menu
             menuContainer.setMenuVisibility(isGamePaused);
             if (isGamePaused) {
-                menuContainer.updateMenuPosition(app);
+                menuContainer.genUpdateMenuPosition();
             }
 
             if (isGamePaused || isGameOver) {
@@ -87,10 +81,10 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
             timedEventsManager.update();
 
-            debugTool.update(app);
+            debugTool.update(instance.app);
 
             // Render the stage
-            app.renderer.render(app.stage);
+            instance.app.renderer.render(instance.app.stage);
 
             // Request next frame
             requestAnimationFrame(gameLoop);

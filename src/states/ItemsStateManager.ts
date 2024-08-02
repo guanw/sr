@@ -1,10 +1,10 @@
 // Items.ts
 
-import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from 'uuid';
 import { Avatar } from '../entity/avatar';
 import { Entity } from '../entity/Entity';
 import { Bomb } from "../entity/Bomb";
+import Application from "../entity/Application";
 
 
 class ItemsStateManager {
@@ -13,10 +13,11 @@ class ItemsStateManager {
         this.items = new Map<string, Entity>();
     }
 
-    public addItem(app: PIXI.Application, user: Avatar) {
+    public async genAddItem(user: Avatar) {
+        const instance = await Application.getInstance();
         const uuid = uuidv4();
         // only add Bomb for now (this needs refactoring as ItemFactory (parent class) should not know what kind of item (child) this is)
-        this.items.set(uuid, new Bomb(app, user));
+        this.items.set(uuid, new Bomb(instance.app, user));
     }
 
     public getItems(): Map<string, Entity> {

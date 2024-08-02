@@ -5,6 +5,7 @@ import { Enemy } from "./Enemy";
 import { globalState } from "../states/events";
 import { Entity } from './Entity';
 import { AVATAR_SPEED } from '../utils/Constants';
+import Application from "./Application";
 
 const COLLECT_ITEM_RANGE = 15;
 
@@ -42,9 +43,10 @@ export class Avatar extends Entity {
         this.initializeHPSystem();
     }
 
-    public static async create(app: PIXI.Application) :Promise<Avatar> {
+    public static async create() :Promise<Avatar> {
+        const instance = await Application.getInstance();
         const asset = await PIXI.Assets.load('https://pixijs.com/assets/bunny.png');
-        return new Avatar(app, asset)
+        return new Avatar(instance.app, asset)
     }
 
     public moveLeft() {

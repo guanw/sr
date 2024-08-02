@@ -27,6 +27,6 @@ export class Bomb extends Entity {
 
     uponCollide(app: PIXI.Application): void {
         this.destroy(app);
-        enemiesStateManager.destroyAllEnemies(app);
+        enemiesStateManager.destroyAllEnemies();
     }
 }

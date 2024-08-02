@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import { AVATAR_SPEED } from '../utils/Constants';
+import Application from "./Application";
 
 export class Tiling {
     private instance: PIXI.TilingSprite;
@@ -12,9 +13,10 @@ export class Tiling {
         app.stage.addChild(this.instance);
     }
 
-    public static async create(app: PIXI.Application) {
+    public static async create() {
+        const instance = await Application.getInstance();
         const texture = await PIXI.Assets.load('https://pixijs.com/assets/p2.jpeg');
-        return new Tiling(app, texture);
+        return new Tiling(instance.app, texture);
     }
 
     public moveLeft() {
