@@ -1,12 +1,25 @@
 // Entity.ts
 
 import * as PIXI from "pixi.js";
+import { AVATAR_SPEED } from './avatar';
 
 const ENTITY_COLLIDE_RANGE = 3;
 export abstract class Entity {
     protected instance!: PIXI.Graphics;
     abstract getX(): number;
     abstract getY(): number;
+    public moveLeft() {
+        this.instance.x -= AVATAR_SPEED;
+    }
+    public moveRight() {
+        this.instance.x += AVATAR_SPEED;
+    }
+    public moveDown() {
+        this.instance.y -= AVATAR_SPEED;
+    }
+    public moveUp() {
+        this.instance.y += AVATAR_SPEED;
+    }
 
     // override this for collision detection
     isCollidedWith(ent: Entity, range=ENTITY_COLLIDE_RANGE): boolean {

@@ -77,7 +77,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
                 return;
             }
 
-            moveUser(user, tiling);
+            moveUser(user, tiling, itemsStateManager.getItems());
 
             const enemies = enemiesStateManager.getEnemies();
             enemies.forEach((enemy) => {
