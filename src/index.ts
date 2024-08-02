@@ -9,6 +9,7 @@ import { Menu } from './menu';
 import { timedEventsManager } from './timeEventsManager';
 import { itemsStateManager } from './states/ItemsStateManager';
 import { DebugTool } from "./internal/DebugTool";
+import { Tiling } from "./entity/Tiling";
 
 
 const AVATAR_ATTACK_INTERVAL = 2000;
@@ -28,13 +29,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
         // Then adding the application's canvas to the DOM body.
         document.body.appendChild(app.canvas);
 
-        const texture = await PIXI.Assets.load('https://pixijs.com/assets/p2.jpeg');
-        const tilingSprite = new PIXI.TilingSprite({
-            texture,
-            width: app.screen.width,
-            height: app.screen.height,
-        });
-        app.stage.addChild(tilingSprite);
+        const tiling = await Tiling.create(app);
 
         // TODO add reference to the game
         // createEnvironmentReferences(app);
@@ -82,7 +77,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
                 return;
             }
 
-            moveUser(user, tilingSprite);
+            moveUser(user, tiling);
 
             const enemies = enemiesStateManager.getEnemies();
             enemies.forEach((enemy) => {

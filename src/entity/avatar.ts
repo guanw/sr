@@ -7,7 +7,7 @@ import { Entity } from './Entity';
 
 const COLLECT_ITEM_RANGE = 15;
 
-const AVATAR_SPEED = 3;
+export const AVATAR_SPEED = 3;
 const ENEMY_ATTACK_VALUE = 10;
 const SWORD_WIDTH = 5;
 const SWORD_LENGTH = 50;
@@ -47,24 +47,17 @@ export class Avatar extends Entity {
         return new Avatar(app, asset)
     }
 
-    public moveLeft(tilingSprite: PIXI.TilingSprite) {
+    public moveLeft() {
         this.sprite.x -= AVATAR_SPEED;
-        tilingSprite.tilePosition.x += AVATAR_SPEED;
     }
-
-    public moveRight(tilingSprite: PIXI.TilingSprite) {
+    public moveRight() {
         this.sprite.x += AVATAR_SPEED;
-        tilingSprite.tilePosition.x -= AVATAR_SPEED;
     }
-
-    public moveDown(tilingSprite: PIXI.TilingSprite) {
+    public moveDown() {
         this.sprite.y -= AVATAR_SPEED;
-        tilingSprite.tilePosition.y += AVATAR_SPEED;
     }
-
-    public moveUp(tilingSprite: PIXI.TilingSprite) {
+    public moveUp() {
         this.sprite.y += AVATAR_SPEED;
-        tilingSprite.tilePosition.y -= AVATAR_SPEED;
     }
 
     public getX() {
