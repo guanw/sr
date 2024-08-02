@@ -4,10 +4,10 @@ import * as PIXI from "pixi.js";
 import { Enemy } from "./Enemy";
 import { globalState } from "../states/events";
 import { Entity } from './Entity';
+import { AVATAR_SPEED } from '../utils/Constants';
 
 const COLLECT_ITEM_RANGE = 15;
 
-export const AVATAR_SPEED = 3;
 const ENEMY_ATTACK_VALUE = 10;
 const SWORD_WIDTH = 5;
 const SWORD_LENGTH = 50;

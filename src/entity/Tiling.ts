@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { AVATAR_SPEED } from '../entity/avatar';
+import { AVATAR_SPEED } from '../utils/Constants';
 
 export class Tiling {
     private instance: PIXI.TilingSprite;

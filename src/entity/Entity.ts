@@ -1,7 +1,7 @@
 // Entity.ts
 
 import * as PIXI from "pixi.js";
-import { AVATAR_SPEED } from './avatar';
+import { AVATAR_SPEED } from '../utils/Constants';
 
 const ENTITY_COLLIDE_RANGE = 3;
 export abstract class Entity {
