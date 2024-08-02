@@ -1,7 +1,6 @@
-import * as PIXI from "pixi.js";
-import { Avatar } from '../entity/avatar';
 import { Tiling } from "../entity/Tiling";
 import { Entity } from "../entity/Entity";
+import { Enemy } from '../entity/Enemy';
 
 const avatarMoveKeys: { [key: string]: boolean } = {
     ArrowLeft: false,
@@ -41,35 +40,43 @@ function handleToggleDebugTool(e: KeyboardEvent): void {
     }
 }
 
-export function moveUser(user: Avatar, background: Tiling, items: Map<string, Entity>) {
+export function moveUser(background: Tiling, items: Map<string, Entity>, enemies: Map<string, Enemy>) {
     // Move user based on key states
     if (avatarMoveKeys.ArrowLeft) {
-        user.moveLeft();
         background.moveRight();
-        items.forEach((item, _) => {
+        items.forEach((item) => {
             item.moveRight();
         });
+        enemies.forEach((enemy) => {
+            enemy.moveRight();
+        })
     }
     if (avatarMoveKeys.ArrowRight) {
-        user.moveRight();
         background.moveLeft();
-        items.forEach((item, _) => {
+        items.forEach((item) => {
             item.moveLeft();
         });
+        enemies.forEach((enemy) => {
+            enemy.moveLeft();
+        })
     }
     if (avatarMoveKeys.ArrowUp) {
-        user.moveDown();
         background.moveUp();
-        items.forEach((item, _) => {
+        items.forEach((item) => {
             item.moveUp();
         });
+        enemies.forEach((enemy) => {
+            enemy.moveUp();
+        })
     }
     if (avatarMoveKeys.ArrowDown) {
-        user.moveUp();
         background.moveDown();
-        items.forEach((item, _) => {
+        items.forEach((item) => {
             item.moveDown();
         });
+        enemies.forEach((enemy) => {
+            enemy.moveDown();
+        })
     }
 }
 

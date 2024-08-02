@@ -1,6 +1,5 @@
 // index.ts
 
-import * as PIXI from "pixi.js";
 import { Avatar } from './entity/avatar';
 import { globalState, moveUser } from './states/events';
 import { createEnvironmentReferences } from './environmentReference';
@@ -30,7 +29,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
         // createEnvironmentReferences(app);
 
         const user: Avatar = await Avatar.create();
-        const debugTool = new DebugTool(instance.app, user);
+        const debugTool = await DebugTool.create(user);
         const menuContainer = new Menu(instance.app);
 
 
@@ -57,7 +56,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
         })
 
         // Game loop
-        function gameLoop() {
+        async function gameLoop() {
             const isGamePaused = globalState.isGamePaused;
             const isGameOver = globalState.isGameOver;
             // if paused, show menu
@@ -71,7 +70,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
                 return;
             }
 
-            moveUser(user, tiling, itemsStateManager.getItems());
+            moveUser(tiling, itemsStateManager.getItems(), enemiesStateManager.getEnemies());
 
             const enemies = enemiesStateManager.getEnemies();
             enemies.forEach((enemy) => {
@@ -81,7 +80,7 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
             timedEventsManager.update();
 
-            debugTool.update(instance.app);
+            await debugTool.genUpdate();
 
             // Render the stage
             instance.app.renderer.render(instance.app.stage);

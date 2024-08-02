@@ -4,7 +4,6 @@ import * as PIXI from "pixi.js";
 import { Enemy } from "./Enemy";
 import { globalState } from "../states/events";
 import { Entity } from './Entity';
-import { AVATAR_SPEED } from '../utils/Constants';
 import Application from "./Application";
 
 const COLLECT_ITEM_RANGE = 15;
@@ -47,19 +46,6 @@ export class Avatar extends Entity {
         const instance = await Application.getInstance();
         const asset = await PIXI.Assets.load('https://pixijs.com/assets/bunny.png');
         return new Avatar(instance.app, asset)
-    }
-
-    public moveLeft() {
-        this.sprite.x -= AVATAR_SPEED;
-    }
-    public moveRight() {
-        this.sprite.x += AVATAR_SPEED;
-    }
-    public moveDown() {
-        this.sprite.y -= AVATAR_SPEED;
-    }
-    public moveUp() {
-        this.sprite.y += AVATAR_SPEED;
     }
 
     public getX() {
