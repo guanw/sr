@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import Application from "./entity/Application";
 
 export class Menu {
-    private container: PIXI.Container;
+    public container: PIXI.Container;
     constructor(app: PIXI.Application<PIXI.Renderer>) {
         this.container = new PIXI.Container();
         const menuBackground = new PIXI.Graphics();

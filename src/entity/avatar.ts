@@ -22,15 +22,13 @@ const avatarMetaData = {
 };
 
 export class Avatar extends Entity {
-    private sprite: PIXI.Sprite;
-    private app: PIXI.Application;
-    private healthBarContainer = new PIXI.Graphics();
-    private healthBar = new PIXI.Graphics();
+    public sprite: PIXI.Sprite;
+    static healthBarContainer = new PIXI.Graphics();
+    static healthBar = new PIXI.Graphics();
 
 
     private constructor(app: PIXI.Application, texture: PIXI.Texture) {
         super();
-        this.app = app;
         const appWidth: number = app.screen.width;
         const appHeight: number = app.screen.height;
         this.sprite = new PIXI.Sprite(texture);
@@ -39,13 +37,14 @@ export class Avatar extends Entity {
         this.sprite.y = appHeight / 2;
         app.stage.addChild(this.sprite);
         this.renderAvatarHP();
-        this.initializeHPSystem();
     }
 
     public static async create() :Promise<Avatar> {
         const instance = await Application.genInstance();
         const asset = await PIXI.Assets.load('https://pixijs.com/assets/bunny.png');
-        return new Avatar(instance.app, asset)
+        const avatar = new Avatar(instance.app, asset);
+        await this.genInitializeHPSystem();
+        return avatar;
     }
 
     public getX() {
@@ -104,7 +103,7 @@ export class Avatar extends Entity {
         });
     }
 
-    public initializeHPSystem() {
+    public static async genInitializeHPSystem() {
         avatarMetaData.hp_system.bar = this.healthBarContainer;
         this.healthBarContainer.beginFill(0xff0000);
         this.healthBarContainer.drawRect(0, 0, 100, 10);
@@ -129,13 +128,14 @@ export class Avatar extends Entity {
         this.healthBar.endFill();
         this.healthBarContainer.addChild(this.healthBar);
 
+        const instance = await Application.genInstance();
         // add health bar container
-        this.app.stage.addChild(avatarMetaData.hp_system.bar);
+        instance.app.stage.addChild(avatarMetaData.hp_system.bar);
     }
 
     private updateHealth(newHealth: number) {
         avatarMetaData.hp_system.value = newHealth;
-        this.healthBar.width = (avatarMetaData.hp_system.value / 100) * 100;
+        Avatar.healthBar.width = (avatarMetaData.hp_system.value / 100) * 100;
     }
 
     private renderAvatarHP() {
@@ -143,9 +143,10 @@ export class Avatar extends Entity {
         avatarMetaData.hp_system.bar.y = this.sprite.y - HP_TEXT_Y_OFFSET;
     }
 
-    public performAttack(enemies: Map<string, Enemy>) {
+    public async genPerformAttack(enemies: Map<string, Enemy>) {
+        const instance = await Application.genInstance();
         if (this.sprite && this.sprite.parent) {
-            const sword = new Avatar.Sword(this.app, this.sprite);
+            const sword = new Avatar.Sword(instance.app, this.sprite);
 
             // Check for collision with enemies
             enemies.forEach((_, key) => {
@@ -155,7 +156,7 @@ export class Avatar extends Entity {
                 }
 
                 if (sword.isCollidedWith(enemy)) {
-                    enemy.destroy(this.app);
+                    enemy.destroy(instance.app);
                     enemies.delete(key);
                 }
             })

@@ -3,7 +3,7 @@ import { AVATAR_SPEED } from '../utils/Constants';
 import Application from "./Application";
 
 export class Tiling {
-    private instance: PIXI.TilingSprite;
+    public instance: PIXI.TilingSprite;
     private constructor(app: PIXI.Application, texture: PIXI.Texture) {
         this.instance = new PIXI.TilingSprite({
             texture,

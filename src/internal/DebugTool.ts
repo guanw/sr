@@ -4,7 +4,7 @@ import { globalState } from '../states/events';
 import Application from '../entity/Application';
 
 export class DebugTool {
-  private container: PIXI.Container;
+  public container: PIXI.Container;
   private text: PIXI.Text;
   private avatar: Avatar;
 

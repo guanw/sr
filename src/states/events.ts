@@ -13,6 +13,7 @@ export const globalState = {
     isGamePaused: false,
     isGameOver: false,
     isDebugToolVisible: false,
+    isPlaygroundActive: false,
 };
 
 // Handle keyboard events to move avatar
@@ -37,6 +38,12 @@ function handleToggleMenu(e: KeyboardEvent): void {
 function handleToggleDebugTool(e: KeyboardEvent): void {
     if (e.key === 'd' || e.key === 'D') {
         globalState.isDebugToolVisible = !globalState.isDebugToolVisible;
+    }
+}
+
+function handleLayerSwitch(e: KeyboardEvent): void {
+    if (e.key === 'p') {
+        globalState.isPlaygroundActive = !globalState.isPlaygroundActive;
     }
 }
 
@@ -86,4 +93,5 @@ export function moveUser(background: Tiling, items: Map<string, Entity>, enemies
     window.addEventListener('keyup', handleMoveKeyUp);
     window.addEventListener('keydown', handleToggleMenu);
     window.addEventListener('keydown', handleToggleDebugTool);
+    window.addEventListener('keydown', handleLayerSwitch);
 }());
