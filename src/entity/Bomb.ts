@@ -2,11 +2,11 @@ import * as PIXI from "pixi.js";
 import { Entity } from "./Entity";
 import enemiesStateManager from "../states/EnemyStateManager";
 import { Avatar } from "./avatar";
-import Application from "./Application";
+import { MainLayer } from "../layer/MainLayer";
 
 export class Bomb extends Entity {
     name = "bomb";
-    constructor(app: PIXI.Application, avatar: Avatar) {
+    constructor(layer: PIXI.Container, avatar: Avatar) {
         super();
         this.instance = new PIXI.Graphics();
         this.instance.fill(0x002200);
@@ -15,7 +15,7 @@ export class Bomb extends Entity {
         this.instance.endFill();
         this.instance.x = (avatar.getX() - 400) + Math.random() * 800;
         this.instance.y = (avatar.getY() - 300) + Math.random() * 600;
-        app.stage.addChild(this.instance);
+        layer.addChild(this.instance);
     }
 
     getX(): number {
@@ -27,8 +27,8 @@ export class Bomb extends Entity {
     }
 
     async genUponCollide(): Promise<void> {
-        const instance = await Application.genInstance();
-        this.destroy(instance.app);
+        const mainLayer = await MainLayer.genInstance();
+        this.destroy(mainLayer.layer);
         enemiesStateManager.destroyAllEnemies();
     }
 }

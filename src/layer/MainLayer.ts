@@ -14,50 +14,55 @@ const COLLECT_ITEM_INTERVAL = 10;
 const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
 export class MainLayer {
-    public instance: PIXI.Container
+    public static instance: MainLayer;
+    public layer: PIXI.Container
     user: Avatar;
     debugTool: DebugTool;
     tiling: Tiling;
 
     constructor(tiling: Tiling,  debugTool: DebugTool, user: Avatar) {
-        this.instance = new PIXI.Container();
+        this.layer = new PIXI.Container();
         this.tiling = tiling;
         this.debugTool = debugTool;
         this.user = user;
 
-        this.instance.addChild(this.tiling.instance);
-        this.instance.addChild(this.debugTool.container);
-        this.instance.addChild(this.user.sprite);
-        this.instance.addChild(Avatar.healthBarContainer);
+        this.layer.addChild(this.tiling.instance);
+        this.layer.addChild(this.debugTool.container);
+        this.layer.addChild(this.user.sprite);
+        this.layer.addChild(Avatar.healthBarContainer);
     }
-    public static async create(): Promise<MainLayer> {
-        const tiling = await Tiling.create();
-        const user: Avatar = await Avatar.create();
-        const debugTool = await DebugTool.create(user);
 
-        // enemy related events
-        timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
-            await enemiesStateManager.genAddEnemy();
-        });
-        timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
-            const enemies = enemiesStateManager.getEnemies();
-            await user.genPerformAttack(enemies);
-        });
-        timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, async () => {
-            const enemies = enemiesStateManager.getEnemies();
-            await user.genCheckCollisionWithEnemyAndReduceHealth(enemies);
-        });
+    public static async genInstance(): Promise<MainLayer> {
+        if (!MainLayer.instance) {
+            const tiling = await Tiling.create();
+            const user: Avatar = await Avatar.create();
+            const debugTool = await DebugTool.create(tiling, user);
 
-        // item related events
-        timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, async () => {
-            await itemsStateManager.genAddItem(user);
-        });
-        timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, async () => {
-            const items = itemsStateManager.getItems();
-            await user.genCheckCollectingItems(items);
-        })
+            MainLayer.instance = new MainLayer(tiling, debugTool, user);
 
-        return new MainLayer(tiling, debugTool, user);
+            // enemy related events
+            timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
+                await enemiesStateManager.genAddEnemy(MainLayer.instance.layer);
+            });
+            timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
+                const enemies = enemiesStateManager.getEnemies();
+                await user.genPerformAttack(enemies);
+            });
+            timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, async () => {
+                const enemies = enemiesStateManager.getEnemies();
+                await user.genCheckCollisionWithEnemyAndReduceHealth(enemies);
+            });
+
+            // item related events
+            timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, async () => {
+                await itemsStateManager.genAddItem(MainLayer.instance.layer, user);
+            });
+            timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, async () => {
+                const items = itemsStateManager.getItems();
+                await user.genCheckCollectingItems(items);
+            })
+        }
+        return MainLayer.instance;
     }
 
     async update() {

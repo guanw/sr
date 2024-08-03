@@ -1,6 +1,8 @@
+import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from 'uuid';
 import { Enemy } from '../entity/Enemy';
 import Application from '../entity/Application';
+import { MainLayer } from "../layer/MainLayer";
 
 class EnemiesStateManager {
     private enemies: Map<string, Enemy>;
@@ -9,10 +11,10 @@ class EnemiesStateManager {
         this.enemies = new Map<string, Enemy>();
     }
 
-    public async genAddEnemy() {
+    public async genAddEnemy(layer: PIXI.Container) {
         const instance = await Application.genInstance();
         const uuid = uuidv4();
-        this.enemies.set(uuid, new Enemy(instance.app));
+        this.enemies.set(uuid, new Enemy(instance.app, layer));
     }
 
     public getEnemies(): Map<string, Enemy> {
@@ -20,9 +22,9 @@ class EnemiesStateManager {
     }
 
     public async destroyAllEnemies(): Promise<void> {
-        const instance = await Application.genInstance();
+        const mainLayer = await MainLayer.genInstance();
         this.enemies.forEach((enemy) => {
-            enemy.destroy(instance.app);
+            enemy.destroy(mainLayer.layer);
         });
         this.enemies.clear();
     }

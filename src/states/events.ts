@@ -1,6 +1,8 @@
 import { Tiling } from "../entity/Tiling";
 import { Entity } from "../entity/Entity";
 import { Enemy } from '../entity/Enemy';
+import { MainLayer } from "../layer/MainLayer";
+import { PlaygroundLayer } from "../layer/PlaygroundLayer";
 
 const avatarMoveKeys: { [key: string]: boolean } = {
     ArrowLeft: false,
@@ -41,9 +43,13 @@ function handleToggleDebugTool(e: KeyboardEvent): void {
     }
 }
 
-function handleLayerSwitch(e: KeyboardEvent): void {
+async function handleLayerSwitch(e: KeyboardEvent): Promise<void> {
     if (e.key === 'p') {
         globalState.isPlaygroundActive = !globalState.isPlaygroundActive;
+        const mainLayer = await MainLayer.genInstance();
+        const playgroundLayer = await PlaygroundLayer.genInstance();
+        mainLayer.layer.visible = !globalState.isPlaygroundActive;
+        playgroundLayer.layer.visible = globalState.isPlaygroundActive;
     }
 }
 

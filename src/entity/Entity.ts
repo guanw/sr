@@ -2,7 +2,7 @@
 
 import * as PIXI from "pixi.js";
 import { AVATAR_SPEED } from '../utils/Constants';
-import Application from "./Application";
+import { MainLayer } from "../layer/MainLayer";
 
 const ENTITY_COLLIDE_RANGE = 3;
 export abstract class Entity {
@@ -34,11 +34,11 @@ export abstract class Entity {
 
     // override this function for special effect
     async genUponCollide(): Promise<void> {
-        const instance = await Application.genInstance();
-        this.destroy(instance.app);
+        const mainLayer = await MainLayer.genInstance();
+        this.destroy(mainLayer.layer);
     }
 
-    public destroy(app: PIXI.Application) {
-        app.stage.removeChild(this.instance);
+    public destroy(layer: PIXI.Container) {
+        layer.removeChild(this.instance);
     }
 }

@@ -5,6 +5,7 @@ import { Enemy } from "./Enemy";
 import { globalState } from "../states/events";
 import { Entity } from './Entity';
 import Application from "./Application";
+import { MainLayer } from "../layer/MainLayer";
 
 const COLLECT_ITEM_RANGE = 15;
 
@@ -145,8 +146,9 @@ export class Avatar extends Entity {
 
     public async genPerformAttack(enemies: Map<string, Enemy>) {
         const instance = await Application.genInstance();
+        const mainLayer = await MainLayer.genInstance();
         if (this.sprite && this.sprite.parent) {
-            const sword = new Avatar.Sword(instance.app, this.sprite);
+            const sword = new Avatar.Sword(instance.app, mainLayer.layer, this.sprite);
 
             // Check for collision with enemies
             enemies.forEach((_, key) => {
@@ -156,7 +158,7 @@ export class Avatar extends Entity {
                 }
 
                 if (sword.isCollidedWith(enemy)) {
-                    enemy.destroy(instance.app);
+                    enemy.destroy(mainLayer.layer);
                     enemies.delete(key);
                 }
             })
@@ -169,17 +171,19 @@ export class Avatar extends Entity {
 
     static Sword = class extends Entity {
         private app: PIXI.Application;
-        public constructor(app: PIXI.Application, avatar: PIXI.Sprite) {
+        private container: PIXI.Container;
+        public constructor(app: PIXI.Application, container: PIXI.Container, avatar: PIXI.Sprite) {
             super();
             this.app = app;
+            this.container = container;
             this.instance = new PIXI.Graphics();
             this.instance.moveTo(avatar.x, avatar.y);
             this.instance.lineTo(SWORD_LENGTH + avatar.x, avatar.y);
             this.instance.stroke({ width: SWORD_WIDTH, color: 0xffd900 });
-            this.app.stage.addChild(this.instance);
+            this.container.addChild(this.instance);
             // Remove sword after a short delay e.g 200ms
             setTimeout(() => {
-                this.app.stage.removeChild(this.instance);
+                this.container.removeChild(this.instance);
             }, 200);
         }
 

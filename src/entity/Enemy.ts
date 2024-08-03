@@ -4,7 +4,7 @@ import { Entity } from './Entity';
 export const enemySpeed: number = 1;
 
 class Enemy extends Entity {
-    constructor(app: PIXI.Application) {
+    constructor(app: PIXI.Application, layer: PIXI.Container) {
         super();
         const appWidth = app.stage.width;
         const appHeight = app.stage.height;
@@ -15,7 +15,7 @@ class Enemy extends Entity {
         this.instance.endFill();
         this.instance.x = Math.random() * appWidth - app.stage.x;
         this.instance.y = Math.random() * appHeight - app.stage.y;
-        app.stage.addChild(this.instance);
+        layer.addChild(this.instance);
     }
 
     public getX(): number {
@@ -31,8 +31,8 @@ class Enemy extends Entity {
         this.instance.y = y;
     }
 
-    public destroy(app: PIXI.Application) {
-        app.stage.removeChild(this.instance);
+    public destroy(layer: PIXI.Container) {
+        layer.removeChild(this.instance);
     }
 
     public moveTowards(
