@@ -34,10 +34,8 @@ export class DebugTool {
     if (visible) {
       this.container.x = (instance.app.screen.width / 2);
       this.container.y = (instance.app.screen.height / 2);
-      // TODO fix debug relative position
-      // Position: (${-this.tiling.instance.position.x}, ${-this.tiling.instance.position.y})\n
       const hp = this.avatar.getHealth_DEBUG_TOOL_ONLY();
-      this.text.text = `HP: ${hp}`;
+      this.text.text = `Position: (${-this.tiling.instance.tilePosition.x}, ${this.tiling.instance.tilePosition.y})\nHP: ${hp}`;
     }
   }
 }
