@@ -13,8 +13,7 @@ class ItemsStateManager {
 
     public async genAddItem(layer: PIXI.Container, user: Avatar) {
         const uuid = uuidv4();
-        // only add Bomb for now (this needs refactoring as ItemFactory (parent class) should not know what kind of item (child) this is)
-        this.items.set(uuid, new Bomb(layer, user));
+        this.items.set(uuid, await Bomb.create(layer, user));
     }
 
     public getItems(): Map<string, Entity> {
