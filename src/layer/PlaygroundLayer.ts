@@ -1,8 +1,10 @@
 import * as PIXI from 'pixi.js';
+import { AttackPower } from '../entity/AttackPower';
 
 export class PlaygroundLayer {
     public static instance: PlaygroundLayer;
     public layer: PIXI.Container;
+    static attackPowers: AttackPower[] = [];
 
     constructor() {
         this.layer = new PIXI.Container();
@@ -36,10 +38,25 @@ export class PlaygroundLayer {
         animatedSlime.play();
         animatedSlime.x = 400;
         animatedSlime.y = 300;
+
+        document.addEventListener('click', (event) => {
+            const targetX = event.clientX;
+            const targetY = event.clientY;
+            PlaygroundLayer.attack(targetX, targetY);
+        });
         PlaygroundLayer.instance.layer.addChild(animatedSlime);
     }
 
-    async update() {
+    private static attack(targetX: number, targetY: number) {
+        const attackPower = new AttackPower(400+16, 300+16, targetX, targetY);
+        PlaygroundLayer.attackPowers.push(attackPower);
+        PlaygroundLayer.instance.layer.addChild(attackPower.circle);
+    }
 
+    async update() {
+        PlaygroundLayer.attackPowers.forEach((attackPower: AttackPower) => {
+            attackPower.move();
+        });
     }
 }
+

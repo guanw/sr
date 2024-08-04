@@ -4,7 +4,7 @@ import * as PIXI from "pixi.js";
 import { AVATAR_SPEED } from '../utils/Constants';
 import { MainLayer } from "../layer/MainLayer";
 
-const ENTITY_COLLIDE_RANGE = 3;
+const ENTITY_COLLIDE_RANGE = 5;
 export abstract class Entity {
     protected instance!: PIXI.Graphics;
     abstract getX(): number;
