@@ -1,38 +1,62 @@
 import * as PIXI from "pixi.js";
 import { Entity } from './Entity';
-
-export const enemySpeed: number = 1;
+import { AVATAR_SPEED, ENEMY_ANIMATION_SPEED, ENEMY_FRAME_NUMBER, ENEMY_FRAME_SIZE, ENEMY_SPEED } from '../utils/Constants'
 
 class Enemy extends Entity {
-    constructor(app: PIXI.Application, layer: PIXI.Container) {
+    sprite: PIXI.AnimatedSprite
+    private constructor(app: PIXI.Application, layer: PIXI.Container, frames: PIXI.Texture[]) {
         super();
         const appWidth = app.stage.width;
         const appHeight = app.stage.height;
-        this.instance = new PIXI.Graphics();
-        this.instance.fill(0xff0000)
-        this.instance.beginFill(0xff33ee);
-        this.instance.drawCircle(0, 0, 10);
-        this.instance.endFill();
-        this.instance.x = Math.random() * appWidth - app.stage.x;
-        this.instance.y = Math.random() * appHeight - app.stage.y;
-        layer.addChild(this.instance);
+        this.sprite = new PIXI.AnimatedSprite(frames);
+        this.sprite.animationSpeed = ENEMY_ANIMATION_SPEED;
+        this.sprite.play();
+        this.sprite.x = Math.random() * appWidth - app.stage.x;
+        this.sprite.y = Math.random() * appHeight - app.stage.y;
+        layer.addChild(this.sprite);
+    }
+
+    static async create(app: PIXI.Application, layer: PIXI.Container) {
+        const texture = await PIXI.Assets.load('https://guanw.github.io/sr_assets/slime_run.png');
+        const frames = [];
+        const frameWidth = ENEMY_FRAME_SIZE;
+        const frameHeight = ENEMY_FRAME_SIZE;
+        const numberOfFrames = ENEMY_FRAME_NUMBER;
+        for (let i = 0; i < numberOfFrames; i++) {
+            const rect = new PIXI.Rectangle(i * frameWidth, 0, frameWidth, frameHeight);
+            frames.push(new PIXI.Texture({source: texture.baseTexture, frame: rect}));
+        }
+        return new Enemy(app, layer, frames);
+    }
+
+    public moveLeft() {
+        this.sprite.x -= AVATAR_SPEED;
+    }
+    public moveRight() {
+        this.sprite.x += AVATAR_SPEED;
+    }
+    public moveDown() {
+        this.sprite.y -= AVATAR_SPEED;
+    }
+    public moveUp() {
+        this.sprite.y += AVATAR_SPEED;
     }
 
     public getX(): number {
-        return this.instance.x;
+        return this.sprite.x;
     }
 
     public getY(): number {
-        return this.instance.y;
+        return this.sprite.y;
     }
 
     public setPos(x: number, y: number) {
-        this.instance.x = x;
-        this.instance.y = y;
+        this.sprite.x = x;
+        this.sprite.y = y;
     }
 
     public destroy(layer: PIXI.Container) {
-        layer.removeChild(this.instance);
+        layer.removeChild(this.sprite);
     }
 
     public moveTowards(
@@ -44,8 +68,8 @@ class Enemy extends Entity {
         const dx = playerX - enemyX;
         const dy = playerY - enemyY;
         const angle = Math.atan2(dy, dx);
-        const vx = Math.cos(angle) * enemySpeed;
-        const vy = Math.sin(angle) * enemySpeed;
+        const vx = Math.cos(angle) * ENEMY_SPEED;
+        const vy = Math.sin(angle) * ENEMY_SPEED;
         this.setPos(enemyX+vx, enemyY+vy);
     }
 }

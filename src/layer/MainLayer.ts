@@ -42,7 +42,7 @@ export class MainLayer {
 
             // enemy related events
             timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
-                await enemiesStateManager.genAddEnemy(MainLayer.instance.layer);
+                await enemiesStateManager.genAddEnemy();
             });
             timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
                 const enemies = enemiesStateManager.getEnemies();
