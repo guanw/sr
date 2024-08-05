@@ -18,7 +18,7 @@ export class PlaygroundLayer {
         }
 
         return PlaygroundLayer.instance;
-      }
+    }
 
     private static async createAnimatedSlime() {
         const texture = await PIXI.Assets.load('https://guanw.github.io/sr_assets/slime_run.png');

@@ -1,8 +1,9 @@
 import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from 'uuid';
-import { Avatar } from '../entity/avatar';
+import { Avatar } from '../entity/Avatar';
 import { Entity } from '../entity/Entity';
-import { Bomb } from "../entity/Bomb";
+import { Bomb } from "../entity/Items/Bomb";
+import { Potion } from "../entity/Items/Potion";
 
 
 class ItemsStateManager {
@@ -13,7 +14,20 @@ class ItemsStateManager {
 
     public async genAddItem(layer: PIXI.Container, user: Avatar) {
         const uuid = uuidv4();
-        this.items.set(uuid, await Bomb.create(layer, user));
+        const n = this.getRandomInteger(2);
+        switch(n) {
+            case 1:
+                this.items.set(uuid, await Bomb.create(layer, user));
+                break;
+            case 2:
+                this.items.set(uuid, await Potion.create(layer, user));
+                break;
+            default:
+        }
+    }
+
+    private getRandomInteger(n: number): number {
+        return Math.floor(Math.random() * n) + 1;
     }
 
     public getItems(): Map<string, Entity> {

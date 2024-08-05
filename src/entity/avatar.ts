@@ -1,4 +1,4 @@
-// avatar.ts
+// Avatar.ts
 
 import * as PIXI from "pixi.js";
 import { Enemy } from "./Enemy";
@@ -15,6 +15,7 @@ const SWORD_LENGTH = 50;
 const MAX_HEALTH = 100;
 const HP_TEXT_X_OFFSET = 500;
 const HP_TEXT_Y_OFFSET = 500;
+const HP_POTION_INCREASE = 50;
 const avatarMetaData = {
     hp_system: {
         value: MAX_HEALTH,
@@ -23,6 +24,7 @@ const avatarMetaData = {
 };
 
 export class Avatar extends Entity {
+    public static instance: Avatar;
     public sprite: PIXI.Sprite;
     static healthBarContainer = new PIXI.Graphics();
     static healthBar = new PIXI.Graphics();
@@ -40,12 +42,14 @@ export class Avatar extends Entity {
         this.renderAvatarHP();
     }
 
-    public static async create() :Promise<Avatar> {
-        const instance = await Application.genInstance();
-        const asset = await PIXI.Assets.load('https://pixijs.com/assets/bunny.png');
-        const avatar = new Avatar(instance.app, asset);
-        await this.genInitializeHPSystem();
-        return avatar;
+    public static async genInstance() :Promise<Avatar> {
+        if (!Avatar.instance) {
+            const instance = await Application.genInstance();
+            const asset = await PIXI.Assets.load('https://pixijs.com/assets/bunny.png');
+            Avatar.instance = new Avatar(instance.app, asset);
+            await this.genInitializeHPSystem();
+        }
+        return Avatar.instance;
     }
 
     public getX() {
@@ -132,6 +136,10 @@ export class Avatar extends Entity {
         const instance = await Application.genInstance();
         // add health bar container
         instance.app.stage.addChild(avatarMetaData.hp_system.bar);
+    }
+
+    public increaseHP() {
+        this.updateHealth(Math.min(100, HP_POTION_INCREASE + avatarMetaData.hp_system.value));
     }
 
     private updateHealth(newHealth: number) {

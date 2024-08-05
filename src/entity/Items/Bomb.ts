@@ -1,9 +1,9 @@
 import * as PIXI from "pixi.js";
-import { Entity } from "./Entity";
-import enemiesStateManager from "../states/EnemyStateManager";
-import { Avatar } from "./avatar";
-import { MainLayer } from "../layer/MainLayer";
-import { AVATAR_SPEED, ITEM_FRAME_SIZE } from "../utils/Constants";
+import { Entity } from "../Entity";
+import enemiesStateManager from "../../states/EnemyStateManager";
+import { Avatar } from "../Avatar";
+import { MainLayer } from "../../layer/MainLayer";
+import { AVATAR_SPEED, ITEM_FRAME_SIZE } from "../../utils/Constants";
 
 export class Bomb extends Entity {
     sprite: PIXI.Sprite;

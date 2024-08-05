@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Tiling } from '../entity/Tiling';
-import { Avatar } from '../entity/avatar';
+import { Avatar } from '../entity/Avatar';
 import { DebugTool } from '../internal/DebugTool';
 import { timedEventsManager } from '../timeEventsManager';
 import enemiesStateManager from '../states/EnemyStateManager';
@@ -35,7 +35,7 @@ export class MainLayer {
     public static async genInstance(): Promise<MainLayer> {
         if (!MainLayer.instance) {
             const tiling = await Tiling.create();
-            const user: Avatar = await Avatar.create();
+            const user: Avatar = await Avatar.genInstance();
             const debugTool = await DebugTool.create(tiling, user);
 
             MainLayer.instance = new MainLayer(tiling, debugTool, user);

@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Avatar } from '../entity/avatar';
+import { Avatar } from '../entity/Avatar';
 import { globalState } from '../states/events';
 import Application from '../entity/Application';
 import { Tiling } from '../entity/Tiling';
