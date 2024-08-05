@@ -12,9 +12,10 @@ class ItemsStateManager {
         this.items = new Map<string, Entity>();
     }
 
-    public async genAddItem(layer: PIXI.Container, user: Avatar) {
+    public async genAddItem(layer: PIXI.Container) {
         const uuid = uuidv4();
         const n = this.getRandomInteger(2);
+        const user = await Avatar.genInstance();
         switch(n) {
             case 1:
                 this.items.set(uuid, await Bomb.create(layer, user));

@@ -1,5 +1,3 @@
-// Avatar.ts
-
 import * as PIXI from "pixi.js";
 import { Enemy } from "./Enemy";
 import { globalState } from "../states/events";
