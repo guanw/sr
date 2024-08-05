@@ -74,21 +74,21 @@ export function moveUser(background: Tiling, items: Map<string, Entity>, enemies
         })
     }
     if (avatarMoveKeys.ArrowUp) {
-        background.moveUp();
-        items.forEach((item) => {
-            item.moveUp();
-        });
-        enemies.forEach((enemy) => {
-            enemy.moveUp();
-        })
-    }
-    if (avatarMoveKeys.ArrowDown) {
         background.moveDown();
         items.forEach((item) => {
             item.moveDown();
         });
         enemies.forEach((enemy) => {
             enemy.moveDown();
+        })
+    }
+    if (avatarMoveKeys.ArrowDown) {
+        background.moveUp();
+        items.forEach((item) => {
+            item.moveUp();
+        });
+        enemies.forEach((enemy) => {
+            enemy.moveUp();
         })
     }
 }

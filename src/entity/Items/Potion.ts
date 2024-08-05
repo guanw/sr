@@ -2,9 +2,22 @@ import * as PIXI from "pixi.js";
 import { Entity } from "../Entity";
 import { Avatar } from "../Avatar";
 import { MainLayer } from "../../layer/MainLayer";
-import { AVATAR_SPEED, ITEM_FRAME_SIZE } from "../../utils/Constants";
+import { ITEM_FRAME_SIZE } from "../../utils/Constants";
 
 export class Potion extends Entity {
+    setX(x: number): void {
+        this.sprite.x = x;
+    }
+    setY(y: number): void {
+        this.sprite.y = y;
+    }
+    getX(): number {
+        return this.sprite.x;
+    }
+
+    getY(): number {
+        return this.sprite.y;
+    }
     sprite: PIXI.Sprite;
 
     constructor(layer: PIXI.Container, avatar: Avatar, texture: PIXI.Texture) {
@@ -20,27 +33,6 @@ export class Potion extends Entity {
     static async create(layer: PIXI.Container, avatar: Avatar) {
         const texture = await PIXI.Assets.load('https://guanw.github.io/sr_assets/items/Potion01.png');
         return new Potion(layer, avatar, texture);
-    }
-
-    public moveLeft() {
-        this.sprite.x -= AVATAR_SPEED;
-    }
-    public moveRight() {
-        this.sprite.x += AVATAR_SPEED;
-    }
-    public moveDown() {
-        this.sprite.y -= AVATAR_SPEED;
-    }
-    public moveUp() {
-        this.sprite.y += AVATAR_SPEED;
-    }
-
-    getX(): number {
-        return this.sprite.x;
-    }
-
-    getY(): number {
-        return this.sprite.y;
     }
 
     public destroy(layer: PIXI.Container) {

@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Entity } from './Entity';
-import { AVATAR_SPEED, ENEMY_ANIMATION_SPEED, ENEMY_FRAME_NUMBER, ENEMY_FRAME_SIZE, ENEMY_SPEED } from '../utils/Constants'
+import { ENEMY_ANIMATION_SPEED, ENEMY_FRAME_NUMBER, ENEMY_FRAME_SIZE, ENEMY_SPEED } from '../utils/Constants'
 
 class Enemy extends Entity {
     sprite: PIXI.AnimatedSprite
@@ -29,25 +29,17 @@ class Enemy extends Entity {
         return new Enemy(app, layer, frames);
     }
 
-    public moveLeft() {
-        this.sprite.x -= AVATAR_SPEED;
-    }
-    public moveRight() {
-        this.sprite.x += AVATAR_SPEED;
-    }
-    public moveDown() {
-        this.sprite.y -= AVATAR_SPEED;
-    }
-    public moveUp() {
-        this.sprite.y += AVATAR_SPEED;
-    }
-
     public getX(): number {
         return this.sprite.x;
     }
-
     public getY(): number {
         return this.sprite.y;
+    }
+    public setX(x: number): void {
+        this.sprite.x = x;
+    }
+    public setY(y: number): void {
+        this.sprite.y = y;
     }
 
     public setPos(x: number, y: number) {

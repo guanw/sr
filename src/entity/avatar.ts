@@ -22,6 +22,8 @@ const avatarMetaData = {
 };
 
 export class Avatar extends Entity {
+    protected destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
+    }
     public static instance: Avatar;
     public sprite: PIXI.Sprite;
     static healthBarContainer = new PIXI.Graphics();
@@ -50,12 +52,17 @@ export class Avatar extends Entity {
         return Avatar.instance;
     }
 
-    public getX() {
+    public getX(): number {
         return this.sprite.x;
     }
-
-    public getY() {
+    public getY(): number {
         return this.sprite.y;
+    }
+    public setX(x: number): void {
+        this.sprite.x = x;
+    }
+    public setY(y: number): void {
+        this.sprite.y = y;
     }
 
     /**
@@ -176,8 +183,18 @@ export class Avatar extends Entity {
     }
 
     static Sword = class extends Entity {
+        public setX(x: number): void {
+            throw new Error("Method not implemented.");
+        }
+        public setY(y: number): void {
+            throw new Error("Method not implemented.");
+        }
+        protected destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
+
+        }
         private app: PIXI.Application;
         private container: PIXI.Container;
+        private instance: PIXI.Graphics;
         public constructor(app: PIXI.Application, container: PIXI.Container, avatar: PIXI.Sprite) {
             super();
             this.app = app;

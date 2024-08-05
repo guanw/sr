@@ -34,7 +34,7 @@ export class DebugTool {
       this.container.x = (instance.app.screen.width / 2);
       this.container.y = (instance.app.screen.height / 2);
       const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
-      this.text.text = `Position: (${-this.tiling.instance.tilePosition.x}, ${this.tiling.instance.tilePosition.y})\nHP: ${hp}`;
+      this.text.text = `Position: (${-this.tiling.instance.tilePosition.x}, ${-this.tiling.instance.tilePosition.y})\nHP: ${hp}`;
     }
   }
 }

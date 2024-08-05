@@ -1,25 +1,29 @@
-// Entity.ts
-
 import * as PIXI from "pixi.js";
+import { MainLayer } from '../layer/MainLayer';
 import { AVATAR_SPEED } from '../utils/Constants';
-import { MainLayer } from "../layer/MainLayer";
 
 const ENTITY_COLLIDE_RANGE = 5;
 export abstract class Entity {
-    protected instance!: PIXI.Graphics;
-    abstract getX(): number;
-    abstract getY(): number;
-    public moveLeft() {
-        this.instance.x -= AVATAR_SPEED;
+
+    public abstract getX(): number;
+    public abstract getY(): number;
+    public abstract setX(x: number): void;
+    public abstract setY(y: number): void;
+
+    public moveLeft(): void {
+        this.setX(this.getX() - AVATAR_SPEED);
     }
-    public moveRight() {
-        this.instance.x += AVATAR_SPEED;
+
+    public moveRight(): void {
+        this.setX(this.getX() + AVATAR_SPEED);
     }
-    public moveDown() {
-        this.instance.y -= AVATAR_SPEED;
+
+    public moveDown(): void {
+        this.setY(this.getY() + AVATAR_SPEED);
     }
-    public moveUp() {
-        this.instance.y += AVATAR_SPEED;
+
+    public moveUp(): void {
+        this.setY(this.getY() - AVATAR_SPEED);
     }
 
     // override this for collision detection
@@ -38,7 +42,5 @@ export abstract class Entity {
         this.destroy(mainLayer.layer);
     }
 
-    public destroy(layer: PIXI.Container) {
-        layer.removeChild(this.instance);
-    }
+    protected abstract destroy(layer: PIXI.Container): void;
 }

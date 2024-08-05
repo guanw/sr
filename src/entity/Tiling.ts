@@ -1,10 +1,11 @@
 import * as PIXI from "pixi.js";
-import { AVATAR_SPEED } from '../utils/Constants';
 import Application from "./Application";
+import { Entity } from "./Entity";
 
-export class Tiling {
+export class Tiling extends Entity {
     public instance: PIXI.TilingSprite;
     private constructor(app: PIXI.Application, texture: PIXI.Texture) {
+        super();
         this.instance = new PIXI.TilingSprite({
             texture,
             width: app.screen.width,
@@ -19,16 +20,19 @@ export class Tiling {
         return new Tiling(instance.app, texture);
     }
 
-    public moveLeft() {
-        this.instance.tilePosition.x -= AVATAR_SPEED;
+    getX(): number {
+        return this.instance.tilePosition.x;
     }
-    public moveRight() {
-        this.instance.tilePosition.x += AVATAR_SPEED;
+    getY(): number {
+        return this.instance.tilePosition.y;
     }
-    public moveDown() {
-        this.instance.tilePosition.y -= AVATAR_SPEED;
+    setX(x: number): void {
+        this.instance.tilePosition.x = x;
     }
-    public moveUp() {
-        this.instance.tilePosition.y += AVATAR_SPEED;
+    setY(y: number): void {
+        this.instance.tilePosition.y = y;
+    }
+    protected destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
+        // no-op
     }
 }
