@@ -5,17 +5,9 @@ import { Entity } from './Entity';
 import Application from "./Application";
 import { MainLayer } from "../layer/MainLayer";
 import { Item } from "./Items/Item";
+import { MAX_HEALTH, AVATAR_SIZE, ENEMY_ATTACK_VALUE, COLLECT_ITEM_RANGE, HP_POTION_INCREASE, HP_TEXT_X_OFFSET, HP_TEXT_Y_OFFSET, INITIAL_SWORD_SIZE, SWORD_WIDTH } from "../utils/Constants";
 
-const COLLECT_ITEM_RANGE = 15;
 
-const ENEMY_ATTACK_VALUE = 10;
-const INITIAL_SWORD_SIZE = 50;
-const SWORD_WIDTH = 5;
-const MAX_HEALTH = 100;
-const HP_TEXT_X_OFFSET = 500;
-const HP_TEXT_Y_OFFSET = 500;
-const HP_POTION_INCREASE = 50;
-const AVATAR_SIZE = 14;
 const avatarMetaData = {
     hp_system: {
         value: MAX_HEALTH,
