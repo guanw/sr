@@ -1,15 +1,15 @@
 import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from 'uuid';
 import { Avatar } from '../entity/Avatar';
-import { Entity } from '../entity/Entity';
 import { Bomb } from "../entity/Items/Bomb";
 import { Potion } from "../entity/Items/Potion";
+import { Item } from "../entity/Items/Item";
 
 
 class ItemsStateManager {
-    private items: Map<string, Entity>;
+    private items: Map<string, Item>;
     public constructor() {
-        this.items = new Map<string, Entity>();
+        this.items = new Map<string, Item>();
     }
 
     public async genAddItem(layer: PIXI.Container) {
@@ -31,7 +31,7 @@ class ItemsStateManager {
         return Math.floor(Math.random() * n) + 1;
     }
 
-    public getItems(): Map<string, Entity> {
+    public getItems(): Map<string, Item> {
         return this.items;
     }
 }

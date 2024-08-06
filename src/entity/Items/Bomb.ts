@@ -1,11 +1,11 @@
 import * as PIXI from "pixi.js";
-import { Entity } from "../Entity";
+import { Item } from "./Item";
 import enemiesStateManager from "../../states/EnemyStateManager";
 import { Avatar } from "../Avatar";
 import { MainLayer } from "../../layer/MainLayer";
 import { ITEM_FRAME_SIZE } from "../../utils/Constants";
 
-export class Bomb extends Entity {
+export class Bomb extends Item {
     sprite: PIXI.Sprite;
 
     constructor(layer: PIXI.Container, avatar: Avatar, texture: PIXI.Texture) {
@@ -29,12 +29,16 @@ export class Bomb extends Entity {
     getY(): number {
         return this.sprite.y;
     }
-    public setX(x: number): void {
+    setX(x: number): void {
         this.sprite.x = x;
     }
-    public setY(y: number): void {
+    setY(y: number): void {
         this.sprite.y = y;
     }
+    getDisplacement(): number {
+        return ITEM_FRAME_SIZE/2;
+    }
+
 
     public destroy(layer: PIXI.Container) {
         layer.removeChild(this.sprite);

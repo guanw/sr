@@ -64,13 +64,12 @@ export class MainLayer {
     }
 
     async update() {
-        const user = await Avatar.genInstance();
         moveUser(this.tiling, itemsStateManager.getItems(), enemiesStateManager.getEnemies());
 
         const enemies = enemiesStateManager.getEnemies();
-        enemies.forEach((enemy) => {
+        enemies.forEach(async (enemy) => {
             if (enemy !== undefined)
-                enemy.moveTowards(user.getX(), user.getY())
+                await enemy.genMoveTowardsAvatar()
         })
 
         timedEventsManager.update();

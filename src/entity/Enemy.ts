@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Entity } from './Entity';
 import { ENEMY_ANIMATION_SPEED, ENEMY_FRAME_NUMBER, ENEMY_FRAME_SIZE, ENEMY_SPEED } from '../utils/Constants'
+import { Avatar } from "./Avatar";
 
 class Enemy extends Entity {
     sprite: PIXI.AnimatedSprite
@@ -29,17 +30,20 @@ class Enemy extends Entity {
         return new Enemy(app, layer, frames);
     }
 
-    public getX(): number {
+    getX(): number {
         return this.sprite.x;
     }
-    public getY(): number {
+    getY(): number {
         return this.sprite.y;
     }
-    public setX(x: number): void {
+    setX(x: number): void {
         this.sprite.x = x;
     }
-    public setY(y: number): void {
+    setY(y: number): void {
         this.sprite.y = y;
+    }
+    getDisplacement(): number {
+        return ENEMY_FRAME_SIZE/2;
     }
 
     public setPos(x: number, y: number) {
@@ -51,14 +55,12 @@ class Enemy extends Entity {
         layer.removeChild(this.sprite);
     }
 
-    public moveTowards(
-        playerX: number,
-        playerY: number,
-    ) {
+    public async genMoveTowardsAvatar() {
+        const user = await Avatar.genInstance();
         const enemyX = this.getX();
         const enemyY = this.getY();
-        const dx = playerX - enemyX;
-        const dy = playerY - enemyY;
+        const dx = (user.getX()-user.getDisplacement()) - enemyX;
+        const dy = (user.getY()-user.getDisplacement()) - enemyY;
         const angle = Math.atan2(dy, dx);
         const vx = Math.cos(angle) * ENEMY_SPEED;
         const vy = Math.sin(angle) * ENEMY_SPEED;

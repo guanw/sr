@@ -1,23 +1,10 @@
 import * as PIXI from "pixi.js";
-import { Entity } from "../Entity";
+import { Item } from "./Item";
 import { Avatar } from "../Avatar";
 import { MainLayer } from "../../layer/MainLayer";
 import { ITEM_FRAME_SIZE } from "../../utils/Constants";
 
-export class Potion extends Entity {
-    setX(x: number): void {
-        this.sprite.x = x;
-    }
-    setY(y: number): void {
-        this.sprite.y = y;
-    }
-    getX(): number {
-        return this.sprite.x;
-    }
-
-    getY(): number {
-        return this.sprite.y;
-    }
+export class Potion extends Item {
     sprite: PIXI.Sprite;
 
     constructor(layer: PIXI.Container, avatar: Avatar, texture: PIXI.Texture) {
@@ -33,6 +20,22 @@ export class Potion extends Entity {
     static async create(layer: PIXI.Container, avatar: Avatar) {
         const texture = await PIXI.Assets.load('https://guanw.github.io/sr_assets/items/Potion01.png');
         return new Potion(layer, avatar, texture);
+    }
+
+    setX(x: number): void {
+        this.sprite.x = x;
+    }
+    setY(y: number): void {
+        this.sprite.y = y;
+    }
+    getX(): number {
+        return this.sprite.x;
+    }
+    getY(): number {
+        return this.sprite.y;
+    }
+    getDisplacement(): number {
+        return ITEM_FRAME_SIZE/2;
     }
 
     public destroy(layer: PIXI.Container) {

@@ -4,16 +4,18 @@ import { globalState } from "../states/events";
 import { Entity } from './Entity';
 import Application from "./Application";
 import { MainLayer } from "../layer/MainLayer";
+import { Item } from "./Items/Item";
 
 const COLLECT_ITEM_RANGE = 15;
 
 const ENEMY_ATTACK_VALUE = 10;
+const INITIAL_SWORD_SIZE = 50;
 const SWORD_WIDTH = 5;
-const SWORD_LENGTH = 50;
 const MAX_HEALTH = 100;
 const HP_TEXT_X_OFFSET = 500;
 const HP_TEXT_Y_OFFSET = 500;
 const HP_POTION_INCREASE = 50;
+const AVATAR_SIZE = 14;
 const avatarMetaData = {
     hp_system: {
         value: MAX_HEALTH,
@@ -22,8 +24,6 @@ const avatarMetaData = {
 };
 
 export class Avatar extends Entity {
-    protected destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
-    }
     public static instance: Avatar;
     public sprite: PIXI.Sprite;
     static healthBarContainer = new PIXI.Graphics();
@@ -52,17 +52,22 @@ export class Avatar extends Entity {
         return Avatar.instance;
     }
 
-    public getX(): number {
+    getX(): number {
         return this.sprite.x;
     }
-    public getY(): number {
+    getY(): number {
         return this.sprite.y;
     }
-    public setX(x: number): void {
+    setX(x: number): void {
         this.sprite.x = x;
     }
-    public setY(y: number): void {
+    setY(y: number): void {
         this.sprite.y = y;
+    }
+    getDisplacement(): number {
+        return AVATAR_SIZE / 2;
+    }
+    protected destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
     }
 
     /**
@@ -100,7 +105,7 @@ export class Avatar extends Entity {
         }
     }
 
-    public async genCheckCollectingItems(items: Map<string, Entity>) {
+    public async genCheckCollectingItems(items: Map<string, Item>) {
         items.forEach(async (_, key) => {
             const item = items.get(key);
             if (item === undefined) {
@@ -183,15 +188,6 @@ export class Avatar extends Entity {
     }
 
     static Sword = class extends Entity {
-        public setX(x: number): void {
-            throw new Error("Method not implemented.");
-        }
-        public setY(y: number): void {
-            throw new Error("Method not implemented.");
-        }
-        protected destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
-
-        }
         private app: PIXI.Application;
         private container: PIXI.Container;
         private instance: PIXI.Graphics;
@@ -200,8 +196,11 @@ export class Avatar extends Entity {
             this.app = app;
             this.container = container;
             this.instance = new PIXI.Graphics();
-            this.instance.moveTo(avatar.x, avatar.y);
-            this.instance.lineTo(SWORD_LENGTH + avatar.x, avatar.y);
+            this.instance.moveTo(avatar.x - INITIAL_SWORD_SIZE/2, avatar.y - INITIAL_SWORD_SIZE/2);
+            this.instance.lineTo(avatar.x + INITIAL_SWORD_SIZE/2, avatar.y - INITIAL_SWORD_SIZE/2);
+            this.instance.lineTo(avatar.x + INITIAL_SWORD_SIZE/2, avatar.y + INITIAL_SWORD_SIZE/2);
+            this.instance.lineTo(avatar.x - INITIAL_SWORD_SIZE/2, avatar.y + INITIAL_SWORD_SIZE/2);
+            this.instance.lineTo(avatar.x - INITIAL_SWORD_SIZE/2, avatar.y - INITIAL_SWORD_SIZE/2);
             this.instance.stroke({ width: SWORD_WIDTH, color: 0xffd900 });
             this.container.addChild(this.instance);
             // Remove sword after a short delay e.g 200ms
@@ -216,9 +215,21 @@ export class Avatar extends Entity {
         getY(): number {
             throw new Error("should not be called with collide(ent: Entity) being overriden");
         }
+        setX(x: number): void {
+            throw new Error("Method not implemented.");
+        }
+        setY(y: number): void {
+            throw new Error("Method not implemented.");
+        }
+        getDisplacement(): number {
+            return INITIAL_SWORD_SIZE/2;
+        }
+        protected destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
+
+        }
 
         isCollidedWith(ent: Entity): boolean {
-            const enemyPoint = new PIXI.Point(ent.getX() + this.app.stage.x, ent.getY() + this.app.stage.y);
+            const enemyPoint = new PIXI.Point(ent.getX() + ent.getDisplacement() + this.app.stage.x - this.getDisplacement(), ent.getY() + ent.getDisplacement() + this.app.stage.y);
             return this.instance.getBounds().containsPoint(enemyPoint.x, enemyPoint.y)
         }
     }
