@@ -1,19 +1,19 @@
 import * as PIXI from 'pixi.js';
-import { Enemy } from './Enemy';
-import { Helper } from '../utils/Helper';
+import { Enemy } from '../Enemy';
+import { Helper } from '../../utils/Helper';
 
-export class AttackPower {
-    circle: PIXI.Graphics;
+export class Bullet {
+    instance: PIXI.Graphics;
     speed: number;
     direction: { x: number; y: number; };
     isExploded: boolean;
     constructor(x: number, y: number, targetX: number, targetY: number) {
-        this.circle = new PIXI.Graphics();
-        this.circle.beginFill(0xFF0000); // Red color for the attack circle
-        this.circle.drawCircle(0, 0, 10); // Radius of 10
-        this.circle.endFill();
-        this.circle.x = x;
-        this.circle.y = y;
+        this.instance = new PIXI.Graphics();
+        this.instance.beginFill(0xFF0000); // Red color for the attack circle
+        this.instance.drawCircle(0, 0, 10); // Radius of 10
+        this.instance.endFill();
+        this.instance.x = x;
+        this.instance.y = y;
         this.speed = 5;
 
         // Calculate the direction vector
@@ -25,13 +25,13 @@ export class AttackPower {
     }
 
     move() {
-        this.circle.x += this.direction.x * this.speed;
-        this.circle.y += this.direction.y * this.speed;
+        this.instance.x += this.direction.x * this.speed;
+        this.instance.y += this.direction.y * this.speed;
     }
 
     checkCollision(enemies: Map<string, Enemy>) {
         enemies.forEach((enemy) => {
-            if (Helper.boundsIntersect(this.circle.getBounds(), enemy.sprite.getBounds())) {
+            if (Helper.boundsIntersect(this.instance.getBounds(), enemy.sprite.getBounds())) {
                 this.explode();
                 // enemy.kill();
             }
@@ -45,14 +45,14 @@ export class AttackPower {
         explosion.beginFill(0xFFFF00); // Yellow color for explosion
         explosion.drawCircle(0, 0, 30); // Explosion radius
         explosion.endFill();
-        explosion.x = this.circle.x;
-        explosion.y = this.circle.y;
+        explosion.x = this.instance.x;
+        explosion.y = this.instance.y;
 
         setTimeout(() => {
             explosion.destroy();
         }, 500); // Explosion effect duration
 
-        this.circle.parent.addChild(explosion);
-        this.circle.destroy();
+        this.instance.parent.addChild(explosion);
+        this.instance.destroy();
     }
 }

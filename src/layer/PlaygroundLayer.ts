@@ -1,10 +1,10 @@
 import * as PIXI from 'pixi.js';
-import { AttackPower } from '../entity/AttackPower';
+import { Bullet } from '../entity/Attacks/Bullet';
 
 export class PlaygroundLayer {
     public static instance: PlaygroundLayer;
     public layer: PIXI.Container;
-    static attackPowers: AttackPower[] = [];
+    static bullets: Bullet[] = [];
 
     constructor() {
         this.layer = new PIXI.Container();
@@ -48,13 +48,13 @@ export class PlaygroundLayer {
     }
 
     private static attack(targetX: number, targetY: number) {
-        const attackPower = new AttackPower(400+16, 300+16, targetX, targetY);
-        PlaygroundLayer.attackPowers.push(attackPower);
-        PlaygroundLayer.instance.layer.addChild(attackPower.circle);
+        const attackPower = new Bullet(400+16, 300+16, targetX, targetY);
+        PlaygroundLayer.bullets.push(attackPower);
+        PlaygroundLayer.instance.layer.addChild(attackPower.instance);
     }
 
     async update() {
-        PlaygroundLayer.attackPowers.forEach((attackPower: AttackPower) => {
+        PlaygroundLayer.bullets.forEach((attackPower: Bullet) => {
             attackPower.move();
         });
     }
