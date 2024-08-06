@@ -52,6 +52,10 @@ export class PlaygroundLayer {
         const wind = await Wind.create(targetX, targetY);
         PlaygroundLayer.winds.push(wind);
         PlaygroundLayer.instance.layer.addChild(wind.instance);
+
+        const bullet = new Bullet(400+16, 300+16, targetX, targetY);
+        PlaygroundLayer.bullets.push(bullet);
+        PlaygroundLayer.instance.layer.addChild(bullet.instance);
     }
 
     async update() {

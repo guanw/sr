@@ -9,12 +9,12 @@ export class Wind {
         this.instance = new PIXI.AnimatedSprite(frames);
         this.instance.animationSpeed = 0.1;
         this.instance.play();
-        this.instance.x = 200;
-        this.instance.y = 200;
+        this.instance.x = x;
+        this.instance.y = y;
 
         // Calculate the direction vector
-        const dx = targetX - x;
-        const dy = targetY - y;
+        const dx = targetX - x - 32;
+        const dy = targetY - y - 32;
         const length = Math.sqrt(dx * dx + dy * dy);
         this.direction = { x: dx / length, y: dy / length };
     }
