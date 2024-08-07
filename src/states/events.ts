@@ -3,12 +3,15 @@ import { Entity } from "../entity/Entity";
 import { Enemy } from '../entity/Enemy';
 import { MainLayer } from "../layer/MainLayer";
 import { PlaygroundLayer } from "../layer/PlaygroundLayer";
+import { Wind } from "../entity/Attacks/Wind";
+import attackStateManager from "./AttackStateManager";
 
-const avatarMoveKeys: { [key: string]: boolean } = {
+const avatarKeys: { [key: string]: boolean } = {
     ArrowLeft: false,
     ArrowRight: false,
     ArrowUp: false,
-    ArrowDown: false
+    ArrowDown: false,
+    '1': false,
 };
 
 export const globalState = {
@@ -19,15 +22,15 @@ export const globalState = {
 };
 
 // Handle keyboard events to move avatar
-function handleMoveKeyDown(e: KeyboardEvent): void {
-    if (e.key in avatarMoveKeys) {
-        avatarMoveKeys[e.key] = true;
+function handleAvatarKeyDown(e: KeyboardEvent): void {
+    if (e.key in avatarKeys) {
+        avatarKeys[e.key] = true;
     }
 }
 
-function handleMoveKeyUp(e: KeyboardEvent): void {
-    if (e.key in avatarMoveKeys) {
-        avatarMoveKeys[e.key] = false;
+function handleAvatarKeyUp(e: KeyboardEvent): void {
+    if (e.key in avatarKeys) {
+        avatarKeys[e.key] = false;
     }
 }
 
@@ -53,9 +56,10 @@ async function handleLayerSwitch(e: KeyboardEvent): Promise<void> {
     }
 }
 
-export function moveUser(background: Tiling, items: Map<string, Entity>, enemies: Map<string, Enemy>) {
+export async function genMoveUser(items: Map<string, Entity>, enemies: Map<string, Enemy>) {
+    const background = await Tiling.genInstance()
     // Move user based on key states
-    if (avatarMoveKeys.ArrowLeft) {
+    if (avatarKeys.ArrowLeft) {
         background.moveRight();
         items.forEach((item) => {
             item.moveRight();
@@ -64,7 +68,7 @@ export function moveUser(background: Tiling, items: Map<string, Entity>, enemies
             enemy.moveRight();
         })
     }
-    if (avatarMoveKeys.ArrowRight) {
+    if (avatarKeys.ArrowRight) {
         background.moveLeft();
         items.forEach((item) => {
             item.moveLeft();
@@ -73,7 +77,7 @@ export function moveUser(background: Tiling, items: Map<string, Entity>, enemies
             enemy.moveLeft();
         })
     }
-    if (avatarMoveKeys.ArrowUp) {
+    if (avatarKeys.ArrowUp) {
         background.moveDown();
         items.forEach((item) => {
             item.moveDown();
@@ -82,7 +86,7 @@ export function moveUser(background: Tiling, items: Map<string, Entity>, enemies
             enemy.moveDown();
         })
     }
-    if (avatarMoveKeys.ArrowDown) {
+    if (avatarKeys.ArrowDown) {
         background.moveUp();
         items.forEach((item) => {
             item.moveUp();
@@ -93,11 +97,18 @@ export function moveUser(background: Tiling, items: Map<string, Entity>, enemies
     }
 }
 
+export async function genHandleAvatarAttack(event: MouseEvent) {
+    const wind = await Wind.create(400-32, 300-32, event.clientX, event.clientY);
+    attackStateManager.addAttack(wind);
+    MainLayer.instance.layer.addChild(wind.instance);
+}
+
 (function () {
     // Add event listeners for keydown and keyup events
-    window.addEventListener('keydown', handleMoveKeyDown);
-    window.addEventListener('keyup', handleMoveKeyUp);
+    window.addEventListener('keydown', handleAvatarKeyDown);
+    window.addEventListener('keyup', handleAvatarKeyUp);
     window.addEventListener('keydown', handleToggleMenu);
     window.addEventListener('keydown', handleToggleDebugTool);
     window.addEventListener('keydown', handleLayerSwitch);
+    window.addEventListener('click', genHandleAvatarAttack);
 }());

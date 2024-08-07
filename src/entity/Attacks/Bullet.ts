@@ -33,7 +33,6 @@ export class Bullet {
         enemies.forEach((enemy) => {
             if (Helper.boundsIntersect(this.instance.getBounds(), enemy.sprite.getBounds())) {
                 this.explode();
-                // enemy.kill();
             }
         });
     }

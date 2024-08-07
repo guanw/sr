@@ -49,7 +49,7 @@ export class PlaygroundLayer {
     }
 
     private static async attack(targetX: number, targetY: number) {
-        const wind = await Wind.create(targetX, targetY);
+        const wind = await Wind.create(400, 300, targetX, targetY);
         PlaygroundLayer.winds.push(wind);
         PlaygroundLayer.instance.layer.addChild(wind.instance);
 

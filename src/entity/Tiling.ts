@@ -3,34 +3,38 @@ import Application from "./Application";
 import { Entity } from "./Entity";
 
 export class Tiling extends Entity {
-    public instance: PIXI.TilingSprite;
+    public tilingSprite: PIXI.TilingSprite;
+    public static instance: Tiling;
     private constructor(app: PIXI.Application, texture: PIXI.Texture) {
         super();
-        this.instance = new PIXI.TilingSprite({
+        this.tilingSprite = new PIXI.TilingSprite({
             texture,
             width: app.screen.width,
             height: app.screen.height,
         });
-        app.stage.addChild(this.instance);
+        app.stage.addChild(this.tilingSprite);
     }
 
-    public static async create() {
-        const instance = await Application.genInstance();
-        const texture = await PIXI.Assets.load('https://pixijs.com/assets/p2.jpeg');
-        return new Tiling(instance.app, texture);
+    public static async genInstance() {
+        if (!Tiling.instance) {
+            const instance = await Application.genInstance();
+            const texture = await PIXI.Assets.load('https://pixijs.com/assets/p2.jpeg');
+            Tiling.instance = new Tiling(instance.app, texture);
+        }
+        return Tiling.instance;
     }
 
     getX(): number {
-        return this.instance.tilePosition.x;
+        return this.tilingSprite.tilePosition.x;
     }
     getY(): number {
-        return this.instance.tilePosition.y;
+        return this.tilingSprite.tilePosition.y;
     }
     setX(x: number): void {
-        this.instance.tilePosition.x = x;
+        this.tilingSprite.tilePosition.x = x;
     }
     setY(y: number): void {
-        this.instance.tilePosition.y = y;
+        this.tilingSprite.tilePosition.y = y;
     }
     getDisplacement(): number {
         // no-op

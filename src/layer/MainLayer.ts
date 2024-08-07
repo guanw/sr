@@ -5,7 +5,8 @@ import { DebugTool } from '../internal/DebugTool';
 import { timedEventsManager } from '../timeEventsManager';
 import enemiesStateManager from '../states/EnemyStateManager';
 import { itemsStateManager } from '../states/ItemsStateManager';
-import { moveUser } from '../states/events';
+import { genMoveUser } from '../states/events';
+import attackStateManager from '../states/AttackStateManager';
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
@@ -17,14 +18,12 @@ export class MainLayer {
     public static instance: MainLayer;
     public layer: PIXI.Container
     debugTool: DebugTool;
-    tiling: Tiling;
 
     constructor(tiling: Tiling,  debugTool: DebugTool, user: Avatar) {
         this.layer = new PIXI.Container();
-        this.tiling = tiling;
         this.debugTool = debugTool;
 
-        this.layer.addChild(this.tiling.instance);
+        this.layer.addChild(tiling.tilingSprite);
         this.layer.addChild(this.debugTool.container);
         this.layer.addChild(user.sprite);
         this.layer.addChild(Avatar.healthBarContainer);
@@ -32,9 +31,9 @@ export class MainLayer {
 
     public static async genInstance(): Promise<MainLayer> {
         if (!MainLayer.instance) {
-            const tiling = await Tiling.create();
+            const tiling = await Tiling.genInstance();
             const user: Avatar = await Avatar.genInstance();
-            const debugTool = await DebugTool.create(tiling);
+            const debugTool = await DebugTool.create();
 
             MainLayer.instance = new MainLayer(tiling, debugTool, user);
 
@@ -64,13 +63,15 @@ export class MainLayer {
     }
 
     async update() {
-        moveUser(this.tiling, itemsStateManager.getItems(), enemiesStateManager.getEnemies());
+        genMoveUser(itemsStateManager.getItems(), enemiesStateManager.getEnemies());
 
         const enemies = enemiesStateManager.getEnemies();
         enemies.forEach(async (enemy) => {
             if (enemy !== undefined)
                 await enemy.genMoveTowardsAvatar()
         })
+
+        attackStateManager.updateAttacks()
 
         timedEventsManager.update();
 
