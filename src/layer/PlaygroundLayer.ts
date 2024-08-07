@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Bullet } from '../entity/Attacks/Bullet';
 import { Wind } from '../entity/Attacks/Wind';
+import { GAME_WIDTH, GAME_HEIGHT } from '../entity/Application';
 
 export class PlaygroundLayer {
     public static instance: PlaygroundLayer;
@@ -37,8 +38,8 @@ export class PlaygroundLayer {
         // Set animation speed (frames per second)
         animatedSlime.animationSpeed = 0.1;
         animatedSlime.play();
-        animatedSlime.x = 400;
-        animatedSlime.y = 300;
+        animatedSlime.x = GAME_WIDTH/2;
+        animatedSlime.y = GAME_HEIGHT/2;
 
         document.addEventListener('click', async (event) => {
             const targetX = event.clientX;
@@ -49,11 +50,11 @@ export class PlaygroundLayer {
     }
 
     private static async attack(targetX: number, targetY: number) {
-        const wind = await Wind.create(400, 300, targetX, targetY);
+        const wind = await Wind.create(GAME_WIDTH/2, GAME_HEIGHT/2, targetX, targetY);
         PlaygroundLayer.winds.push(wind);
         PlaygroundLayer.instance.layer.addChild(wind.instance);
 
-        const bullet = new Bullet(400+16, 300+16, targetX, targetY);
+        const bullet = new Bullet(GAME_WIDTH/2+16, GAME_HEIGHT/2+16, targetX, targetY);
         PlaygroundLayer.bullets.push(bullet);
         PlaygroundLayer.instance.layer.addChild(bullet.instance);
     }

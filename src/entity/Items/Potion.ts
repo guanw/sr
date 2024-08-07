@@ -12,8 +12,7 @@ export class Potion extends Item {
         this.sprite = new PIXI.Sprite(texture);
         this.sprite.width = ITEM_FRAME_SIZE;
         this.sprite.height = ITEM_FRAME_SIZE;
-        this.sprite.x = (avatar.getX() - 400) + Math.random() * 800;
-        this.sprite.y = (avatar.getY() - 300) + Math.random() * 600;
+        [this.sprite.x, this.sprite.y] = this.placeItem(avatar.getX(), avatar.getY())
         layer.addChild(this.sprite);
     }
 

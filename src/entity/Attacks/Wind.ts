@@ -4,6 +4,7 @@ import { MainLayer } from '../../layer/MainLayer';
 import enemiesStateManager from '../../states/EnemyStateManager';
 import attackStateManager from '../../states/AttackStateManager';
 
+export const DISPLACEMENT = 32;
 export class Wind {
     instance: PIXI.AnimatedSprite;
     speed: number;
