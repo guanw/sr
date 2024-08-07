@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { MainLayer } from "../../layer/MainLayer";
 import { Entity } from "../Entity";
-import { AVATAR_LOCATION, GAME_HEIGHT, GAME_WIDTH } from "../Application";
+import { GAME_WIDTH, GAME_HEIGHT, AVATAR_LOCATION } from "../../utils/Constants";
 
 export abstract class Item extends Entity {
     async genUponCollide(): Promise<void> {

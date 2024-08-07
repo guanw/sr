@@ -3,17 +3,17 @@ import { Helper } from '../../utils/Helper';
 import { MainLayer } from '../../layer/MainLayer';
 import enemiesStateManager from '../../states/EnemyStateManager';
 import attackStateManager from '../../states/AttackStateManager';
+import { WIND_ANIMATION_SPEED, WIND_FRAME_SIZE, WIND_NUM_OF_FRAME, WIND_SPEED, WIND_URL } from '../../utils/Constants';
 
-export const DISPLACEMENT = 32;
 export class Wind {
     instance: PIXI.AnimatedSprite;
     speed: number;
     direction: { x: number; y: number; };
     isExploded: boolean;
     private constructor(frames: PIXI.Texture[], x: number, y: number, targetX: number, targetY: number) {
-        this.speed = 5;
+        this.speed = WIND_SPEED;
         this.instance = new PIXI.AnimatedSprite(frames);
-        this.instance.animationSpeed = 0.1;
+        this.instance.animationSpeed = WIND_ANIMATION_SPEED;
         this.instance.play();
         this.instance.x = x;
         this.instance.y = y;
@@ -24,11 +24,11 @@ export class Wind {
     }
 
     public static async create(x: number, y: number, targetX: number, targetY: number) {
-        const texture = await PIXI.Assets.load('https://guanw.github.io/sr_assets/smoke/px_5.png');
+        const texture = await PIXI.Assets.load(WIND_URL);
         const frames = [];
-        const frameWidth = 64; // Width of a single frame in pixels
-        const frameHeight = 64; // Height of a single frame in pixels
-        const numberOfFrames = 16; // Number of frames in the animation
+        const frameWidth = WIND_FRAME_SIZE; // Width of a single frame in pixels
+        const frameHeight = WIND_FRAME_SIZE; // Height of a single frame in pixels
+        const numberOfFrames = WIND_NUM_OF_FRAME; // Number of frames in the animation
         for (let i = 0; i < numberOfFrames; i++) {
             const rect = new PIXI.Rectangle(i * frameWidth, 0, frameWidth, frameHeight);
             frames.push(new PIXI.Texture({source: texture.baseTexture, frame: rect}));

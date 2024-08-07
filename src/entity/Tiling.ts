@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import Application from "./Application";
 import { Entity } from "./Entity";
+import { TILING_URL } from "../utils/Constants";
 
 export class Tiling extends Entity {
     public tilingSprite: PIXI.TilingSprite;
@@ -18,7 +19,7 @@ export class Tiling extends Entity {
     public static async genInstance() {
         if (!Tiling.instance) {
             const instance = await Application.genInstance();
-            const texture = await PIXI.Assets.load('https://pixijs.com/assets/p2.jpeg');
+            const texture = await PIXI.Assets.load(TILING_URL);
             Tiling.instance = new Tiling(instance.app, texture);
         }
         return Tiling.instance;

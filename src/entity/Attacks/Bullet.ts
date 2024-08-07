@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { Enemy } from '../Enemy';
 import { Helper } from '../../utils/Helper';
 
+const SPEED = 5;
 export class Bullet {
     instance: PIXI.Graphics;
     speed: number;
@@ -14,13 +15,9 @@ export class Bullet {
         this.instance.endFill();
         this.instance.x = x;
         this.instance.y = y;
-        this.speed = 5;
+        this.speed = SPEED;
 
-        // Calculate the direction vector
-        const dx = targetX - x;
-        const dy = targetY - y;
-        const length = Math.sqrt(dx * dx + dy * dy);
-        this.direction = { x: dx / length, y: dy / length };
+        this.direction = Helper.calculateDirection(x, y, targetX, targetY, 16)
         this.isExploded = false;
     }
 

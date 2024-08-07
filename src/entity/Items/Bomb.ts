@@ -3,7 +3,7 @@ import { Item } from "./Item";
 import enemiesStateManager from "../../states/EnemyStateManager";
 import { Avatar } from "../Avatar";
 import { MainLayer } from "../../layer/MainLayer";
-import { ITEM_FRAME_SIZE } from "../../utils/Constants";
+import { BOMB_URL, ITEM_FRAME_SIZE } from "../../utils/Constants";
 
 export class Bomb extends Item {
     sprite: PIXI.Sprite;
@@ -18,7 +18,7 @@ export class Bomb extends Item {
     }
 
     static async create(layer: PIXI.Container, avatar: Avatar) {
-        const texture = await PIXI.Assets.load('https://guanw.github.io/sr_assets/bomb.png');
+        const texture = await PIXI.Assets.load(BOMB_URL);
         return new Bomb(layer, avatar, texture);
     }
 

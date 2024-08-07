@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Bullet } from '../entity/Attacks/Bullet';
 import { Wind } from '../entity/Attacks/Wind';
-import { GAME_WIDTH, GAME_HEIGHT } from '../entity/Application';
+import { GAME_WIDTH, GAME_HEIGHT } from '../utils/Constants';
 
 export class PlaygroundLayer {
     public static instance: PlaygroundLayer;

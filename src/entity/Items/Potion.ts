@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import { Item } from "./Item";
 import { Avatar } from "../Avatar";
 import { MainLayer } from "../../layer/MainLayer";
-import { ITEM_FRAME_SIZE } from "../../utils/Constants";
+import { ITEM_FRAME_SIZE, POTION_URL } from "../../utils/Constants";
 
 export class Potion extends Item {
     sprite: PIXI.Sprite;
@@ -17,7 +17,7 @@ export class Potion extends Item {
     }
 
     static async create(layer: PIXI.Container, avatar: Avatar) {
-        const texture = await PIXI.Assets.load('https://guanw.github.io/sr_assets/items/Potion01.png');
+        const texture = await PIXI.Assets.load(POTION_URL);
         return new Potion(layer, avatar, texture);
     }
 
