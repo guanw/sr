@@ -11,13 +11,12 @@ export abstract class Item extends Entity {
         (centerY - AVATAR_LOCATION.y) + Math.random() * GAME_HEIGHT];
     }
 
-    async genCollideCallback(): Promise<void> {
-    }
-
     async genCollide(): Promise<void> {
         const mainLayer = await MainLayer.genInstance();
         this.destroy(mainLayer.layer);
         await this.genCollideCallback();
+    }
+    async genCollideCallback(): Promise<void> {
     }
 
     protected destroy(layer: PIXI.Container) {
