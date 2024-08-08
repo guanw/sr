@@ -7,6 +7,7 @@ import enemiesStateManager from '../states/EnemyStateManager';
 import { itemsStateManager } from '../states/ItemsStateManager';
 import { genMoveUser } from '../states/events';
 import attackStateManager from '../states/AttackStateManager';
+import { AvatarAttackEnemiesEvent, GameEventManager } from '../states/events/GameEvent';
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
@@ -18,10 +19,12 @@ export class MainLayer {
     public static instance: MainLayer;
     public layer: PIXI.Container
     debugTool: DebugTool;
+    gameEventManager: GameEventManager;
 
     constructor(tiling: Tiling,  debugTool: DebugTool, user: Avatar) {
         this.layer = new PIXI.Container();
         this.debugTool = debugTool;
+        this.gameEventManager = GameEventManager.getInstance();
 
         this.layer.addChild(tiling.tilingSprite);
         this.layer.addChild(this.debugTool.container);
@@ -35,6 +38,7 @@ export class MainLayer {
             const user: Avatar = await Avatar.genInstance();
             const debugTool = await DebugTool.create();
 
+
             MainLayer.instance = new MainLayer(tiling, debugTool, user);
 
             // enemy related events
@@ -42,8 +46,7 @@ export class MainLayer {
                 await enemiesStateManager.genAddEnemy();
             });
             timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
-                const enemies = enemiesStateManager.getEnemies();
-                await user.genPerformAttack(enemies);
+                MainLayer.instance.gameEventManager.emit(new AvatarAttackEnemiesEvent())
             });
             timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, async () => {
                 const enemies = enemiesStateManager.getEnemies();
@@ -76,5 +79,7 @@ export class MainLayer {
         timedEventsManager.update();
 
         await this.debugTool.genUpdate();
+
+        this.gameEventManager.processEvents();
     }
 }
