@@ -41,8 +41,7 @@ export class Tiling extends Entity {
         // no-op
         throw new Error("Tiling Should not need to implement");
     }
-
-    protected destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
+    destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
         // no-op
         throw new Error("Tiling Should not need to implement");
     }

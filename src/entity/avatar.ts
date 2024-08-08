@@ -59,8 +59,6 @@ export class Avatar extends Entity {
     getDisplacement(): number {
         return AVATAR_SIZE / 2;
     }
-    protected destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
-    }
 
     /**
      * collision with enemy
@@ -104,7 +102,7 @@ export class Avatar extends Entity {
                 return;
             }
             if (item.isCollidedWith(this, COLLECT_ITEM_RANGE)) {
-                await item.genUponCollide();
+                await item.genCollide();
                 items.delete(key);
             }
         });
@@ -215,9 +213,6 @@ export class Avatar extends Entity {
         }
         getDisplacement(): number {
             return INITIAL_SWORD_SIZE/2;
-        }
-        protected destroy(layer: PIXI.Container<PIXI.ContainerChild>): void {
-
         }
 
         isCollidedWith(ent: Entity): boolean {

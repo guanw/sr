@@ -6,7 +6,6 @@ import { MainLayer } from "../../layer/MainLayer";
 import { BOMB_URL, ITEM_FRAME_SIZE } from "../../utils/Constants";
 
 export class Bomb extends Item {
-    sprite: PIXI.Sprite;
 
     constructor(layer: PIXI.Container, avatar: Avatar, texture: PIXI.Texture) {
         super();
@@ -38,14 +37,7 @@ export class Bomb extends Item {
         return ITEM_FRAME_SIZE/2;
     }
 
-
-    public destroy(layer: PIXI.Container) {
-        layer.removeChild(this.sprite);
-    }
-
-    async genUponCollide(): Promise<void> {
-        const mainLayer = await MainLayer.genInstance();
-        this.destroy(mainLayer.layer);
+    async genCollideCallback(): Promise<void> {
         enemiesStateManager.destroyAllEnemies();
     }
 }
