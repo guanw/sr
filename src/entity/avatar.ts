@@ -70,13 +70,12 @@ export class Avatar extends Entity {
                 return;
             }
             if (enemy.isCollidedWith(this)) {
-                await this.genUponCollide();
+                await this.genCollide();
             }
         })
     }
 
-    // override avatar genUponCollide with enemy
-    async genUponCollide(): Promise<void> {
+    private async genCollide(): Promise<void> {
         const instance = await Application.genInstance();
         const app = instance.app;
         this.updateHealth(avatarMetaData.hp_system.value - ENEMY_ATTACK_VALUE);
@@ -177,12 +176,11 @@ export class Avatar extends Entity {
         return avatarMetaData.hp_system.value;
     }
 
-    static Sword = class extends Entity {
+    static Sword = class {
         private app: PIXI.Application;
         private container: PIXI.Container;
         private instance: PIXI.Graphics;
         public constructor(app: PIXI.Application, container: PIXI.Container, avatar: PIXI.Sprite) {
-            super();
             this.app = app;
             this.container = container;
             this.instance = new PIXI.Graphics();
@@ -199,18 +197,6 @@ export class Avatar extends Entity {
             }, 200);
         }
 
-        getX(): number {
-            throw new Error("should not be called with collide(ent: Entity) being overriden");
-        }
-        getY(): number {
-            throw new Error("should not be called with collide(ent: Entity) being overriden");
-        }
-        setX(x: number): void {
-            throw new Error("Method not implemented.");
-        }
-        setY(y: number): void {
-            throw new Error("Method not implemented.");
-        }
         getDisplacement(): number {
             return INITIAL_SWORD_SIZE/2;
         }

@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Wind } from '../entity/Attacks/Wind';
-import enemiesStateManager from './EnemyStateManager';
 
 class AttackStateManager {
     private attacks: Map<string, Wind>;

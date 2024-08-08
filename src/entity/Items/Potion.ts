@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Item } from "./Item";
 import { Avatar } from "../Avatar";
-import { MainLayer } from "../../layer/MainLayer";
 import { ITEM_FRAME_SIZE, POTION_URL } from "../../utils/Constants";
 
 export class Potion extends Item {

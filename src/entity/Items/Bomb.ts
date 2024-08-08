@@ -2,7 +2,6 @@ import * as PIXI from "pixi.js";
 import { Item } from "./Item";
 import enemiesStateManager from "../../states/EnemyStateManager";
 import { Avatar } from "../Avatar";
-import { MainLayer } from "../../layer/MainLayer";
 import { BOMB_URL, ITEM_FRAME_SIZE } from "../../utils/Constants";
 
 export class Bomb extends Item {
