@@ -2,10 +2,10 @@
 export const GAME_WIDTH = 800;
 export const GAME_HEIGHT = 600;
 export const FALLBACK_BACKGROUND_COLOR = 0x1099bb;
-export const AVATAR_LOCATION = {x:GAME_WIDTH/2, y:GAME_HEIGHT/2};
+export const AVATAR_LOCATION = { x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 };
 
 // Tiling related
-export const TILING_URL = 'https://pixijs.com/assets/p2.jpeg';
+export const TILING_URL = "https://pixijs.com/assets/p2.jpeg";
 
 // Avatar related
 export const AVATAR_SPEED = 3;
@@ -27,11 +27,12 @@ export const ENEMY_FRAME_NUMBER = 6; // Number of frames in the animation
 
 // Item related
 export const ITEM_FRAME_SIZE = 32;
-export const BOMB_URL = 'https://guanw.github.io/sr_assets/bomb.png';
-export const POTION_URL = 'https://guanw.github.io/sr_assets/items/Potion01.png';
+export const BOMB_URL = "https://guanw.github.io/sr_assets/bomb.png";
+export const POTION_URL =
+  "https://guanw.github.io/sr_assets/items/Potion01.png";
 
 // Attack related
-export const WIND_URL = 'https://guanw.github.io/sr_assets/smoke/px_5.png';
+export const WIND_URL = "https://guanw.github.io/sr_assets/smoke/px_5.png";
 export const WIND_DISPLACEMENT = 32;
 export const WIND_FRAME_SIZE = 64;
 export const WIND_NUM_OF_FRAME = 16;

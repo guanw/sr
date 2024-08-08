@@ -1,8 +1,8 @@
-import * as PIXI from 'pixi.js';
-import { Avatar } from '../entity/Avatar';
-import { globalState } from '../states/events';
-import Application from '../entity/Application';
-import { Tiling } from '../entity/Tiling';
+import * as PIXI from "pixi.js";
+import { Avatar } from "../entity/Avatar";
+import { globalState } from "../states/events";
+import Application from "../entity/Application";
+import { Tiling } from "../entity/Tiling";
 
 export class DebugTool {
   public container: PIXI.Container;
@@ -10,7 +10,7 @@ export class DebugTool {
 
   constructor() {
     this.container = new PIXI.Container();
-    this.text = new PIXI.Text('', { fill: 'white' });
+    this.text = new PIXI.Text("", { fill: "white" });
     this.container.addChild(this.text);
 
     this.container.visible = globalState.isDebugToolVisible;
@@ -30,8 +30,8 @@ export class DebugTool {
     const visible = globalState.isDebugToolVisible;
     this.container.visible = visible;
     if (visible) {
-      this.container.x = (instance.app.screen.width / 2);
-      this.container.y = (instance.app.screen.height / 2);
+      this.container.x = instance.app.screen.width / 2;
+      this.container.y = instance.app.screen.height / 2;
       const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
       this.text.text = `Position: (${-tiling.getX()}, ${-tiling.getY()})\nHP: ${hp}\n Attack: (${-tiling.getX()}, ${-tiling.getY()})`;
     }
