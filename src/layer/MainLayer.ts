@@ -5,7 +5,6 @@ import { DebugTool } from '../internal/DebugTool';
 import { timedEventsManager } from '../timeEventsManager';
 import enemiesStateManager from '../states/EnemyStateManager';
 import { itemsStateManager } from '../states/ItemsStateManager';
-import { genMoveUser } from '../states/events';
 import attackStateManager from '../states/AttackStateManager';
 import { AvatarAttackEnemiesEvent, GameEventManager } from '../states/events/GameEvent';
 
@@ -66,8 +65,6 @@ export class MainLayer {
     }
 
     async update() {
-        genMoveUser(itemsStateManager.getItems(), enemiesStateManager.getEnemies());
-
         const enemies = enemiesStateManager.getEnemies();
         enemies.forEach(async (enemy) => {
             if (enemy !== undefined)
