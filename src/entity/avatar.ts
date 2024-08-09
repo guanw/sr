@@ -4,12 +4,10 @@ import { globalState } from "../states/events";
 import { Entity } from "./Entity";
 import Application from "./Application";
 import { MainLayer } from "../layer/MainLayer";
-import { Item } from "./Items/Item";
 import {
   MAX_HEALTH,
   AVATAR_SIZE,
   ENEMY_ATTACK_VALUE,
-  COLLECT_ITEM_RANGE,
   HP_POTION_INCREASE,
   HP_TEXT_X_OFFSET,
   HP_TEXT_Y_OFFSET,
@@ -70,24 +68,7 @@ export class Avatar extends Entity {
     return AVATAR_SIZE / 2;
   }
 
-  /**
-   * collision with enemy
-   */
-  public async genCheckCollisionWithEnemyAndReduceHealth(
-    enemies: Map<string, Enemy>
-  ) {
-    enemies.forEach(async (_, key) => {
-      const enemy = enemies.get(key);
-      if (enemy === undefined) {
-        return;
-      }
-      if (enemy.isCollidedWith(this)) {
-        await this.genCollide();
-      }
-    });
-  }
-
-  private async genCollide(): Promise<void> {
+  public async genCollide(): Promise<void> {
     const instance = await Application.genInstance();
     const app = instance.app;
     this.updateHealth(avatarMetaData.hp_system.value - ENEMY_ATTACK_VALUE);
@@ -104,19 +85,6 @@ export class Avatar extends Entity {
       gameOverText.y = app.screen.height / 2 - app.stage.y;
       app.stage.addChild(gameOverText);
     }
-  }
-
-  public async genCheckCollectingItems(items: Map<string, Item>) {
-    items.forEach(async (_, key) => {
-      const item = items.get(key);
-      if (item === undefined) {
-        return;
-      }
-      if (item.isCollidedWith(this, COLLECT_ITEM_RANGE)) {
-        await item.genCollide();
-        items.delete(key);
-      }
-    });
   }
 
   public static async genInitializeHPSystem() {

@@ -2,6 +2,7 @@ import { Avatar } from "../../entity/Avatar";
 import { Tiling } from "../../entity/Tiling";
 import { MainLayer } from "../../layer/MainLayer";
 import { Menu } from "../../menu";
+import { COLLECT_ITEM_RANGE } from "../../utils/Constants";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
 import { avatarKeys, globalState } from "../events";
@@ -115,7 +116,15 @@ export class GameEventManager {
   private async handleEnemiesAttackAvatar() {
     const enemies = enemiesStateManager.getEnemies();
     const user: Avatar = await Avatar.genInstance();
-    await user.genCheckCollisionWithEnemyAndReduceHealth(enemies);
+    enemies.forEach(async (_, key) => {
+      const enemy = enemies.get(key);
+      if (enemy === undefined) {
+        return;
+      }
+      if (enemy.isCollidedWith(user)) {
+        await user.genCollide();
+      }
+    });
   }
 
   private async handleGenerateNewItem() {
@@ -125,7 +134,16 @@ export class GameEventManager {
   private async handleCollectItem() {
     const items = itemsStateManager.getItems();
     const user: Avatar = await Avatar.genInstance();
-    await user.genCheckCollectingItems(items);
+    items.forEach(async (_, key) => {
+      const item = items.get(key);
+      if (item === undefined) {
+        return;
+      }
+      if (item.isCollidedWith(user, COLLECT_ITEM_RANGE)) {
+        await item.genCollide();
+        items.delete(key);
+      }
+    });
   }
 
   private async genMoveUser() {
