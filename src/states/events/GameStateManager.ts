@@ -83,6 +83,10 @@ export class GameEventManager {
         await this.handleGameOver();
         break;
       }
+      case "ENEMIES_MOVE_TOWARDS_AVATAR": {
+        await this.handleEnemiesMoveTowardsAvatar();
+        break;
+      }
     }
   }
 
@@ -195,5 +199,12 @@ export class GameEventManager {
         enemy.moveUp();
       });
     }
+  }
+
+  private async handleEnemiesMoveTowardsAvatar(): Promise<void> {
+    const enemies = enemiesStateManager.getEnemies();
+    enemies.forEach(async (enemy) => {
+      if (enemy !== undefined) await enemy.genMoveTowardsAvatar();
+    });
   }
 }

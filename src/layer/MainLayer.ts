@@ -9,6 +9,7 @@ import {
   AvatarAttackEnemiesEvent,
   CollectItemEvent,
   EnemiesAttackAvatarEvent,
+  EnemiesMoveTowardsAvatar,
   GenerateNewEnemyEvent,
   GenerateNewItemEvent,
 } from "../states/events/GameEvent";
@@ -87,10 +88,7 @@ export class MainLayer {
       return;
     }
 
-    const enemies = enemiesStateManager.getEnemies();
-    enemies.forEach(async (enemy) => {
-      if (enemy !== undefined) await enemy.genMoveTowardsAvatar();
-    });
+    MainLayer.instance.gameEventManager.emit(new EnemiesMoveTowardsAvatar());
 
     attackStateManager.updateAttacks();
 
