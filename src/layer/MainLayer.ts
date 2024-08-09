@@ -4,12 +4,13 @@ import { Avatar } from "../entity/Avatar";
 import { DebugTool } from "../internal/DebugTool";
 import { timedEventsManager } from "../timeEventsManager";
 import enemiesStateManager from "../states/EnemyStateManager";
-import { itemsStateManager } from "../states/ItemsStateManager";
 import attackStateManager from "../states/AttackStateManager";
 import {
   AvatarAttackEnemiesEvent,
+  CollectItemEvent,
   EnemiesAttackAvatarEvent,
   GenerateNewEnemyEvent,
+  GenerateNewItemEvent,
 } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
 import { globalState } from "../states/events";
@@ -62,11 +63,10 @@ export class MainLayer {
 
       // item related events
       timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, async () => {
-        await itemsStateManager.genAddItem(MainLayer.instance.layer);
+        MainLayer.instance.gameEventManager.emit(new GenerateNewItemEvent());
       });
       timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, async () => {
-        const items = itemsStateManager.getItems();
-        await user.genCheckCollectingItems(items);
+        MainLayer.instance.gameEventManager.emit(new CollectItemEvent());
       });
     }
     return MainLayer.instance;

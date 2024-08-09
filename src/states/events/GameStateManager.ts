@@ -1,5 +1,6 @@
 import { Avatar } from "../../entity/Avatar";
 import { Tiling } from "../../entity/Tiling";
+import { MainLayer } from "../../layer/MainLayer";
 import { Menu } from "../../menu";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
@@ -69,6 +70,14 @@ export class GameEventManager {
         await this.handleEnemiesAttackAvatar();
         break;
       }
+      case "GENERATE_NEW_ITEM": {
+        await this.handleGenerateNewItem();
+        break;
+      }
+      case "COLLECT_ITEM": {
+        await this.handleCollectItem();
+        break;
+      }
     }
   }
 
@@ -107,6 +116,16 @@ export class GameEventManager {
     const enemies = enemiesStateManager.getEnemies();
     const user: Avatar = await Avatar.genInstance();
     await user.genCheckCollisionWithEnemyAndReduceHealth(enemies);
+  }
+
+  private async handleGenerateNewItem() {
+    await itemsStateManager.genAddItem(MainLayer.instance.layer);
+  }
+
+  private async handleCollectItem() {
+    const items = itemsStateManager.getItems();
+    const user: Avatar = await Avatar.genInstance();
+    await user.genCheckCollectingItems(items);
   }
 
   private async genMoveUser() {
