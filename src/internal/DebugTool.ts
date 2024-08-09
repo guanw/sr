@@ -5,6 +5,7 @@ import Application from "../entity/Application";
 import { Tiling } from "../entity/Tiling";
 
 export class DebugTool {
+  private static instance: DebugTool;
   public container: PIXI.Container;
   private text: PIXI.Text;
 
@@ -12,28 +13,30 @@ export class DebugTool {
     this.container = new PIXI.Container();
     this.text = new PIXI.Text("", { fill: "white" });
     this.container.addChild(this.text);
-
     this.container.visible = globalState.isDebugToolVisible;
   }
 
-  public static async create() {
-    const tool = new DebugTool();
-    const instance = await Application.genInstance();
-    instance.app.stage.addChild(tool.container);
-    return tool;
+  static async genInstance() {
+    if (!this.instance) {
+      const instance = await Application.genInstance();
+      const tool = new DebugTool();
+      instance.app.stage.addChild(tool.container);
+      this.instance = tool;
+      this.instance.container.x = instance.app.screen.width / 2;
+      this.instance.container.y = instance.app.screen.height / 2;
+    }
+    return this.instance;
+  }
+
+  public toggle() {
+    globalState.isDebugToolVisible = !globalState.isDebugToolVisible;
+    this.container.visible = globalState.isDebugToolVisible;
   }
 
   public async genUpdate() {
     const tiling = await Tiling.genInstance();
-    const instance = await Application.genInstance();
     const avatar = await Avatar.genInstance();
-    const visible = globalState.isDebugToolVisible;
-    this.container.visible = visible;
-    if (visible) {
-      this.container.x = instance.app.screen.width / 2;
-      this.container.y = instance.app.screen.height / 2;
-      const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
-      this.text.text = `Position: (${-tiling.getX()}, ${-tiling.getY()})\nHP: ${hp}\n Attack: (${-tiling.getX()}, ${-tiling.getY()})`;
-    }
+    const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
+    this.text.text = `Position: (${-tiling.getX()}, ${-tiling.getY()})\nHP: ${hp}\n`;
   }
 }

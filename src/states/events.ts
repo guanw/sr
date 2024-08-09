@@ -20,20 +20,14 @@ export const globalState = {
   isPlaygroundActive: false,
 };
 
-function handleAvatarMoveKeyDown(e: KeyboardEvent): void {
+function handleKeyDown(e: KeyboardEvent): void {
   const gameEventManager = GameEventManager.getInstance();
   gameEventManager.emit(new KeyDownEvent(e));
 }
 
-function handleAvatarMoveKeyUp(e: KeyboardEvent): void {
+function handleKeyUp(e: KeyboardEvent): void {
   const gameEventManager = GameEventManager.getInstance();
   gameEventManager.emit(new KeyUpEvent(e));
-}
-
-function handleToggleDebugTool(e: KeyboardEvent): void {
-  if (e.key === "d" || e.key === "D") {
-    globalState.isDebugToolVisible = !globalState.isDebugToolVisible;
-  }
 }
 
 async function handleLayerSwitch(e: KeyboardEvent): Promise<void> {
@@ -59,9 +53,8 @@ export async function genHandleAvatarAttack(event: MouseEvent) {
 
 (function () {
   // Add event listeners for keydown and keyup events
-  window.addEventListener("keydown", handleAvatarMoveKeyDown);
-  window.addEventListener("keyup", handleAvatarMoveKeyUp);
-  window.addEventListener("keydown", handleToggleDebugTool);
+  window.addEventListener("keydown", handleKeyDown);
+  window.addEventListener("keyup", handleKeyUp);
   window.addEventListener("keydown", handleLayerSwitch);
   window.addEventListener("click", genHandleAvatarAttack);
 })();

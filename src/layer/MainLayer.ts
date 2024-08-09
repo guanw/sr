@@ -10,6 +10,7 @@ import {
   EnemiesMoveTowardsAvatarEvent,
   GenerateNewEnemyEvent,
   GenerateNewItemEvent,
+  RefreshDebugToolEvent,
   UpdateAttacksEvent,
 } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
@@ -43,7 +44,7 @@ export class MainLayer {
     if (!MainLayer.instance) {
       const tiling = await Tiling.genInstance();
       const user: Avatar = await Avatar.genInstance();
-      const debugTool = await DebugTool.create();
+      const debugTool = await DebugTool.genInstance();
 
       MainLayer.instance = new MainLayer(tiling, debugTool, user);
 
@@ -93,8 +94,8 @@ export class MainLayer {
 
     MainLayer.instance.gameEventManager.emit(new UpdateAttacksEvent());
 
-    timedEventsManager.update();
+    MainLayer.instance.gameEventManager.emit(new RefreshDebugToolEvent());
 
-    await this.debugTool.genUpdate();
+    timedEventsManager.update();
   }
 }

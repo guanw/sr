@@ -8,7 +8,8 @@ type EventType =
   | "COLLECT_ITEM"
   | "GAME_OVER"
   | "ENEMIES_MOVE_TOWARDS_AVATAR"
-  | "UPDATE_ATTACKS";
+  | "UPDATE_ATTACKS"
+  | "REFRESH_DEBUG_TOOL";
 
 export interface GameEvent {
   type: EventType;
@@ -60,4 +61,8 @@ export class EnemiesMoveTowardsAvatarEvent implements GameEvent {
 
 export class UpdateAttacksEvent implements GameEvent {
   type: EventType = "UPDATE_ATTACKS";
+}
+
+export class RefreshDebugToolEvent implements GameEvent {
+  type: EventType = "REFRESH_DEBUG_TOOL";
 }

@@ -1,5 +1,6 @@
 import { Avatar } from "../../entity/Avatar";
 import { Tiling } from "../../entity/Tiling";
+import { DebugTool } from "../../internal/DebugTool";
 import { MainLayer } from "../../layer/MainLayer";
 import { Menu } from "../../menu";
 import { COLLECT_ITEM_RANGE } from "../../utils/Constants";
@@ -48,13 +49,17 @@ export class GameEventManager {
         await this.handleAvatarAttackEnemiesEvent();
         break;
       case "KEY_DOWN": {
-        const KeyDownEvent = event as KeyDownEvent;
-        if (KeyDownEvent.event.key === "m" || KeyDownEvent.event.key === "M") {
+        const keyDownEvent = event as KeyDownEvent;
+        if (keyDownEvent.event.key === "m" || keyDownEvent.event.key === "M") {
           await this.handleToggleMenu();
         }
 
-        if (KeyDownEvent.event.key in avatarKeys) {
-          await this.handleAvatarMoveKeyDownEvent(KeyDownEvent.event);
+        if (keyDownEvent.event.key === "d" || keyDownEvent.event.key === "D") {
+          await this.handleToggleDebugTool();
+        }
+
+        if (keyDownEvent.event.key in avatarKeys) {
+          await this.handleAvatarMoveKeyDownEvent(keyDownEvent.event);
         }
 
         break;
@@ -92,6 +97,10 @@ export class GameEventManager {
         await this.handleUpdateAttacks();
         break;
       }
+      case "REFRESH_DEBUG_TOOL": {
+        await this.handleRefreshDebugTool();
+        break;
+      }
     }
   }
 
@@ -114,6 +123,18 @@ export class GameEventManager {
     if (globalState.isGamePaused) {
       menu.genUpdateMenuPosition();
     }
+  }
+
+  private async handleToggleDebugTool() {
+    const debugTool = await DebugTool.genInstance();
+    debugTool.toggle();
+  }
+  private async handleRefreshDebugTool() {
+    if (!globalState.isDebugToolVisible) {
+      return;
+    }
+    const debugTool = await DebugTool.genInstance();
+    await debugTool.genUpdate();
   }
 
   private async handleAvatarMoveKeyUpEvent(e: KeyboardEvent) {
