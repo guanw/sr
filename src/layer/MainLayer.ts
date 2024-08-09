@@ -6,10 +6,8 @@ import { timedEventsManager } from "../timeEventsManager";
 import enemiesStateManager from "../states/EnemyStateManager";
 import { itemsStateManager } from "../states/ItemsStateManager";
 import attackStateManager from "../states/AttackStateManager";
-import {
-  AvatarAttackEnemiesEvent,
-  GameEventManager,
-} from "../states/events/GameEvent";
+import { AvatarAttackEnemiesEvent } from "../states/events/GameEvent";
+import { GameEventManager } from "../states/events/GameStateManager";
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;

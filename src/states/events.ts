@@ -6,8 +6,8 @@ import { Wind } from "../entity/Attacks/Wind";
 import {
   AvatarMoveKeyDownEvent,
   AvatarMoveKeyUpEvent,
-  GameEventManager,
 } from "./events/GameEvent";
+import { GameEventManager } from "../states/events/GameStateManager";
 
 export const avatarKeys: { [key: string]: boolean } = {
   ArrowLeft: false,
