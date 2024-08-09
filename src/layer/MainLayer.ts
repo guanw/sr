@@ -3,15 +3,14 @@ import { Tiling } from "../entity/Tiling";
 import { Avatar } from "../entity/Avatar";
 import { DebugTool } from "../internal/DebugTool";
 import { timedEventsManager } from "../timeEventsManager";
-import enemiesStateManager from "../states/EnemyStateManager";
-import attackStateManager from "../states/AttackStateManager";
 import {
   AvatarAttackEnemiesEvent,
   CollectItemEvent,
   EnemiesAttackAvatarEvent,
-  EnemiesMoveTowardsAvatar,
+  EnemiesMoveTowardsAvatarEvent,
   GenerateNewEnemyEvent,
   GenerateNewItemEvent,
+  UpdateAttacksEvent,
 } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
 import { globalState } from "../states/events";
@@ -88,9 +87,11 @@ export class MainLayer {
       return;
     }
 
-    MainLayer.instance.gameEventManager.emit(new EnemiesMoveTowardsAvatar());
+    MainLayer.instance.gameEventManager.emit(
+      new EnemiesMoveTowardsAvatarEvent()
+    );
 
-    attackStateManager.updateAttacks();
+    MainLayer.instance.gameEventManager.emit(new UpdateAttacksEvent());
 
     timedEventsManager.update();
 

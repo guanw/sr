@@ -7,7 +7,8 @@ type EventType =
   | "GENERATE_NEW_ITEM"
   | "COLLECT_ITEM"
   | "GAME_OVER"
-  | "ENEMIES_MOVE_TOWARDS_AVATAR";
+  | "ENEMIES_MOVE_TOWARDS_AVATAR"
+  | "UPDATE_ATTACKS";
 
 export interface GameEvent {
   type: EventType;
@@ -53,6 +54,10 @@ export class GameOverEvent implements GameEvent {
   type: EventType = "GAME_OVER";
 }
 
-export class EnemiesMoveTowardsAvatar implements GameEvent {
+export class EnemiesMoveTowardsAvatarEvent implements GameEvent {
   type: EventType = "ENEMIES_MOVE_TOWARDS_AVATAR";
+}
+
+export class UpdateAttacksEvent implements GameEvent {
+  type: EventType = "UPDATE_ATTACKS";
 }

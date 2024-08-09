@@ -3,6 +3,7 @@ import { Tiling } from "../../entity/Tiling";
 import { MainLayer } from "../../layer/MainLayer";
 import { Menu } from "../../menu";
 import { COLLECT_ITEM_RANGE } from "../../utils/Constants";
+import attackStateManager from "../AttackStateManager";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
 import { avatarKeys, globalState } from "../events";
@@ -87,6 +88,10 @@ export class GameEventManager {
         await this.handleEnemiesMoveTowardsAvatar();
         break;
       }
+      case "UPDATE_ATTACKS": {
+        await this.handleUpdateAttacks();
+        break;
+      }
     }
   }
 
@@ -156,6 +161,10 @@ export class GameEventManager {
 
   private async handleGameOver() {
     globalState.isGameOver = true;
+  }
+
+  private async handleUpdateAttacks() {
+    attackStateManager.updateAttacks();
   }
 
   private async genMoveUser() {
