@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import Application from "./entity/Application";
 
 export class Menu {
+  private static instance: Menu;
   public container: PIXI.Container;
   constructor(app: PIXI.Application<PIXI.Renderer>) {
     this.container = new PIXI.Container();
@@ -28,6 +29,14 @@ export class Menu {
 
     app.stage.addChild(this.container);
     this.container.visible = false; // Hide the menu initially
+  }
+
+  public static async genInstance(): Promise<Menu> {
+    const app = await Application.genInstance();
+    if (!Menu.instance) {
+      Menu.instance = new Menu(app.app);
+    }
+    return Menu.instance;
   }
 
   public async genUpdateMenuPosition() {

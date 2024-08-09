@@ -8,6 +8,7 @@ import { itemsStateManager } from "../states/ItemsStateManager";
 import attackStateManager from "../states/AttackStateManager";
 import { AvatarAttackEnemiesEvent } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
+import { globalState } from "../states/events";
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
@@ -67,6 +68,13 @@ export class MainLayer {
   }
 
   async update() {
+    this.gameEventManager.processEvents();
+
+    const isGamePaused = globalState.isGamePaused;
+    if (isGamePaused) {
+      return;
+    }
+
     const enemies = enemiesStateManager.getEnemies();
     enemies.forEach(async (enemy) => {
       if (enemy !== undefined) await enemy.genMoveTowardsAvatar();
@@ -77,7 +85,5 @@ export class MainLayer {
     timedEventsManager.update();
 
     await this.debugTool.genUpdate();
-
-    this.gameEventManager.processEvents();
   }
 }

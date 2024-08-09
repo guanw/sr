@@ -1,13 +1,10 @@
 import { Avatar } from "../../entity/Avatar";
 import { Tiling } from "../../entity/Tiling";
+import { Menu } from "../../menu";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
-import { avatarKeys } from "../events";
-import {
-  GameEvent,
-  AvatarMoveKeyDownEvent,
-  AvatarMoveKeyUpEvent,
-} from "./GameEvent";
+import { avatarKeys, globalState } from "../events";
+import { GameEvent, KeyDownEvent, KeyUpEvent } from "./GameEvent";
 
 export class GameEventManager {
   private static instance: GameEventManager;
@@ -34,8 +31,12 @@ export class GameEventManager {
       }
     }
 
-    // TODO multi-player game genMoveUser should be executed on client side
+    /* TODO start multi-player game genMoveUser should be executed on client side */
+    if (globalState.isGamePaused) {
+      return;
+    }
     await this.genMoveUser();
+    /* TODO end multi-player game genMoveUser should be executed on client side */
   }
 
   private async handleEvent(event: GameEvent) {
@@ -43,13 +44,20 @@ export class GameEventManager {
       case "AVATAR_ATTACK_ENEMIES":
         await this.handleAvatarAttackEnemiesEvent();
         break;
-      case "AVATAR_MOVE_KEY_DOWN": {
-        const moveKeyDownEvent = event as AvatarMoveKeyDownEvent;
-        await this.handleAvatarMoveKeyDownEvent(moveKeyDownEvent.event);
+      case "KEY_DOWN": {
+        const KeyDownEvent = event as KeyDownEvent;
+        if (KeyDownEvent.event.key === "m" || KeyDownEvent.event.key === "M") {
+          await this.handleToggleMenu();
+        }
+
+        if (KeyDownEvent.event.key in avatarKeys) {
+          await this.handleAvatarMoveKeyDownEvent(KeyDownEvent.event);
+        }
+
         break;
       }
-      case "AVATAR_MOVE_KEY_UP": {
-        const moveKeyUpEvent = event as AvatarMoveKeyUpEvent;
+      case "KEY_UP": {
+        const moveKeyUpEvent = event as KeyUpEvent;
         await this.handleAvatarMoveKeyUpEvent(moveKeyUpEvent.event);
         break;
       }
@@ -65,6 +73,15 @@ export class GameEventManager {
   private async handleAvatarMoveKeyDownEvent(e: KeyboardEvent) {
     if (e.key in avatarKeys) {
       avatarKeys[e.key] = true;
+    }
+  }
+
+  private async handleToggleMenu() {
+    globalState.isGamePaused = !globalState.isGamePaused;
+    const menu = await Menu.genInstance();
+    menu.setMenuVisibility(globalState.isGamePaused);
+    if (globalState.isGamePaused) {
+      menu.genUpdateMenuPosition();
     }
   }
 

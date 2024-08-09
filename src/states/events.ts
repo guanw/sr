@@ -3,10 +3,7 @@ import { PlaygroundLayer } from "../layer/PlaygroundLayer";
 import attackStateManager from "./AttackStateManager";
 import { AVATAR_LOCATION, WIND_DISPLACEMENT } from "../utils/Constants";
 import { Wind } from "../entity/Attacks/Wind";
-import {
-  AvatarMoveKeyDownEvent,
-  AvatarMoveKeyUpEvent,
-} from "./events/GameEvent";
+import { KeyDownEvent, KeyUpEvent } from "./events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
 
 export const avatarKeys: { [key: string]: boolean } = {
@@ -25,18 +22,12 @@ export const globalState = {
 
 function handleAvatarMoveKeyDown(e: KeyboardEvent): void {
   const gameEventManager = GameEventManager.getInstance();
-  gameEventManager.emit(new AvatarMoveKeyDownEvent(e));
+  gameEventManager.emit(new KeyDownEvent(e));
 }
 
 function handleAvatarMoveKeyUp(e: KeyboardEvent): void {
   const gameEventManager = GameEventManager.getInstance();
-  gameEventManager.emit(new AvatarMoveKeyUpEvent(e));
-}
-
-function handleToggleMenu(e: KeyboardEvent): void {
-  if (e.key === "m" || e.key === "M") {
-    globalState.isGamePaused = !globalState.isGamePaused;
-  }
+  gameEventManager.emit(new KeyUpEvent(e));
 }
 
 function handleToggleDebugTool(e: KeyboardEvent): void {
@@ -70,7 +61,6 @@ export async function genHandleAvatarAttack(event: MouseEvent) {
   // Add event listeners for keydown and keyup events
   window.addEventListener("keydown", handleAvatarMoveKeyDown);
   window.addEventListener("keyup", handleAvatarMoveKeyUp);
-  window.addEventListener("keydown", handleToggleMenu);
   window.addEventListener("keydown", handleToggleDebugTool);
   window.addEventListener("keydown", handleLayerSwitch);
   window.addEventListener("click", genHandleAvatarAttack);

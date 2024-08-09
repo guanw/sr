@@ -3,7 +3,6 @@ import { globalState } from "./states/events";
 import Application from "./entity/Application";
 import { MainLayer } from "./layer/MainLayer";
 import { PlaygroundLayer } from "./layer/PlaygroundLayer";
-import { Menu } from "./menu";
 
 (async () => {
   // initialize app instance
@@ -14,19 +13,12 @@ import { Menu } from "./menu";
   instance.app.stage.addChild(playgroundLayer.layer);
   mainLayer.layer.visible = true;
   playgroundLayer.layer.visible = false;
-  const menu = new Menu(instance.app);
+
   // Game loop
   async function gameLoop() {
-    // Add main layer-specific update logic here
-    const isGamePaused = globalState.isGamePaused;
     const isGameOver = globalState.isGameOver;
-    // if paused, show menu
-    menu.setMenuVisibility(isGamePaused);
-    if (isGamePaused) {
-      menu.genUpdateMenuPosition();
-    }
 
-    if (isGamePaused || isGameOver) {
+    if (isGameOver) {
       requestAnimationFrame(gameLoop);
       return;
     }
