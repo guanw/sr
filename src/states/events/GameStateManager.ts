@@ -61,6 +61,14 @@ export class GameEventManager {
         await this.handleAvatarMoveKeyUpEvent(moveKeyUpEvent.event);
         break;
       }
+      case "GENERATE_NEW_ENEMY": {
+        await this.handleGenerateNewEnemy();
+        break;
+      }
+      case "ENEMIES_ATTACK_AVATAR": {
+        await this.handleEnemiesAttackAvatar();
+        break;
+      }
     }
   }
 
@@ -89,6 +97,16 @@ export class GameEventManager {
     if (e.key in avatarKeys) {
       avatarKeys[e.key] = false;
     }
+  }
+
+  private async handleGenerateNewEnemy() {
+    await enemiesStateManager.genAddEnemy();
+  }
+
+  private async handleEnemiesAttackAvatar() {
+    const enemies = enemiesStateManager.getEnemies();
+    const user: Avatar = await Avatar.genInstance();
+    await user.genCheckCollisionWithEnemyAndReduceHealth(enemies);
   }
 
   private async genMoveUser() {

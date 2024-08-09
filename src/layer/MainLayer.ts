@@ -6,7 +6,11 @@ import { timedEventsManager } from "../timeEventsManager";
 import enemiesStateManager from "../states/EnemyStateManager";
 import { itemsStateManager } from "../states/ItemsStateManager";
 import attackStateManager from "../states/AttackStateManager";
-import { AvatarAttackEnemiesEvent } from "../states/events/GameEvent";
+import {
+  AvatarAttackEnemiesEvent,
+  EnemiesAttackAvatarEvent,
+  GenerateNewEnemyEvent,
+} from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
 import { globalState } from "../states/events";
 
@@ -43,7 +47,7 @@ export class MainLayer {
 
       // enemy related events
       timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
-        await enemiesStateManager.genAddEnemy();
+        MainLayer.instance.gameEventManager.emit(new GenerateNewEnemyEvent());
       });
       timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
         MainLayer.instance.gameEventManager.emit(
@@ -51,8 +55,9 @@ export class MainLayer {
         );
       });
       timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, async () => {
-        const enemies = enemiesStateManager.getEnemies();
-        await user.genCheckCollisionWithEnemyAndReduceHealth(enemies);
+        MainLayer.instance.gameEventManager.emit(
+          new EnemiesAttackAvatarEvent()
+        );
       });
 
       // item related events

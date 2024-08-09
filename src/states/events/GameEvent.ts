@@ -1,4 +1,9 @@
-type EventType = "AVATAR_ATTACK_ENEMIES" | "KEY_DOWN" | "KEY_UP";
+type EventType =
+  | "AVATAR_ATTACK_ENEMIES"
+  | "KEY_DOWN"
+  | "KEY_UP"
+  | "GENERATE_NEW_ENEMY"
+  | "ENEMIES_ATTACK_AVATAR";
 
 export interface GameEvent {
   type: EventType;
@@ -6,6 +11,14 @@ export interface GameEvent {
 
 export class AvatarAttackEnemiesEvent implements GameEvent {
   type: EventType = "AVATAR_ATTACK_ENEMIES";
+}
+
+export class GenerateNewEnemyEvent implements GameEvent {
+  type: EventType = "GENERATE_NEW_ENEMY";
+}
+
+export class EnemiesAttackAvatarEvent implements GameEvent {
+  type: EventType = "ENEMIES_ATTACK_AVATAR";
 }
 
 export class KeyDownEvent implements GameEvent {
