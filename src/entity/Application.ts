@@ -4,6 +4,7 @@ import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "../utils/Constants";
+import { Avatar } from "./Avatar";
 
 export type Position = {
   x: number;
@@ -28,6 +29,20 @@ class Application {
       document.body.appendChild(Application.instance.app.canvas);
     }
     return Application.instance;
+  }
+
+  public async genHandleGameOver() {
+    const avatar = await Avatar.genInstance();
+    avatar.updateHealth(0);
+    const gameOverText = new PIXI.Text("Game Over", {
+      fontSize: 48,
+      fill: 0xff0000,
+      align: "center",
+    });
+    gameOverText.anchor.set(0.5);
+    gameOverText.x = this.app.screen.width / 2 - this.app.stage.x;
+    gameOverText.y = this.app.screen.height / 2 - this.app.stage.y;
+    this.app.stage.addChild(gameOverText);
   }
 }
 

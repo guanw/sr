@@ -1,6 +1,5 @@
 import * as PIXI from "pixi.js";
 import { Enemy } from "./Enemy";
-import { globalState } from "../states/events";
 import { Entity } from "./Entity";
 import Application from "./Application";
 import { MainLayer } from "../layer/MainLayer";
@@ -14,6 +13,7 @@ import {
   INITIAL_SWORD_SIZE,
   SWORD_WIDTH,
 } from "../utils/Constants";
+import { GameOverEvent } from "../states/events/GameEvent";
 
 const avatarMetaData = {
   hp_system: {
@@ -69,21 +69,9 @@ export class Avatar extends Entity {
   }
 
   public async genCollide(): Promise<void> {
-    const instance = await Application.genInstance();
-    const app = instance.app;
     this.updateHealth(avatarMetaData.hp_system.value - ENEMY_ATTACK_VALUE);
     if (avatarMetaData.hp_system.value <= 0) {
-      this.updateHealth(0);
-      globalState.isGameOver = true;
-      const gameOverText = new PIXI.Text("Game Over", {
-        fontSize: 48,
-        fill: 0xff0000,
-        align: "center",
-      });
-      gameOverText.anchor.set(0.5);
-      gameOverText.x = app.screen.width / 2 - app.stage.x;
-      gameOverText.y = app.screen.height / 2 - app.stage.y;
-      app.stage.addChild(gameOverText);
+      MainLayer.instance.gameEventManager.emit(new GameOverEvent());
     }
   }
 
@@ -122,7 +110,7 @@ export class Avatar extends Entity {
     );
   }
 
-  private updateHealth(newHealth: number) {
+  public updateHealth(newHealth: number) {
     avatarMetaData.hp_system.value = newHealth;
     Avatar.healthBar.width = (avatarMetaData.hp_system.value / 100) * 100;
   }

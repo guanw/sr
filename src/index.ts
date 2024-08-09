@@ -19,6 +19,7 @@ import { PlaygroundLayer } from "./layer/PlaygroundLayer";
     const isGameOver = globalState.isGameOver;
 
     if (isGameOver) {
+      await instance.genHandleGameOver();
       requestAnimationFrame(gameLoop);
       return;
     }

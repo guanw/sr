@@ -14,6 +14,7 @@ import {
 } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
 import { globalState } from "../states/events";
+import Application from "../entity/Application";
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
@@ -76,7 +77,13 @@ export class MainLayer {
     this.gameEventManager.processEvents();
 
     const isGamePaused = globalState.isGamePaused;
+    const isGameOver = globalState.isGameOver;
     if (isGamePaused) {
+      return;
+    }
+    if (isGameOver) {
+      const app = await Application.genInstance();
+      await app.genHandleGameOver();
       return;
     }
 

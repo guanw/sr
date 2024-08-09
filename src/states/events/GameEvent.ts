@@ -5,7 +5,8 @@ type EventType =
   | "GENERATE_NEW_ENEMY"
   | "ENEMIES_ATTACK_AVATAR"
   | "GENERATE_NEW_ITEM"
-  | "COLLECT_ITEM";
+  | "COLLECT_ITEM"
+  | "GAME_OVER";
 
 export interface GameEvent {
   type: EventType;
@@ -45,4 +46,8 @@ export class KeyUpEvent implements GameEvent {
   constructor(event: KeyboardEvent) {
     this.event = event;
   }
+}
+
+export class GameOverEvent implements GameEvent {
+  type: EventType = "GAME_OVER";
 }

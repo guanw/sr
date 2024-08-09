@@ -79,6 +79,10 @@ export class GameEventManager {
         await this.handleCollectItem();
         break;
       }
+      case "GAME_OVER": {
+        await this.handleGameOver();
+        break;
+      }
     }
   }
 
@@ -144,6 +148,10 @@ export class GameEventManager {
         items.delete(key);
       }
     });
+  }
+
+  private async handleGameOver() {
+    globalState.isGameOver = true;
   }
 
   private async genMoveUser() {
