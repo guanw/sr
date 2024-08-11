@@ -12,6 +12,10 @@ import {
   HP_TEXT_Y_OFFSET,
   INITIAL_SWORD_SIZE,
   SWORD_WIDTH,
+  AVATAR_FRAME_SIZE,
+  AVATAR_NUM_OF_FRAME,
+  AVATAR_URL,
+  AVATAR_ANIMATION_SPEED,
 } from "../utils/Constants";
 import { GameOverEvent } from "../states/events/GameEvent";
 
@@ -24,16 +28,20 @@ const avatarMetaData = {
 
 export class Avatar extends Entity {
   public static instance: Avatar;
-  public sprite: PIXI.Sprite;
+  public sprite: PIXI.AnimatedSprite;
   static healthBarContainer = new PIXI.Graphics();
   static healthBar = new PIXI.Graphics();
 
-  private constructor(app: PIXI.Application, texture: PIXI.Texture) {
+  private constructor(app: PIXI.Application, texture: PIXI.Texture[]) {
     super();
     const appWidth: number = app.screen.width;
     const appHeight: number = app.screen.height;
-    this.sprite = new PIXI.Sprite(texture);
+    this.sprite = new PIXI.AnimatedSprite(texture);
     this.sprite.anchor.set(0.5);
+    this.sprite.width = 75;
+    this.sprite.height = 75;
+    this.sprite.animationSpeed = AVATAR_ANIMATION_SPEED;
+    this.sprite.play();
     this.sprite.x = appWidth / 2;
     this.sprite.y = appHeight / 2;
     app.stage.addChild(this.sprite);
@@ -43,10 +51,23 @@ export class Avatar extends Entity {
   public static async genInstance(): Promise<Avatar> {
     if (!Avatar.instance) {
       const instance = await Application.genInstance();
-      const asset = await PIXI.Assets.load(
-        "https://pixijs.com/assets/bunny.png"
-      );
-      Avatar.instance = new Avatar(instance.app, asset);
+      const texture = await PIXI.Assets.load(AVATAR_URL);
+      const frames = [];
+      const frameWidth = AVATAR_FRAME_SIZE;
+      const frameHeight = AVATAR_FRAME_SIZE;
+      const numberOfFrames = AVATAR_NUM_OF_FRAME;
+      for (let i = 0; i < numberOfFrames; i++) {
+        const rect = new PIXI.Rectangle(
+          i * frameWidth,
+          0,
+          frameWidth,
+          frameHeight
+        );
+        frames.push(
+          new PIXI.Texture({ source: texture.baseTexture, frame: rect })
+        );
+      }
+      Avatar.instance = new Avatar(instance.app, frames);
       await this.genInitializeHPSystem();
     }
     return Avatar.instance;

@@ -18,6 +18,10 @@ export const HP_TEXT_X_OFFSET = 500;
 export const HP_TEXT_Y_OFFSET = 500;
 export const HP_POTION_INCREASE = 50;
 export const AVATAR_SIZE = 14;
+export const AVATAR_FRAME_SIZE = 48;
+export const AVATAR_NUM_OF_FRAME = 6;
+export const AVATAR_URL = "https://guanw.github.io/sr_assets/avatar.png";
+export const AVATAR_ANIMATION_SPEED = 0.1;
 
 // Enemy related
 export const ENEMY_SPEED = 1;
