@@ -38,7 +38,6 @@ export class Tiling extends Entity {
     this.tilingSprite.tilePosition.y = y;
   }
   getDisplacement(): number {
-    // no-op
     throw new Error("Tiling Should not need to implement");
   }
 }

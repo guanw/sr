@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Tiling } from "../entity/Tiling";
 import { Avatar } from "../entity/Avatar";
-import { DebugTool } from "../internal/DebugTool";
 import { timedEventsManager } from "../timeEventsManager";
 import {
   AvatarAttackEnemiesEvent,
@@ -26,16 +25,13 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 export class MainLayer {
   public static instance: MainLayer;
   public layer: PIXI.Container;
-  debugTool: DebugTool;
   gameEventManager: GameEventManager;
 
-  constructor(tiling: Tiling, debugTool: DebugTool, user: Avatar) {
+  constructor(tiling: Tiling, user: Avatar) {
     this.layer = new PIXI.Container();
-    this.debugTool = debugTool;
     this.gameEventManager = GameEventManager.getInstance();
 
     this.layer.addChild(tiling.tilingSprite);
-    this.layer.addChild(this.debugTool.container);
     this.layer.addChild(user.sprite);
     this.layer.addChild(Avatar.healthBarContainer);
   }
@@ -44,9 +40,8 @@ export class MainLayer {
     if (!MainLayer.instance) {
       const tiling = await Tiling.genInstance();
       const user: Avatar = await Avatar.genInstance();
-      const debugTool = await DebugTool.genInstance();
 
-      MainLayer.instance = new MainLayer(tiling, debugTool, user);
+      MainLayer.instance = new MainLayer(tiling, user);
 
       // enemy related events
       timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {

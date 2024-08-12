@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js";
 import { Avatar } from "../entity/Avatar";
 import { globalState } from "../states/events";
-import Application from "../entity/Application";
 import { Tiling } from "../entity/Tiling";
+import { MainLayer } from "../layer/MainLayer";
 
 export class DebugTool {
   private static instance: DebugTool;
@@ -18,12 +18,12 @@ export class DebugTool {
 
   static async genInstance() {
     if (!this.instance) {
-      const instance = await Application.genInstance();
+      const mainLayer = await MainLayer.genInstance();
       const tool = new DebugTool();
-      instance.app.stage.addChild(tool.container);
+      mainLayer.layer.addChild(tool.container);
       this.instance = tool;
-      this.instance.container.x = instance.app.screen.width / 2;
-      this.instance.container.y = instance.app.screen.height / 2;
+      this.instance.container.x = 400;
+      this.instance.container.y = 300;
     }
     return this.instance;
   }
