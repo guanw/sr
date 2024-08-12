@@ -44,7 +44,6 @@ export class Avatar extends Entity {
     this.sprite.play();
     this.sprite.x = appWidth / 2;
     this.sprite.y = appHeight / 2;
-    app.stage.addChild(this.sprite);
     this.renderAvatarHP();
   }
 
@@ -119,10 +118,6 @@ export class Avatar extends Entity {
     this.healthBar.drawRect(0, 0, 100, 10);
     this.healthBar.endFill();
     this.healthBarContainer.addChild(this.healthBar);
-
-    const instance = await Application.genInstance();
-    // add health bar container
-    instance.app.stage.addChild(avatarMetaData.hp_system.bar);
   }
 
   public increaseHP() {
