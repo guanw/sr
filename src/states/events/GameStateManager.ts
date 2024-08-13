@@ -1,15 +1,10 @@
-import { Wind } from "../../entity/Attacks/Wind";
 import { Avatar } from "../../entity/Avatar";
 import { Tiling } from "../../entity/Tiling";
 import { DebugTool } from "../../internal/DebugTool";
 import { MainLayer } from "../../layer/MainLayer";
 import { PlaygroundLayer } from "../../layer/PlaygroundLayer";
 import { Menu } from "../../menu";
-import {
-  AVATAR_LOCATION,
-  COLLECT_ITEM_RANGE,
-  WIND_DISPLACEMENT,
-} from "../../utils/Constants";
+import { COLLECT_ITEM_RANGE } from "../../utils/Constants";
 import attackStateManager from "../AttackStateManager";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
@@ -263,13 +258,6 @@ export class GameEventManager {
   }
 
   private async handleAvatarInitiateAttack(event: MouseEvent): Promise<void> {
-    const wind = await Wind.create(
-      AVATAR_LOCATION.x - WIND_DISPLACEMENT,
-      AVATAR_LOCATION.y - WIND_DISPLACEMENT,
-      event.clientX,
-      event.clientY
-    );
-    attackStateManager.addAttack(wind);
-    MainLayer.instance.layer.addChild(wind.instance);
+    await attackStateManager.genAddAttack(event.clientX, event.clientY);
   }
 }

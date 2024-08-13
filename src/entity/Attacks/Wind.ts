@@ -58,7 +58,9 @@ export class Wind {
       );
     }
 
-    return new Wind(frames, x, y, targetX, targetY);
+    const wind = new Wind(frames, x, y, targetX, targetY);
+    MainLayer.instance.layer.addChild(wind.instance);
+    return wind;
   }
 
   move() {
