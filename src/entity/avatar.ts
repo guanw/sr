@@ -16,6 +16,8 @@ import {
   AVATAR_NUM_OF_FRAME,
   AVATAR_URL,
   AVATAR_ANIMATION_SPEED,
+  GAME_WIDTH,
+  GAME_HEIGHT,
 } from "../utils/Constants";
 import { GameOverEvent } from "../states/events/GameEvent";
 
@@ -28,67 +30,107 @@ const avatarMetaData = {
 
 export class Avatar extends Entity {
   public static instance: Avatar;
-  public sprite: PIXI.AnimatedSprite;
+  private walkingSprite: PIXI.AnimatedSprite;
+  private attackingSprite: PIXI.AnimatedSprite;
+  public currentSprite: PIXI.AnimatedSprite;
   private static healthBarContainer = new PIXI.Graphics();
   static healthBar = new PIXI.Graphics();
 
-  private constructor(app: PIXI.Application, texture: PIXI.Texture[]) {
+  private constructor(
+    walkingTexture: PIXI.Texture[],
+    attackTexture: PIXI.Texture[]
+  ) {
     super();
-    const appWidth: number = app.screen.width;
-    const appHeight: number = app.screen.height;
-    this.sprite = new PIXI.AnimatedSprite(texture);
-    this.sprite.anchor.set(0.5);
-    this.sprite.width = 75;
-    this.sprite.height = 75;
-    this.sprite.animationSpeed = AVATAR_ANIMATION_SPEED;
-    this.sprite.play();
-    this.sprite.x = appWidth / 2;
-    this.sprite.y = appHeight / 2;
+    this.walkingSprite = this.initSprite(walkingTexture);
+    this.attackingSprite = this.initSprite(attackTexture);
+    this.currentSprite = this.walkingSprite;
     this.renderAvatarHP();
+  }
+
+  private initSprite(texture: PIXI.Texture[]) {
+    const sprite = new PIXI.AnimatedSprite(texture);
+    sprite.anchor.set(0.5);
+    sprite.width = 75;
+    sprite.height = 75;
+    sprite.animationSpeed = AVATAR_ANIMATION_SPEED;
+    sprite.play();
+    sprite.x = GAME_WIDTH / 2;
+    sprite.y = GAME_HEIGHT / 2;
+    return sprite;
   }
 
   public static async genInstance(): Promise<Avatar> {
     if (!Avatar.instance) {
-      const instance = await Application.genInstance();
       const texture = await PIXI.Assets.load(AVATAR_URL);
-      const frames = [];
-      const frameWidth = AVATAR_FRAME_SIZE;
-      const frameHeight = AVATAR_FRAME_SIZE;
-      const numberOfFrames = AVATAR_NUM_OF_FRAME;
-      for (let i = 0; i < numberOfFrames; i++) {
-        const rect = new PIXI.Rectangle(
-          i * frameWidth,
-          0,
-          frameWidth,
-          frameHeight
-        );
-        frames.push(
-          new PIXI.Texture({ source: texture.baseTexture, frame: rect })
-        );
-      }
-      Avatar.instance = new Avatar(instance.app, frames);
+      const walkingFrames = await Avatar.genLoadTexture(texture, 0);
+      const attackFrames = await Avatar.genLoadTexture(texture, 6);
+      Avatar.instance = new Avatar(walkingFrames, attackFrames);
       await this.genInitializeHPSystem();
       const mainLayer = await MainLayer.genInstance();
-      mainLayer.layer.addChild(Avatar.instance.sprite);
+      mainLayer.layer.addChild(Avatar.instance.currentSprite);
       mainLayer.layer.addChild(Avatar.healthBarContainer);
     }
     return Avatar.instance;
   }
 
+  private static async genLoadTexture(texture: PIXI.Texture, row: number) {
+    const frames = [];
+    const frameWidth = AVATAR_FRAME_SIZE;
+    const frameHeight = AVATAR_FRAME_SIZE;
+    const numberOfFrames = AVATAR_NUM_OF_FRAME;
+    for (let i = 0; i < numberOfFrames; i++) {
+      const rect = new PIXI.Rectangle(
+        i * frameWidth,
+        row * frameWidth,
+        frameWidth,
+        frameHeight
+      );
+      frames.push(
+        new PIXI.Texture({ source: texture.baseTexture, frame: rect })
+      );
+    }
+    return frames;
+  }
+
   getX(): number {
-    return this.sprite.x;
+    return this.currentSprite.x;
   }
   getY(): number {
-    return this.sprite.y;
+    return this.currentSprite.y;
   }
   setX(x: number): void {
-    this.sprite.x = x;
+    this.currentSprite.x = x;
   }
   setY(y: number): void {
-    this.sprite.y = y;
+    this.currentSprite.y = y;
   }
   getDisplacement(): number {
     return AVATAR_SIZE / 2;
+  }
+
+  async walk() {
+    if (this.currentSprite !== this.walkingSprite) {
+      await this.switchSprite(this.walkingSprite);
+    }
+  }
+
+  async attack() {
+    if (this.currentSprite !== this.attackingSprite) {
+      await this.switchSprite(this.attackingSprite);
+
+      // Automatically switch back to walking after attack animation finishes
+      this.attackingSprite.onComplete = async () => {
+        await this.switchSprite(this.walkingSprite);
+      };
+    }
+  }
+
+  private async switchSprite(newSprite: PIXI.AnimatedSprite) {
+    const mainLayer = await MainLayer.genInstance();
+    mainLayer.layer.removeChild(this.currentSprite);
+    this.currentSprite = newSprite;
+    mainLayer.layer.addChild(this.currentSprite);
+    this.currentSprite.play();
   }
 
   public async genCollide(): Promise<void> {
@@ -135,18 +177,18 @@ export class Avatar extends Entity {
   }
 
   private renderAvatarHP() {
-    avatarMetaData.hp_system.bar.x = this.sprite.x - HP_TEXT_X_OFFSET;
-    avatarMetaData.hp_system.bar.y = this.sprite.y - HP_TEXT_Y_OFFSET;
+    avatarMetaData.hp_system.bar.x = this.currentSprite.x - HP_TEXT_X_OFFSET;
+    avatarMetaData.hp_system.bar.y = this.currentSprite.y - HP_TEXT_Y_OFFSET;
   }
 
   public async genPerformAttack(enemies: Map<string, Enemy>) {
     const instance = await Application.genInstance();
     const mainLayer = await MainLayer.genInstance();
-    if (this.sprite && this.sprite.parent) {
+    if (this.currentSprite && this.currentSprite.parent) {
       const sword = new Avatar.Sword(
         instance.app,
         mainLayer.layer,
-        this.sprite
+        this.currentSprite
       );
 
       // Check for collision with enemies
