@@ -3,6 +3,7 @@ import { Avatar } from "../entity/Avatar";
 import { globalState } from "../states/events";
 import { Tiling } from "../entity/Tiling";
 import { MainLayer } from "../layer/MainLayer";
+import { GAME_HEIGHT, GAME_WIDTH } from "../utils/Constants";
 
 export class DebugTool {
   private static instance: DebugTool;
@@ -22,8 +23,8 @@ export class DebugTool {
       const tool = new DebugTool();
       mainLayer.layer.addChild(tool.container);
       this.instance = tool;
-      this.instance.container.x = 400;
-      this.instance.container.y = 300;
+      this.instance.container.x = GAME_WIDTH / 2;
+      this.instance.container.y = GAME_HEIGHT / 2;
     }
     return this.instance;
   }

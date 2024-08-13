@@ -1,26 +1,27 @@
 import * as PIXI from "pixi.js";
 import Application from "./Application";
 import { Entity } from "./Entity";
-import { TILING_URL } from "../utils/Constants";
+import { GAME_HEIGHT, GAME_WIDTH, TILING_URL } from "../utils/Constants";
+import { MainLayer } from "../layer/MainLayer";
 
 export class Tiling extends Entity {
   public tilingSprite: PIXI.TilingSprite;
   public static instance: Tiling;
-  private constructor(app: PIXI.Application, texture: PIXI.Texture) {
+  private constructor(texture: PIXI.Texture) {
     super();
     this.tilingSprite = new PIXI.TilingSprite({
       texture,
-      width: app.screen.width,
-      height: app.screen.height,
+      width: GAME_WIDTH,
+      height: GAME_HEIGHT,
     });
-    app.stage.addChild(this.tilingSprite);
   }
 
   public static async genInstance() {
     if (!Tiling.instance) {
-      const instance = await Application.genInstance();
+      const mainLayer = await MainLayer.genInstance();
       const texture = await PIXI.Assets.load(TILING_URL);
-      Tiling.instance = new Tiling(instance.app, texture);
+      Tiling.instance = new Tiling(texture);
+      mainLayer.layer.addChildAt(Tiling.instance.tilingSprite, 0);
     }
     return Tiling.instance;
   }

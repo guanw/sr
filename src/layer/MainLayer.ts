@@ -27,21 +27,19 @@ export class MainLayer {
   public layer: PIXI.Container;
   gameEventManager: GameEventManager;
 
-  constructor(tiling: Tiling, user: Avatar) {
+  constructor(user: Avatar) {
     this.layer = new PIXI.Container();
     this.gameEventManager = GameEventManager.getInstance();
 
-    this.layer.addChild(tiling.tilingSprite);
     this.layer.addChild(user.sprite);
     this.layer.addChild(Avatar.healthBarContainer);
   }
 
   public static async genInstance(): Promise<MainLayer> {
     if (!MainLayer.instance) {
-      const tiling = await Tiling.genInstance();
       const user: Avatar = await Avatar.genInstance();
 
-      MainLayer.instance = new MainLayer(tiling, user);
+      MainLayer.instance = new MainLayer(user);
 
       // enemy related events
       timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
