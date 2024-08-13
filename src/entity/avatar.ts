@@ -33,7 +33,6 @@ export class Avatar extends Entity {
   public static instance: Avatar;
   private walkingSprite: PIXI.AnimatedSprite;
   private attackingSprite: PIXI.AnimatedSprite;
-  public currentSprite: PIXI.AnimatedSprite;
   private static healthBarContainer = new PIXI.Graphics();
   static healthBar = new PIXI.Graphics();
 
@@ -44,7 +43,8 @@ export class Avatar extends Entity {
     super();
     this.walkingSprite = this.initSprite(walkingTexture);
     this.attackingSprite = this.initSprite(attackTexture);
-    this.currentSprite = this.walkingSprite;
+    this.attackingSprite.alpha = 0;
+    this.walkingSprite.alpha = 1;
     this.renderAvatarHP();
   }
 
@@ -68,7 +68,8 @@ export class Avatar extends Entity {
       Avatar.instance = new Avatar(walkingFrames, attackFrames);
       await this.genInitializeHPSystem();
       const mainLayer = await MainLayer.genInstance();
-      mainLayer.layer.addChild(Avatar.instance.currentSprite);
+      mainLayer.layer.addChild(Avatar.instance.walkingSprite);
+      mainLayer.layer.addChild(Avatar.instance.attackingSprite);
       mainLayer.layer.addChild(Avatar.healthBarContainer);
     }
     return Avatar.instance;
@@ -94,44 +95,39 @@ export class Avatar extends Entity {
   }
 
   getX(): number {
-    return this.currentSprite.x;
+    return this.walkingSprite.x;
   }
   getY(): number {
-    return this.currentSprite.y;
+    return this.walkingSprite.y;
   }
   setX(x: number): void {
-    this.currentSprite.x = x;
+    this.walkingSprite.x = x;
+    this.attackingSprite.x = x;
   }
   setY(y: number): void {
-    this.currentSprite.y = y;
+    this.walkingSprite.y = y;
+    this.attackingSprite.y = y;
   }
   getDisplacement(): number {
     return AVATAR_SIZE / 2;
   }
 
   async walk() {
-    if (this.currentSprite !== this.walkingSprite) {
-      await this.switchSprite(this.walkingSprite);
-    }
+    this.walkingSprite.alpha = 1;
+    this.attackingSprite.alpha = 0;
   }
 
   async attack() {
-    if (this.currentSprite !== this.attackingSprite) {
-      await this.switchSprite(this.attackingSprite);
+    this.walkingSprite.alpha = 0;
+    this.attackingSprite.alpha = 1;
 
-      // Automatically switch back to walking after attack animation finishes
-      this.attackingSprite.onComplete = async () => {
-        await this.switchSprite(this.walkingSprite);
-      };
-    }
-  }
-
-  private async switchSprite(newSprite: PIXI.AnimatedSprite) {
-    const mainLayer = await MainLayer.genInstance();
-    mainLayer.layer.removeChild(this.currentSprite);
-    this.currentSprite = newSprite;
-    mainLayer.layer.addChild(this.currentSprite);
-    this.currentSprite.play();
+    // Automatically switch back to walking after attack animation finishes
+    this.attackingSprite.onLoop = async () => {
+      this.walkingSprite.alpha += 0.5;
+      this.walkingSprite.alpha = Math.max(this.walkingSprite.alpha, 1);
+      this.attackingSprite.alpha -= 0.5;
+      this.attackingSprite.alpha = Math.min(this.attackingSprite.alpha, 0);
+    };
   }
 
   public async genCollide(): Promise<void> {
@@ -179,18 +175,18 @@ export class Avatar extends Entity {
   }
 
   private renderAvatarHP() {
-    avatarMetaData.hp_system.bar.x = this.currentSprite.x - HP_TEXT_X_OFFSET;
-    avatarMetaData.hp_system.bar.y = this.currentSprite.y - HP_TEXT_Y_OFFSET;
+    avatarMetaData.hp_system.bar.x = this.walkingSprite.x - HP_TEXT_X_OFFSET;
+    avatarMetaData.hp_system.bar.y = this.walkingSprite.y - HP_TEXT_Y_OFFSET;
   }
 
   public async genPerformAttack(enemies: Map<string, Enemy>) {
     const instance = await Application.genInstance();
     const mainLayer = await MainLayer.genInstance();
-    if (this.currentSprite && this.currentSprite.parent) {
+    if (this.walkingSprite && this.walkingSprite.parent) {
       const sword = new Avatar.Sword(
         instance.app,
         mainLayer.layer,
-        this.currentSprite
+        this.walkingSprite
       );
 
       // Check for collision with enemies

@@ -132,6 +132,8 @@ export class GameEventManager {
   private async handleAvatarMoveKeyDownEvent(e: KeyboardEvent) {
     if (e.key in avatarKeys) {
       avatarKeys[e.key] = true;
+      const user: Avatar = await Avatar.genInstance();
+      user.walk();
     }
   }
 
@@ -259,5 +261,7 @@ export class GameEventManager {
 
   private async handleAvatarInitiateAttack(event: MouseEvent): Promise<void> {
     await attackStateManager.genAddAttack(event.clientX, event.clientY);
+    const user: Avatar = await Avatar.genInstance();
+    await user.attack();
   }
 }
