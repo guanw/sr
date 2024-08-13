@@ -31,6 +31,7 @@ function handleKeyUp(e: KeyboardEvent): void {
 }
 
 async function handleLayerSwitch(e: KeyboardEvent): Promise<void> {
+  // TODO manage layer switch via GameStateManager
   if (e.key === "p") {
     globalState.isPlaygroundActive = !globalState.isPlaygroundActive;
     const mainLayer = await MainLayer.genInstance();
@@ -41,6 +42,7 @@ async function handleLayerSwitch(e: KeyboardEvent): Promise<void> {
 }
 
 export async function genHandleAvatarAttack(event: MouseEvent) {
+  // TODO manage avatar attack via GameStateManager
   const wind = await Wind.create(
     AVATAR_LOCATION.x - WIND_DISPLACEMENT,
     AVATAR_LOCATION.y - WIND_DISPLACEMENT,
