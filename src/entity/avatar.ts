@@ -29,7 +29,7 @@ const avatarMetaData = {
 export class Avatar extends Entity {
   public static instance: Avatar;
   public sprite: PIXI.AnimatedSprite;
-  static healthBarContainer = new PIXI.Graphics();
+  private static healthBarContainer = new PIXI.Graphics();
   static healthBar = new PIXI.Graphics();
 
   private constructor(app: PIXI.Application, texture: PIXI.Texture[]) {
@@ -68,6 +68,9 @@ export class Avatar extends Entity {
       }
       Avatar.instance = new Avatar(instance.app, frames);
       await this.genInitializeHPSystem();
+      const mainLayer = await MainLayer.genInstance();
+      mainLayer.layer.addChild(Avatar.instance.sprite);
+      mainLayer.layer.addChild(Avatar.healthBarContainer);
     }
     return Avatar.instance;
   }

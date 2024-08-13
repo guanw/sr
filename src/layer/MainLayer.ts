@@ -1,6 +1,4 @@
 import * as PIXI from "pixi.js";
-import { Tiling } from "../entity/Tiling";
-import { Avatar } from "../entity/Avatar";
 import { timedEventsManager } from "../timeEventsManager";
 import {
   AvatarAttackEnemiesEvent,
@@ -27,19 +25,14 @@ export class MainLayer {
   public layer: PIXI.Container;
   gameEventManager: GameEventManager;
 
-  constructor(user: Avatar) {
+  constructor() {
     this.layer = new PIXI.Container();
     this.gameEventManager = GameEventManager.getInstance();
-
-    this.layer.addChild(user.sprite);
-    this.layer.addChild(Avatar.healthBarContainer);
   }
 
   public static async genInstance(): Promise<MainLayer> {
     if (!MainLayer.instance) {
-      const user: Avatar = await Avatar.genInstance();
-
-      MainLayer.instance = new MainLayer(user);
+      MainLayer.instance = new MainLayer();
 
       // enemy related events
       timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {

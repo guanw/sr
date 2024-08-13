@@ -1,5 +1,4 @@
 import * as PIXI from "pixi.js";
-import Application from "./Application";
 import { Entity } from "./Entity";
 import { GAME_HEIGHT, GAME_WIDTH, TILING_URL } from "../utils/Constants";
 import { MainLayer } from "../layer/MainLayer";
