@@ -1,15 +1,25 @@
+import { Wind } from "../../entity/Attacks/Wind";
 import { Avatar } from "../../entity/Avatar";
 import { Tiling } from "../../entity/Tiling";
 import { DebugTool } from "../../internal/DebugTool";
 import { MainLayer } from "../../layer/MainLayer";
 import { PlaygroundLayer } from "../../layer/PlaygroundLayer";
 import { Menu } from "../../menu";
-import { COLLECT_ITEM_RANGE } from "../../utils/Constants";
+import {
+  AVATAR_LOCATION,
+  COLLECT_ITEM_RANGE,
+  WIND_DISPLACEMENT,
+} from "../../utils/Constants";
 import attackStateManager from "../AttackStateManager";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
 import { avatarKeys, globalState } from "../events";
-import { GameEvent, KeyDownEvent, KeyUpEvent } from "./GameEvent";
+import {
+  AvatarInitiateAttackEvent,
+  GameEvent,
+  KeyDownEvent,
+  KeyUpEvent,
+} from "./GameEvent";
 
 export class GameEventManager {
   private static instance: GameEventManager;
@@ -108,6 +118,11 @@ export class GameEventManager {
       }
       case "REFRESH_DEBUG_TOOL": {
         await this.handleRefreshDebugTool();
+        break;
+      }
+      case "AVATAR_INITIATE_ATTACK": {
+        const attackEvent = event as AvatarInitiateAttackEvent;
+        await this.handleAvatarInitiateAttack(attackEvent.event);
         break;
       }
     }
@@ -245,5 +260,16 @@ export class GameEventManager {
     enemies.forEach(async (enemy) => {
       if (enemy !== undefined) await enemy.genMoveTowardsAvatar();
     });
+  }
+
+  private async handleAvatarInitiateAttack(event: MouseEvent): Promise<void> {
+    const wind = await Wind.create(
+      AVATAR_LOCATION.x - WIND_DISPLACEMENT,
+      AVATAR_LOCATION.y - WIND_DISPLACEMENT,
+      event.clientX,
+      event.clientY
+    );
+    attackStateManager.addAttack(wind);
+    MainLayer.instance.layer.addChild(wind.instance);
   }
 }

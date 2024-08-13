@@ -9,7 +9,8 @@ type EventType =
   | "GAME_OVER"
   | "ENEMIES_MOVE_TOWARDS_AVATAR"
   | "UPDATE_ATTACKS"
-  | "REFRESH_DEBUG_TOOL";
+  | "REFRESH_DEBUG_TOOL"
+  | "AVATAR_INITIATE_ATTACK";
 
 export interface GameEvent {
   type: EventType;
@@ -65,4 +66,12 @@ export class UpdateAttacksEvent implements GameEvent {
 
 export class RefreshDebugToolEvent implements GameEvent {
   type: EventType = "REFRESH_DEBUG_TOOL";
+}
+
+export class AvatarInitiateAttackEvent implements GameEvent {
+  type: EventType = "AVATAR_INITIATE_ATTACK";
+  event: MouseEvent;
+  constructor(event: MouseEvent) {
+    this.event = event;
+  }
 }
