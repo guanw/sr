@@ -20,6 +20,7 @@ import {
   GAME_HEIGHT,
 } from "../utils/Constants";
 import { GameOverEvent } from "../states/events/GameEvent";
+import { GameEventManager } from "../states/events/GameStateManager";
 
 const avatarMetaData = {
   hp_system: {
@@ -134,9 +135,10 @@ export class Avatar extends Entity {
   }
 
   public async genCollide(): Promise<void> {
+    const gameEventManager = GameEventManager.getInstance();
     this.updateHealth(avatarMetaData.hp_system.value - ENEMY_ATTACK_VALUE);
     if (avatarMetaData.hp_system.value <= 0) {
-      MainLayer.instance.gameEventManager.emit(new GameOverEvent());
+      gameEventManager.emit(new GameOverEvent());
     }
   }
 

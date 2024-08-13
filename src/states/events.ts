@@ -30,17 +30,6 @@ function handleKeyUp(e: KeyboardEvent): void {
   gameEventManager.emit(new KeyUpEvent(e));
 }
 
-async function handleLayerSwitch(e: KeyboardEvent): Promise<void> {
-  // TODO manage layer switch via GameStateManager
-  if (e.key === "p") {
-    globalState.isPlaygroundActive = !globalState.isPlaygroundActive;
-    const mainLayer = await MainLayer.genInstance();
-    const playgroundLayer = await PlaygroundLayer.genInstance();
-    mainLayer.layer.visible = !globalState.isPlaygroundActive;
-    playgroundLayer.layer.visible = globalState.isPlaygroundActive;
-  }
-}
-
 export async function genHandleAvatarAttack(event: MouseEvent) {
   // TODO manage avatar attack via GameStateManager
   const wind = await Wind.create(
@@ -57,6 +46,5 @@ export async function genHandleAvatarAttack(event: MouseEvent) {
   // Add event listeners for keydown and keyup events
   window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("keyup", handleKeyUp);
-  window.addEventListener("keydown", handleLayerSwitch);
   window.addEventListener("click", genHandleAvatarAttack);
 })();

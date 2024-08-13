@@ -3,12 +3,14 @@ import { globalState } from "./states/events";
 import Application from "./entity/Application";
 import { MainLayer } from "./layer/MainLayer";
 import { PlaygroundLayer } from "./layer/PlaygroundLayer";
+import { GameEventManager } from "./states/events/GameStateManager";
 
 (async () => {
   // initialize app instance
   const instance = await Application.genInstance();
   const mainLayer = await MainLayer.genInstance();
   const playgroundLayer = await PlaygroundLayer.genInstance();
+  const gameEventManager = GameEventManager.getInstance();
   instance.app.stage.addChild(mainLayer.layer);
   instance.app.stage.addChild(playgroundLayer.layer);
   mainLayer.layer.visible = true;
@@ -24,6 +26,7 @@ import { PlaygroundLayer } from "./layer/PlaygroundLayer";
       return;
     }
 
+    gameEventManager.processEvents();
     if (!globalState.isPlaygroundActive) {
       await mainLayer.update();
     } else {

@@ -2,6 +2,7 @@ import { Avatar } from "../../entity/Avatar";
 import { Tiling } from "../../entity/Tiling";
 import { DebugTool } from "../../internal/DebugTool";
 import { MainLayer } from "../../layer/MainLayer";
+import { PlaygroundLayer } from "../../layer/PlaygroundLayer";
 import { Menu } from "../../menu";
 import { COLLECT_ITEM_RANGE } from "../../utils/Constants";
 import attackStateManager from "../AttackStateManager";
@@ -50,18 +51,26 @@ export class GameEventManager {
         break;
       case "KEY_DOWN": {
         const keyDownEvent = event as KeyDownEvent;
-        if (keyDownEvent.event.key === "m" || keyDownEvent.event.key === "M") {
+        const key = keyDownEvent.event.key;
+        if (key === "m" || key === "M") {
           await this.handleToggleMenu();
         }
 
-        if (keyDownEvent.event.key === "d" || keyDownEvent.event.key === "D") {
+        if (key === "d" || key === "D") {
           await this.handleToggleDebugTool();
         }
 
-        if (keyDownEvent.event.key in avatarKeys) {
+        if (key in avatarKeys) {
           await this.handleAvatarMoveKeyDownEvent(keyDownEvent.event);
         }
 
+        if (key === "p" || key === "P") {
+          globalState.isPlaygroundActive = !globalState.isPlaygroundActive;
+          const mainLayer = await MainLayer.genInstance();
+          const playgroundLayer = await PlaygroundLayer.genInstance();
+          mainLayer.layer.visible = !globalState.isPlaygroundActive;
+          playgroundLayer.layer.visible = globalState.isPlaygroundActive;
+        }
         break;
       }
       case "KEY_UP": {

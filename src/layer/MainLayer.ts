@@ -23,46 +23,39 @@ const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 export class MainLayer {
   public static instance: MainLayer;
   public layer: PIXI.Container;
-  gameEventManager: GameEventManager;
 
   constructor() {
     this.layer = new PIXI.Container();
-    this.gameEventManager = GameEventManager.getInstance();
   }
 
   public static async genInstance(): Promise<MainLayer> {
     if (!MainLayer.instance) {
       MainLayer.instance = new MainLayer();
-
+      const gameEventManager = GameEventManager.getInstance();
       // enemy related events
       timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
-        MainLayer.instance.gameEventManager.emit(new GenerateNewEnemyEvent());
+        gameEventManager.emit(new GenerateNewEnemyEvent());
       });
       timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
-        MainLayer.instance.gameEventManager.emit(
-          new AvatarAttackEnemiesEvent()
-        );
+        gameEventManager.emit(new AvatarAttackEnemiesEvent());
       });
       timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, async () => {
-        MainLayer.instance.gameEventManager.emit(
-          new EnemiesAttackAvatarEvent()
-        );
+        gameEventManager.emit(new EnemiesAttackAvatarEvent());
       });
 
       // item related events
       timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, async () => {
-        MainLayer.instance.gameEventManager.emit(new GenerateNewItemEvent());
+        gameEventManager.emit(new GenerateNewItemEvent());
       });
       timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, async () => {
-        MainLayer.instance.gameEventManager.emit(new CollectItemEvent());
+        gameEventManager.emit(new CollectItemEvent());
       });
     }
     return MainLayer.instance;
   }
 
   async update() {
-    this.gameEventManager.processEvents();
-
+    const gameEventManager = GameEventManager.getInstance();
     const isGamePaused = globalState.isGamePaused;
     const isGameOver = globalState.isGameOver;
     if (isGamePaused) {
@@ -74,13 +67,11 @@ export class MainLayer {
       return;
     }
 
-    MainLayer.instance.gameEventManager.emit(
-      new EnemiesMoveTowardsAvatarEvent()
-    );
+    gameEventManager.emit(new EnemiesMoveTowardsAvatarEvent());
 
-    MainLayer.instance.gameEventManager.emit(new UpdateAttacksEvent());
+    gameEventManager.emit(new UpdateAttacksEvent());
 
-    MainLayer.instance.gameEventManager.emit(new RefreshDebugToolEvent());
+    gameEventManager.emit(new RefreshDebugToolEvent());
 
     timedEventsManager.update();
   }
