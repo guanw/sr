@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { Avatar } from "../entity/Avatar";
+import { Avatar, avatarMetaData } from "../entity/Avatar";
 import { globalState } from "../states/events";
 import { Tiling } from "../entity/Tiling";
 import { MainLayer } from "../layer/MainLayer";
@@ -38,6 +38,10 @@ export class DebugTool {
     const tiling = await Tiling.genInstance();
     const avatar = await Avatar.genInstance();
     const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
-    this.text.text = `Position: (${-tiling.getX()}, ${-tiling.getY()})\nHP: ${hp}\n`;
+    this.text.text = `
+      Position: (${-tiling.getX()}, ${-tiling.getY()})
+      HP: ${hp}
+      killed enemies: ${avatarMetaData.scoring_sytem.value}
+    `;
   }
 }

@@ -22,10 +22,13 @@ import {
 import { GameOverEvent } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
 
-const avatarMetaData = {
+export const avatarMetaData = {
   hp_system: {
     value: MAX_HEALTH,
     bar: new PIXI.Graphics(),
+  },
+  scoring_sytem: {
+    value: 0,
   },
 };
 

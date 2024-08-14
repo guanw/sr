@@ -6,7 +6,7 @@ import {
   ENEMY_FRAME_SIZE,
   ENEMY_SPEED,
 } from "../utils/Constants";
-import { Avatar } from "./Avatar";
+import { Avatar, avatarMetaData } from "./Avatar";
 
 class Enemy extends Entity {
   sprite: PIXI.AnimatedSprite;
@@ -70,6 +70,7 @@ class Enemy extends Entity {
   }
 
   public destroy(layer: PIXI.Container) {
+    avatarMetaData.scoring_sytem.value += 1;
     layer.removeChild(this.sprite);
   }
 
