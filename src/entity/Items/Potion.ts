@@ -21,11 +21,11 @@ export class Potion extends Item {
     return new Potion(layer, avatar, texture);
   }
 
-  setX(x: number): void {
-    this.sprite.x = x;
+  setDeltaX(deltaX: number): void {
+    this.sprite.x += deltaX;
   }
-  setY(y: number): void {
-    this.sprite.y = y;
+  setDeltaY(deltaY: number): void {
+    this.sprite.y += deltaY;
   }
   getX(): number {
     return this.sprite.x;

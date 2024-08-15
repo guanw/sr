@@ -103,13 +103,13 @@ export class Avatar extends Entity {
   getY(): number {
     return this.walkingSprite.y;
   }
-  setX(x: number): void {
-    this.walkingSprite.x = x;
-    this.attackingSprite.x = x;
+  setDeltaX(deltaX: number): void {
+    this.walkingSprite.x -= deltaX;
+    this.attackingSprite.x -= deltaX;
   }
-  setY(y: number): void {
-    this.walkingSprite.y = y;
-    this.attackingSprite.y = y;
+  setDeltaY(deltaY: number): void {
+    this.walkingSprite.y -= deltaY;
+    this.attackingSprite.y -= deltaY;
   }
   getDisplacement(): number {
     return AVATAR_SIZE / 2;

@@ -3,9 +3,14 @@ export const GAME_WIDTH = 800;
 export const GAME_HEIGHT = 600;
 export const FALLBACK_BACKGROUND_COLOR = 0x1099bb;
 export const AVATAR_LOCATION = { x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 };
+export const WORLD_SIZE = GAME_HEIGHT * 10;
 
 // Tiling related
-export const TILING_URL = "https://pixijs.com/assets/p2.jpeg";
+export const BASE_TILING_URL =
+  "https://guanw.github.io/sr_assets/environment/ground/1.png";
+export const RANDOM_TILING_URL =
+  "https://guanw.github.io/sr_assets/environment/ground/3.png";
+export const TILING_COUNT = 1000;
 
 // Avatar related
 export const AVATAR_SPEED = 3;

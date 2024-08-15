@@ -1,28 +1,52 @@
 import * as PIXI from "pixi.js";
 import { Entity } from "./Entity";
-import { GAME_HEIGHT, GAME_WIDTH, TILING_URL } from "../utils/Constants";
+import {
+  GAME_HEIGHT,
+  GAME_WIDTH,
+  BASE_TILING_URL,
+  RANDOM_TILING_URL,
+  TILING_COUNT,
+} from "../utils/Constants";
 import { MainLayer } from "../layer/MainLayer";
 
 export class Tiling extends Entity {
-  public tilingSprite: PIXI.TilingSprite;
+  private tilingSprite: PIXI.TilingSprite;
+  private staticSprites: PIXI.Sprite[] = [];
   public static instance: Tiling;
-  private constructor(texture: PIXI.Texture) {
+  private constructor(textures: PIXI.Texture[], layer: PIXI.Container) {
     super();
     this.tilingSprite = new PIXI.TilingSprite({
-      texture,
+      texture: textures[0],
       width: GAME_WIDTH,
       height: GAME_HEIGHT,
     });
+    const worldSize = GAME_HEIGHT * 30;
+    for (let i = 0; i < TILING_COUNT; i++) {
+      const staticSprite = new PIXI.Sprite({
+        texture: textures[1],
+        x: Math.random() * worldSize,
+        y: Math.random() * worldSize,
+        anchor: 0.5,
+      });
+      this.staticSprites.push(staticSprite);
+      layer.addChildAt(staticSprite, 0);
+    }
+    layer.addChildAt(this.tilingSprite, 0);
   }
 
   public static async genInstance() {
     if (!Tiling.instance) {
       const mainLayer = await MainLayer.genInstance();
-      const texture = await PIXI.Assets.load(TILING_URL);
-      Tiling.instance = new Tiling(texture);
-      mainLayer.layer.addChildAt(Tiling.instance.tilingSprite, 0);
+      const tilings = await Tiling.genLoadTiling();
+      Tiling.instance = new Tiling(tilings, mainLayer.layer);
     }
     return Tiling.instance;
+  }
+
+  private static async genLoadTiling() {
+    const baseTexture = await PIXI.Assets.load(BASE_TILING_URL);
+    const randomGroundTexture = await PIXI.Assets.load(RANDOM_TILING_URL);
+    return [baseTexture, randomGroundTexture];
   }
 
   getX(): number {
@@ -31,11 +55,17 @@ export class Tiling extends Entity {
   getY(): number {
     return this.tilingSprite.tilePosition.y;
   }
-  setX(x: number): void {
-    this.tilingSprite.tilePosition.x = x;
+  setDeltaX(deltaX: number): void {
+    this.tilingSprite.tilePosition.x -= deltaX;
+    this.staticSprites.forEach((sprite) => {
+      sprite.x += deltaX;
+    });
   }
-  setY(y: number): void {
-    this.tilingSprite.tilePosition.y = y;
+  setDeltaY(deltaY: number): void {
+    this.tilingSprite.tilePosition.y -= deltaY;
+    this.staticSprites.forEach((sprite) => {
+      sprite.y += deltaY;
+    });
   }
   getDisplacement(): number {
     throw new Error("Tiling Should not need to implement");

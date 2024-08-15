@@ -28,11 +28,11 @@ export class Bomb extends Item {
   getY(): number {
     return this.sprite.y;
   }
-  setX(x: number): void {
-    this.sprite.x = x;
+  setDeltaX(deltaX: number): void {
+    this.sprite.x += deltaX;
   }
-  setY(y: number): void {
-    this.sprite.y = y;
+  setDeltaY(deltaY: number): void {
+    this.sprite.y += deltaY;
   }
   getDisplacement(): number {
     return ITEM_FRAME_SIZE / 2;

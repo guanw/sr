@@ -5,6 +5,8 @@ import {
   ENEMY_FRAME_NUMBER,
   ENEMY_FRAME_SIZE,
   ENEMY_SPEED,
+  GAME_HEIGHT,
+  GAME_WIDTH,
 } from "../utils/Constants";
 import { Avatar, avatarMetaData } from "./Avatar";
 
@@ -16,13 +18,12 @@ class Enemy extends Entity {
     frames: PIXI.Texture[]
   ) {
     super();
-    const appWidth = app.stage.width;
-    const appHeight = app.stage.height;
+
     this.sprite = new PIXI.AnimatedSprite(frames);
     this.sprite.animationSpeed = ENEMY_ANIMATION_SPEED;
     this.sprite.play();
-    this.sprite.x = Math.random() * appWidth - app.stage.x;
-    this.sprite.y = Math.random() * appHeight - app.stage.y;
+    this.sprite.x = Math.random() * GAME_WIDTH - GAME_WIDTH / 2;
+    this.sprite.y = Math.random() * GAME_HEIGHT - GAME_HEIGHT / 2;
     layer.addChild(this.sprite);
   }
 
@@ -54,11 +55,11 @@ class Enemy extends Entity {
   getY(): number {
     return this.sprite.y;
   }
-  setX(x: number): void {
-    this.sprite.x = x;
+  setDeltaX(deltaX: number): void {
+    this.sprite.x += deltaX;
   }
-  setY(y: number): void {
-    this.sprite.y = y;
+  setDeltaY(deltaY: number): void {
+    this.sprite.y += deltaY;
   }
   getDisplacement(): number {
     return ENEMY_FRAME_SIZE / 2;

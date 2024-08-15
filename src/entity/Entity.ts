@@ -5,23 +5,23 @@ export abstract class Entity {
   public abstract getDisplacement(): number;
   public abstract getX(): number;
   public abstract getY(): number;
-  public abstract setX(x: number): void;
-  public abstract setY(y: number): void;
+  public abstract setDeltaX(x: number): void;
+  public abstract setDeltaY(y: number): void;
 
   public moveLeft(): void {
-    this.setX(this.getX() - AVATAR_SPEED);
+    this.setDeltaX(-AVATAR_SPEED);
   }
 
   public moveRight(): void {
-    this.setX(this.getX() + AVATAR_SPEED);
+    this.setDeltaX(AVATAR_SPEED);
   }
 
   public moveDown(): void {
-    this.setY(this.getY() + AVATAR_SPEED);
+    this.setDeltaY(AVATAR_SPEED);
   }
 
   public moveUp(): void {
-    this.setY(this.getY() - AVATAR_SPEED);
+    this.setDeltaY(-AVATAR_SPEED);
   }
 
   // override this for collision detection
