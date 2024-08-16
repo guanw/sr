@@ -10,6 +10,15 @@ export class DebugTool {
   public container: PIXI.Container;
   private text: PIXI.Text;
 
+  // avatar bound box
+  private avatarContainer = new PIXI.Container();
+  private avatarBoundingBox!: PIXI.Graphics;
+
+  // TODO
+  // tiling bound box
+  // item bound box
+  // enemy bound box
+
   constructor() {
     this.container = new PIXI.Container();
     this.text = new PIXI.Text("", { fill: "white" });
@@ -29,9 +38,17 @@ export class DebugTool {
     return this.instance;
   }
 
-  public toggle() {
+  public async toggle() {
     globalState.isDebugToolVisible = !globalState.isDebugToolVisible;
     this.container.visible = globalState.isDebugToolVisible;
+
+    const mainLayer = await MainLayer.genInstance();
+    if (this.container.visible) {
+      this.avatarBoundingBox = this.createBoundingBox(this.avatarContainer);
+      mainLayer.layer.addChild(this.avatarContainer);
+    } else {
+      mainLayer.layer.removeChild(this.avatarContainer);
+    }
   }
 
   public async genUpdate() {
@@ -43,5 +60,25 @@ export class DebugTool {
       HP: ${hp}
       killed enemies: ${avatarMetaData.scoring_sytem.value}
     `;
+
+    this.updateBoundingBox(this.avatarBoundingBox, avatar.walkingSprite);
+  }
+
+  private createBoundingBox(container: PIXI.Container): PIXI.Graphics {
+    const graphics = new PIXI.Graphics();
+    container.addChild(graphics);
+    return graphics;
+  }
+
+  // Function to update the bounding box position
+  public updateBoundingBox(graphics: PIXI.Graphics, sprite: PIXI.Sprite) {
+    const bounds = sprite.getBounds();
+    graphics.clear();
+    graphics.moveTo(bounds.minX, bounds.minY);
+    graphics.lineTo(bounds.maxX, bounds.minY);
+    graphics.lineTo(bounds.maxX, bounds.maxY);
+    graphics.lineTo(bounds.minX, bounds.maxY);
+    graphics.lineTo(bounds.minX, bounds.minY);
+    graphics.stroke({ width: 3, color: 0xffd900 });
   }
 }

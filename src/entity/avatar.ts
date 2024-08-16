@@ -34,8 +34,8 @@ export const avatarMetaData = {
 
 export class Avatar extends Entity {
   public static instance: Avatar;
-  private walkingSprite: PIXI.AnimatedSprite;
-  private attackingSprite: PIXI.AnimatedSprite;
+  public walkingSprite: PIXI.AnimatedSprite;
+  public attackingSprite: PIXI.AnimatedSprite;
   private static healthBarContainer = new PIXI.Graphics();
   static healthBar = new PIXI.Graphics();
 

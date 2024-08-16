@@ -151,7 +151,7 @@ export class GameEventManager {
 
   private async handleToggleDebugTool() {
     const debugTool = await DebugTool.genInstance();
-    debugTool.toggle();
+    await debugTool.toggle();
   }
   private async handleRefreshDebugTool() {
     if (!globalState.isDebugToolVisible) {
