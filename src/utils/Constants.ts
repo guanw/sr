@@ -10,7 +10,15 @@ export const BASE_TILING_URL =
   "https://guanw.github.io/sr_assets/environment/ground/1.png";
 export const RANDOM_TILING_URL =
   "https://guanw.github.io/sr_assets/environment/ground/3.png";
-export const TILING_COUNT = 1000;
+export const PILLAR_TOP_TILING_URL =
+  "https://guanw.github.io/sr_assets/environment/pillar/1.png";
+export const PILLAR_MIDDLE_TILING_URL =
+  "https://guanw.github.io/sr_assets/environment/pillar/2.png";
+export const PILLAR_BOTTOM_TILING_URL =
+  "https://guanw.github.io/sr_assets/environment/pillar/3.png";
+export const SAND_TILING_COUNT = 1000;
+export const PILLAR_TILING_COUNT = 1000;
+export const TILING_SIZE = 16;
 
 // Avatar related
 export const AVATAR_SPEED = 3;
