@@ -141,6 +141,10 @@ export class Avatar extends Entity {
     }
   }
 
+  public getBounds(): PIXI.Bounds {
+    return this.walkingSprite.getBounds();
+  }
+
   public static async genInitializeHPSystem() {
     avatarMetaData.hp_system.bar = this.healthBarContainer;
     this.healthBarContainer.beginFill(0xff0000);

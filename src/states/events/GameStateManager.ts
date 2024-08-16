@@ -4,7 +4,10 @@ import { DebugTool } from "../../internal/DebugTool";
 import { MainLayer } from "../../layer/MainLayer";
 import { PlaygroundLayer } from "../../layer/PlaygroundLayer";
 import { Menu } from "../../menu";
-import { COLLECT_ITEM_RANGE } from "../../utils/Constants";
+import {
+  COLLECT_ITEM_RANGE,
+  COLLISION_BACKOFF_OFFSET,
+} from "../../utils/Constants";
 import attackStateManager from "../AttackStateManager";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
@@ -210,46 +213,84 @@ export class GameEventManager {
   }
 
   private async genMoveUser() {
-    const background = await Tiling.genInstance();
-    const items = itemsStateManager.getItems();
-    const enemies = enemiesStateManager.getEnemies();
     // Move user based on key states
+    const background = await Tiling.genInstance();
     if (avatarKeys.ArrowLeft) {
-      background.moveRight();
-      items.forEach((item) => {
-        item.moveRight();
-      });
-      enemies.forEach((enemy) => {
-        enemy.moveRight();
-      });
+      if (await background.genCheckCollisionWithAvatar()) {
+        await this.genMoveUserRight(background, COLLISION_BACKOFF_OFFSET);
+        return;
+      }
+      await this.genMoveUserLeft(background);
     }
     if (avatarKeys.ArrowRight) {
-      background.moveLeft();
-      items.forEach((item) => {
-        item.moveLeft();
-      });
-      enemies.forEach((enemy) => {
-        enemy.moveLeft();
-      });
+      if (await background.genCheckCollisionWithAvatar()) {
+        await this.genMoveUserLeft(background, COLLISION_BACKOFF_OFFSET);
+        return;
+      }
+      await this.genMoveUserRight(background);
     }
     if (avatarKeys.ArrowUp) {
-      background.moveDown();
-      items.forEach((item) => {
-        item.moveDown();
-      });
-      enemies.forEach((enemy) => {
-        enemy.moveDown();
-      });
+      if (await background.genCheckCollisionWithAvatar()) {
+        await this.genMoveUserDown(background, COLLISION_BACKOFF_OFFSET);
+        return;
+      }
+      await this.genMoveUserUp(background);
     }
     if (avatarKeys.ArrowDown) {
-      background.moveUp();
-      items.forEach((item) => {
-        item.moveUp();
-      });
-      enemies.forEach((enemy) => {
-        enemy.moveUp();
-      });
+      if (await background.genCheckCollisionWithAvatar()) {
+        await this.genMoveUserUp(background, COLLISION_BACKOFF_OFFSET);
+        return;
+      }
+      await this.genMoveUserDown(background);
     }
+  }
+
+  private async genMoveUserLeft(background: Tiling, moveSpeedOffset = 1) {
+    const items = itemsStateManager.getItems();
+    const enemies = enemiesStateManager.getEnemies();
+    background.moveRight(moveSpeedOffset);
+    items.forEach((item) => {
+      item.moveRight(moveSpeedOffset);
+    });
+    enemies.forEach((enemy) => {
+      enemy.moveRight(moveSpeedOffset);
+    });
+  }
+
+  private async genMoveUserRight(background: Tiling, moveSpeedOffset = 1) {
+    const items = itemsStateManager.getItems();
+    const enemies = enemiesStateManager.getEnemies();
+    background.moveLeft(moveSpeedOffset);
+    items.forEach((item) => {
+      item.moveLeft(moveSpeedOffset);
+    });
+    enemies.forEach((enemy) => {
+      enemy.moveLeft(moveSpeedOffset);
+    });
+  }
+
+  private async genMoveUserUp(background: Tiling, moveSpeedOffset = 1) {
+    const items = itemsStateManager.getItems();
+    const enemies = enemiesStateManager.getEnemies();
+    background.moveDown(moveSpeedOffset);
+    items.forEach((item) => {
+      item.moveDown(moveSpeedOffset);
+    });
+    enemies.forEach((enemy) => {
+      enemy.moveDown(moveSpeedOffset);
+    });
+  }
+
+  private async genMoveUserDown(background: Tiling, moveSpeedOffset = 1) {
+    const items = itemsStateManager.getItems();
+    const enemies = enemiesStateManager.getEnemies();
+    background.moveUp(moveSpeedOffset);
+    items.forEach((item) => {
+      item.moveUp(moveSpeedOffset);
+    });
+    enemies.forEach((enemy) => {
+      enemy.moveUp(moveSpeedOffset);
+    });
   }
 
   private async handleEnemiesMoveTowardsAvatar(): Promise<void> {

@@ -14,6 +14,7 @@ import {
 } from "../utils/Constants";
 import { MainLayer } from "../layer/MainLayer";
 import { Position } from "./Application";
+import { Avatar } from "./Avatar";
 
 export class Tiling extends Entity {
   private tilingSprite: PIXI.TilingSprite;
@@ -142,5 +143,26 @@ export class Tiling extends Entity {
   }
   getDisplacement(): number {
     throw new Error("Tiling Should not need to implement");
+  }
+
+  public async genCheckCollisionWithAvatar(): Promise<boolean> {
+    const avatar = await Avatar.genInstance();
+    for (const sprite of this.staticSprites) {
+      if (this.isCollision(avatar, sprite)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private isCollision(avatar: Avatar, sprite: PIXI.Sprite): boolean {
+    const avatarBounds = avatar.getBounds();
+    const spriteBounds = sprite.getBounds();
+    return (
+      avatarBounds.x < spriteBounds.x + spriteBounds.width &&
+      avatarBounds.x + avatarBounds.width > spriteBounds.x &&
+      avatarBounds.y < spriteBounds.y + spriteBounds.height &&
+      avatarBounds.y + avatarBounds.height > spriteBounds.y
+    );
   }
 }

@@ -8,20 +8,20 @@ export abstract class Entity {
   public abstract setDeltaX(x: number): void;
   public abstract setDeltaY(y: number): void;
 
-  public moveLeft(): void {
-    this.setDeltaX(-AVATAR_SPEED);
+  public moveLeft(offset = 1): void {
+    this.setDeltaX(-AVATAR_SPEED * offset);
   }
 
-  public moveRight(): void {
-    this.setDeltaX(AVATAR_SPEED);
+  public moveRight(offset = 1): void {
+    this.setDeltaX(AVATAR_SPEED * offset);
   }
 
-  public moveDown(): void {
-    this.setDeltaY(AVATAR_SPEED);
+  public moveDown(offset = 1): void {
+    this.setDeltaY(AVATAR_SPEED * offset);
   }
 
-  public moveUp(): void {
-    this.setDeltaY(-AVATAR_SPEED);
+  public moveUp(offset = 1): void {
+    this.setDeltaY(-AVATAR_SPEED * offset);
   }
 
   // override this for collision detection
