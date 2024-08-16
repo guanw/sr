@@ -216,31 +216,31 @@ export class GameEventManager {
     // Move user based on key states
     const background = await Tiling.genInstance();
     if (avatarKeys.ArrowLeft) {
-      if (await background.genCheckCollisionWithAvatar()) {
-        await this.genMoveUserRight(background, COLLISION_BACKOFF_OFFSET);
-        return;
-      }
+      // if (await background.genCheckCollisionWithAvatar()) {
+      //   await this.genMoveUserRight(background, COLLISION_BACKOFF_OFFSET);
+      //   return;
+      // }
       await this.genMoveUserLeft(background);
     }
     if (avatarKeys.ArrowRight) {
-      if (await background.genCheckCollisionWithAvatar()) {
-        await this.genMoveUserLeft(background, COLLISION_BACKOFF_OFFSET);
-        return;
-      }
+      // if (await background.genCheckCollisionWithAvatar()) {
+      //   await this.genMoveUserLeft(background, COLLISION_BACKOFF_OFFSET);
+      //   return;
+      // }
       await this.genMoveUserRight(background);
     }
     if (avatarKeys.ArrowUp) {
-      if (await background.genCheckCollisionWithAvatar()) {
-        await this.genMoveUserDown(background, COLLISION_BACKOFF_OFFSET);
-        return;
-      }
+      // if (await background.genCheckCollisionWithAvatar()) {
+      //   await this.genMoveUserDown(background, COLLISION_BACKOFF_OFFSET);
+      //   return;
+      // }
       await this.genMoveUserUp(background);
     }
     if (avatarKeys.ArrowDown) {
-      if (await background.genCheckCollisionWithAvatar()) {
-        await this.genMoveUserUp(background, COLLISION_BACKOFF_OFFSET);
-        return;
-      }
+      // if (await background.genCheckCollisionWithAvatar()) {
+      //   await this.genMoveUserUp(background, COLLISION_BACKOFF_OFFSET);
+      //   return;
+      // }
       await this.genMoveUserDown(background);
     }
   }
