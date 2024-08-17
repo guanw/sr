@@ -3,7 +3,7 @@ import { Avatar, avatarMetaData } from "../entity/Avatar";
 import { globalState } from "../states/events";
 import { Tiling } from "../entity/Tiling";
 import { MainLayer } from "../layer/MainLayer";
-import { GAME_HEIGHT, GAME_WIDTH } from "../utils/Constants";
+import { DEBUG_BOUND_COLOR, GAME_HEIGHT, GAME_WIDTH } from "../utils/Constants";
 
 export class DebugTool {
   private static instance: DebugTool;
@@ -79,6 +79,6 @@ export class DebugTool {
     graphics.lineTo(bounds.maxX, bounds.maxY);
     graphics.lineTo(bounds.minX, bounds.maxY);
     graphics.lineTo(bounds.minX, bounds.minY);
-    graphics.stroke({ width: 3, color: 0xffd900 });
+    graphics.stroke({ width: 3, color: DEBUG_BOUND_COLOR });
   }
 }
