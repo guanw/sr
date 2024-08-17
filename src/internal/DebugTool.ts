@@ -14,8 +14,10 @@ export class DebugTool {
   private avatarContainer = new PIXI.Container();
   private avatarBoundingBox!: PIXI.Graphics;
 
-  // TODO
   // tiling bound box
+  private tilingBoundingBoxes: PIXI.Graphics[] = [];
+
+  // TODO P1
   // item bound box
   // enemy bound box
 
@@ -44,14 +46,36 @@ export class DebugTool {
 
     const mainLayer = await MainLayer.genInstance();
     if (this.container.visible) {
+      // add bounding box for avatar
       this.avatarBoundingBox = this.createBoundingBox(this.avatarContainer);
       mainLayer.layer.addChild(this.avatarContainer);
+
+      const avatar = await Avatar.genInstance();
+      this.updateBoundingBox(this.avatarBoundingBox, avatar.walkingSprite);
+
+      const tiling = await Tiling.genInstance();
+      // add bounding box for tilings
+      tiling.staticSprites.forEach((staticSprite) => {
+        // this.tilingContainers.push(staticSprite);
+        const tilingBoundingBox = this.createBoundingBox(staticSprite);
+        this.tilingBoundingBoxes.push(tilingBoundingBox);
+        mainLayer.layer.addChild(tilingBoundingBox);
+      });
     } else {
+      // remove bounding box for avatar
       mainLayer.layer.removeChild(this.avatarContainer);
+
+      // remove bounding box for tilings
+      this.tilingBoundingBoxes.forEach((tilingBoundingBox) => {
+        tilingBoundingBox.clear();
+      });
     }
   }
 
   public async genUpdate() {
+    if (!globalState.isDebugToolVisible) {
+      return;
+    }
     const tiling = await Tiling.genInstance();
     const avatar = await Avatar.genInstance();
     const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
@@ -61,7 +85,9 @@ export class DebugTool {
       killed enemies: ${avatarMetaData.scoring_sytem.value}
     `;
 
-    this.updateBoundingBox(this.avatarBoundingBox, avatar.walkingSprite);
+    this.tilingBoundingBoxes.forEach((boundingBox, i) => {
+      this.updateBoundingBox(boundingBox, tiling.staticSprites[i]);
+    });
   }
 
   private createBoundingBox(container: PIXI.Container): PIXI.Graphics {
@@ -72,6 +98,9 @@ export class DebugTool {
 
   // Function to update the bounding box position
   public updateBoundingBox(graphics: PIXI.Graphics, sprite: PIXI.Sprite) {
+    if (sprite == undefined) {
+      return;
+    }
     const bounds = sprite.getBounds();
     graphics.clear();
     graphics.moveTo(bounds.minX, bounds.minY);

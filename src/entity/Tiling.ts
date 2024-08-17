@@ -18,7 +18,7 @@ import { Avatar } from "./Avatar";
 
 export class Tiling extends Entity {
   private tilingSprite: PIXI.TilingSprite;
-  private staticSprites: PIXI.Sprite[] = [];
+  public staticSprites: PIXI.Sprite[] = [];
   public static instance: Tiling;
   private constructor(textures: PIXI.Texture[], layer: PIXI.Container) {
     super();
