@@ -31,7 +31,7 @@ export const MAX_HEALTH = 100;
 export const HP_TEXT_X_OFFSET = 500;
 export const HP_TEXT_Y_OFFSET = 500;
 export const HP_POTION_INCREASE = 50;
-export const AVATAR_SIZE = 14;
+export const AVATAR_DISPLACEMENT = 10;
 export const AVATAR_FRAME_SIZE = 48;
 export const AVATAR_NUM_OF_FRAME = 6;
 export const AVATAR_URL = "https://guanw.github.io/sr_assets/avatar.png";
@@ -42,6 +42,7 @@ export const ENEMY_SPEED = 1;
 export const ENEMY_FRAME_SIZE = 32; // Animation frame size
 export const ENEMY_ANIMATION_SPEED = 0.1;
 export const ENEMY_FRAME_NUMBER = 6; // Number of frames in the animation
+export const ENEMY_ATTACK_AVATAR_RANGE = 10;
 
 // Item related
 export const ITEM_FRAME_SIZE = 32;

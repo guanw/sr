@@ -5,7 +5,7 @@ import Application from "./Application";
 import { MainLayer } from "../layer/MainLayer";
 import {
   MAX_HEALTH,
-  AVATAR_SIZE,
+  AVATAR_DISPLACEMENT,
   ENEMY_ATTACK_VALUE,
   HP_POTION_INCREASE,
   HP_TEXT_X_OFFSET,
@@ -54,8 +54,8 @@ export class Avatar extends Entity {
   private initSprite(texture: PIXI.Texture[]) {
     const sprite = new PIXI.AnimatedSprite(texture);
     sprite.anchor.set(0.5);
-    sprite.width = 75;
-    sprite.height = 75;
+    sprite.width = AVATAR_FRAME_SIZE;
+    sprite.height = AVATAR_FRAME_SIZE;
     sprite.animationSpeed = AVATAR_ANIMATION_SPEED;
     sprite.play();
     sprite.x = GAME_WIDTH / 2;
@@ -112,7 +112,7 @@ export class Avatar extends Entity {
     this.attackingSprite.y -= deltaY;
   }
   getDisplacement(): number {
-    return AVATAR_SIZE / 2;
+    return AVATAR_DISPLACEMENT;
   }
 
   async walk() {

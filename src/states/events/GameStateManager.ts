@@ -7,6 +7,7 @@ import { Menu } from "../../menu";
 import {
   COLLECT_ITEM_RANGE,
   COLLISION_BACKOFF_OFFSET,
+  ENEMY_ATTACK_AVATAR_RANGE,
 } from "../../utils/Constants";
 import attackStateManager from "../AttackStateManager";
 import enemiesStateManager from "../EnemyStateManager";
@@ -179,7 +180,7 @@ export class GameEventManager {
       if (enemy === undefined) {
         return;
       }
-      if (enemy.isCollidedWith(user)) {
+      if (enemy.isCollidedWith(user, ENEMY_ATTACK_AVATAR_RANGE)) {
         await user.genCollide();
       }
     });
