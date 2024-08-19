@@ -13,6 +13,7 @@ import {
 import { GameEventManager } from "../states/events/GameStateManager";
 import { globalState } from "../states/events";
 import Application from "../entity/Application";
+import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
@@ -34,7 +35,11 @@ export class MainLayer {
       const gameEventManager = GameEventManager.getInstance();
       // enemy related events
       timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
-        gameEventManager.emit(new GenerateNewEnemyEvent());
+        if (ENABLE_MULTI_PLAYER) {
+          // TODO emit the events to socket.io server
+        } else {
+          gameEventManager.emit(new GenerateNewEnemyEvent());
+        }
       });
       timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
         gameEventManager.emit(new AvatarAttackEnemiesEvent());
