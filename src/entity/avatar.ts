@@ -18,6 +18,7 @@ import {
   AVATAR_ANIMATION_SPEED,
   GAME_WIDTH,
   GAME_HEIGHT,
+  AVATAR_SIZE,
 } from "../utils/Constants";
 import { GameOverEvent } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
@@ -54,8 +55,8 @@ export class Avatar extends Entity {
   private initSprite(texture: PIXI.Texture[]) {
     const sprite = new PIXI.AnimatedSprite(texture);
     sprite.anchor.set(0.5);
-    sprite.width = AVATAR_FRAME_SIZE;
-    sprite.height = AVATAR_FRAME_SIZE;
+    sprite.width = AVATAR_SIZE;
+    sprite.height = AVATAR_SIZE;
     sprite.animationSpeed = AVATAR_ANIMATION_SPEED;
     sprite.play();
     sprite.x = GAME_WIDTH / 2;
