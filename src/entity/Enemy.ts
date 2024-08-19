@@ -5,6 +5,7 @@ import {
   ENEMY_FRAME_NUMBER,
   ENEMY_FRAME_SIZE,
   ENEMY_SPEED,
+  ENEMY_URL,
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "../utils/Constants";
@@ -28,9 +29,7 @@ class Enemy extends Entity {
   }
 
   static async create(app: PIXI.Application, layer: PIXI.Container) {
-    const texture = await PIXI.Assets.load(
-      "https://guanw.github.io/sr_assets/slime_run.png"
-    );
+    const texture = await PIXI.Assets.load(ENEMY_URL);
     const frames = [];
     const frameWidth = ENEMY_FRAME_SIZE;
     const frameHeight = ENEMY_FRAME_SIZE;

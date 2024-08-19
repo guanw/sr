@@ -38,6 +38,7 @@ export const AVATAR_URL = "https://guanw.github.io/sr_assets/avatar.png";
 export const AVATAR_ANIMATION_SPEED = 0.1;
 
 // Enemy related
+export const ENEMY_URL = "https://guanw.github.io/sr_assets/slime_run.png";
 export const ENEMY_SPEED = 1;
 export const ENEMY_FRAME_SIZE = 32; // Animation frame size
 export const ENEMY_ANIMATION_SPEED = 0.1;
