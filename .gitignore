@@ -2,6 +2,5 @@ node_modules
 .cache/
 .parcel-cache/
 public
-dist/
 .vscode/
 .DS_store
