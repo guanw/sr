@@ -13,11 +13,7 @@ import { Avatar, avatarMetaData } from "./Avatar";
 
 class Enemy extends Entity {
   sprite: PIXI.AnimatedSprite;
-  private constructor(
-    app: PIXI.Application,
-    layer: PIXI.Container,
-    frames: PIXI.Texture[]
-  ) {
+  private constructor(layer: PIXI.Container, frames: PIXI.Texture[]) {
     super();
 
     this.sprite = new PIXI.AnimatedSprite(frames);
@@ -28,7 +24,7 @@ class Enemy extends Entity {
     layer.addChild(this.sprite);
   }
 
-  static async create(app: PIXI.Application, layer: PIXI.Container) {
+  static async create(layer: PIXI.Container) {
     const texture = await PIXI.Assets.load(ENEMY_URL);
     const frames = [];
     const frameWidth = ENEMY_FRAME_SIZE;
@@ -45,7 +41,7 @@ class Enemy extends Entity {
         new PIXI.Texture({ source: texture.baseTexture, frame: rect })
       );
     }
-    return new Enemy(app, layer, frames);
+    return new Enemy(layer, frames);
   }
 
   getX(): number {

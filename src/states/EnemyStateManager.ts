@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
 import { Enemy } from "../entity/Enemy";
-import Application from "../entity/Application";
 import { MainLayer } from "../layer/MainLayer";
 
 class EnemiesStateManager {
@@ -11,10 +10,9 @@ class EnemiesStateManager {
   }
 
   public async genAddEnemy() {
-    const instance = await Application.genInstance();
     const mainLayer = await MainLayer.genInstance();
     const uuid = uuidv4();
-    this.enemies.set(uuid, await Enemy.create(instance.app, mainLayer.layer));
+    this.enemies.set(uuid, await Enemy.create(mainLayer.layer));
   }
 
   public getEnemies(): Map<string, Enemy> {
