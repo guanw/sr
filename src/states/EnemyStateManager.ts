@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Enemy } from "../entity/Enemy";
-import { MainLayer } from "../layer/MainLayer";
+import { EnemiesSerialization, MainLayer } from "../layer/MainLayer";
 
 class EnemiesStateManager {
   private enemies: Map<string, Enemy>;
@@ -17,6 +17,18 @@ class EnemiesStateManager {
 
   public getEnemies(): Map<string, Enemy> {
     return this.enemies;
+  }
+
+  public async resetAllEnemies(enemies: EnemiesSerialization) {
+    const mainLayer = await MainLayer.genInstance();
+    await this.destroyAllEnemies();
+    for (const key in enemies) {
+      const enemy = enemies[key];
+      this.enemies.set(
+        key,
+        await Enemy.create(mainLayer.layer, enemy.x, enemy.y)
+      );
+    }
   }
 
   public async destroyAllEnemies(): Promise<void> {

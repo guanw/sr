@@ -13,18 +13,28 @@ import { Avatar, avatarMetaData } from "./Avatar";
 
 class Enemy extends Entity {
   sprite: PIXI.AnimatedSprite;
-  private constructor(layer: PIXI.Container, frames: PIXI.Texture[]) {
+  private constructor(
+    layer: PIXI.Container,
+    frames: PIXI.Texture[],
+    // override x,y for enemy initial position, this is used by multi-player feature
+    x: number | null = null,
+    y: number | null = null
+  ) {
     super();
 
     this.sprite = new PIXI.AnimatedSprite(frames);
     this.sprite.animationSpeed = ENEMY_ANIMATION_SPEED;
     this.sprite.play();
-    this.sprite.x = Math.random() * GAME_WIDTH - GAME_WIDTH / 2;
-    this.sprite.y = Math.random() * GAME_HEIGHT - GAME_HEIGHT / 2;
+    this.sprite.x = x ?? Math.random() * GAME_WIDTH - GAME_WIDTH / 2;
+    this.sprite.y = y ?? Math.random() * GAME_HEIGHT - GAME_HEIGHT / 2;
     layer.addChild(this.sprite);
   }
 
-  static async create(layer: PIXI.Container) {
+  static async create(
+    layer: PIXI.Container,
+    x: number | null = null,
+    y: number | null = null
+  ) {
     const texture = await PIXI.Assets.load(ENEMY_URL);
     const frames = [];
     const frameWidth = ENEMY_FRAME_SIZE;
@@ -41,7 +51,7 @@ class Enemy extends Entity {
         new PIXI.Texture({ source: texture.baseTexture, frame: rect })
       );
     }
-    return new Enemy(layer, frames);
+    return new Enemy(layer, frames, x, y);
   }
 
   getX(): number {

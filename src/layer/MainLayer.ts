@@ -14,12 +14,24 @@ import { GameEventManager } from "../states/events/GameStateManager";
 import { globalState } from "../states/events";
 import Application from "../entity/Application";
 import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
+import enemiesStateManager from "../states/EnemyStateManager";
+import SocketClient from "../utils/SocketClient";
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
 const ENEMY_ATTACK_INTERVAL = 500;
 const COLLECT_ITEM_INTERVAL = 10;
 const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
+
+interface EnemyObject {
+  x: number;
+  y: number;
+}
+export type EnemiesSerialization = { [key: string]: EnemyObject };
+type gameStateSnapShot = {
+  enemies: EnemiesSerialization;
+  [key: string]: unknown;
+};
 
 export class MainLayer {
   public static instance: MainLayer;
@@ -34,13 +46,18 @@ export class MainLayer {
       MainLayer.instance = new MainLayer();
       const gameEventManager = GameEventManager.getInstance();
       // enemy related events
-      timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
-        if (ENABLE_MULTI_PLAYER) {
-          // TODO emit the events to socket.io server
-        } else {
+      if (!ENABLE_MULTI_PLAYER) {
+        timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
           gameEventManager.emit(new GenerateNewEnemyEvent());
-        }
-      });
+        });
+      } else {
+        const socketClient = SocketClient.getInstance();
+        socketClient.on("update", (data: unknown) => {
+          const structuredData = data as gameStateSnapShot;
+          const enemies = structuredData["enemies"];
+          enemiesStateManager.resetAllEnemies(enemies);
+        });
+      }
       timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
         gameEventManager.emit(new AvatarAttackEnemiesEvent());
       });
