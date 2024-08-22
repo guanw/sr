@@ -4,11 +4,12 @@ import { globalState } from "../states/events";
 import { Tiling } from "../entity/Tiling";
 import { MainLayer } from "../layer/MainLayer";
 import { DEBUG_BOUND_COLOR, GAME_HEIGHT, GAME_WIDTH } from "../utils/Constants";
+import Application from "../entity/Application";
 
 export class DebugTool {
   private static instance: DebugTool;
   public container: PIXI.Container;
-  private text: PIXI.Text;
+  private avatarText: PIXI.Text;
 
   // avatar bound box
   private avatarContainer = new PIXI.Container();
@@ -23,8 +24,8 @@ export class DebugTool {
 
   constructor() {
     this.container = new PIXI.Container();
-    this.text = new PIXI.Text("", { fill: "white" });
-    this.container.addChild(this.text);
+    this.avatarText = new PIXI.Text("", { fill: "white" });
+    this.container.addChild(this.avatarText);
     this.container.visible = globalState.isDebugToolVisible;
   }
 
@@ -78,9 +79,12 @@ export class DebugTool {
     }
     const tiling = await Tiling.genInstance();
     const avatar = await Avatar.genInstance();
+    const app = await Application.genInstance();
     const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
-    this.text.text = `
-      Position: (${-tiling.getX()}, ${-tiling.getY()})
+    this.avatarText.text = `
+      Relative Position: (${-tiling.getX()}, ${-tiling.getY()})
+      Absoluate: (${avatar.getX()}, ${avatar.getY()})
+      Stage Position: (${app.app.stage.x}, ${app.app.stage.y})
       HP: ${hp}
       killed enemies: ${avatarMetaData.scoring_sytem.value}
     `;

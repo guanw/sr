@@ -260,13 +260,11 @@ export class Avatar extends Entity {
       return INITIAL_SWORD_SIZE / 2;
     }
 
-    isCollidedWith(ent: Entity): boolean {
+    isCollidedWith(enemy: Enemy): boolean {
       const enemyPoint = new PIXI.Point(
-        ent.getX() +
-          ent.getDisplacement() +
-          this.app.stage.x -
-          this.getDisplacement(),
-        ent.getY() + ent.getDisplacement() + this.app.stage.y
+        // +16 - 25 = -9
+        enemy.getX() + enemy.getDisplacement() - this.getDisplacement(),
+        enemy.getY() + enemy.getDisplacement() - this.getDisplacement()
       );
       return this.instance
         .getBounds()
