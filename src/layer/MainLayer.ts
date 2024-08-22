@@ -16,7 +16,6 @@ import Application from "../entity/Application";
 import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
 import enemiesStateManager from "../states/EnemyStateManager";
 import SocketClient from "../utils/SocketClient";
-import { Avatar } from "../entity/Avatar";
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
@@ -44,7 +43,6 @@ export class MainLayer {
 
   public static async genInstance(): Promise<MainLayer> {
     const socketClient = SocketClient.getInstance();
-    const avatar = await Avatar.genInstance();
     if (!MainLayer.instance) {
       MainLayer.instance = new MainLayer();
       const gameEventManager = GameEventManager.getInstance();
@@ -70,7 +68,6 @@ export class MainLayer {
           gameEventManager.emit(new AvatarAttackEnemiesEvent());
         } else {
           socketClient.emit("handleAvatarAttackEnemiesEvent", {});
-          new Avatar.Sword(this.instance.layer, avatar.walkingSprite);
         }
       });
 

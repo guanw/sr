@@ -130,13 +130,13 @@ export class Tiling extends Entity {
     return this.tilingSprite.tilePosition.y;
   }
   setDeltaX(deltaX: number): void {
-    this.tilingSprite.tilePosition.x += deltaX;
+    this.tilingSprite.tilePosition.x -= deltaX;
     this.staticSprites.forEach((sprite) => {
       sprite.x += deltaX;
     });
   }
   setDeltaY(deltaY: number): void {
-    this.tilingSprite.tilePosition.y += deltaY;
+    this.tilingSprite.tilePosition.y -= deltaY;
     this.staticSprites.forEach((sprite) => {
       sprite.y += deltaY;
     });

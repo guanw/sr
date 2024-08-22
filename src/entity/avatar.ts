@@ -22,7 +22,6 @@ import {
 } from "../utils/Constants";
 import { GameOverEvent } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
-import { Tiling } from "./Tiling";
 
 export const avatarMetaData = {
   hp_system: {
@@ -189,18 +188,23 @@ export class Avatar extends Entity {
   }
 
   public async genPerformAttack(enemies: Map<string, Enemy>) {
+    const instance = await Application.genInstance();
     const mainLayer = await MainLayer.genInstance();
     if (this.walkingSprite && this.walkingSprite.parent) {
-      const sword = new Avatar.Sword(mainLayer.layer, this.walkingSprite);
+      const sword = new Avatar.Sword(
+        instance.app,
+        mainLayer.layer,
+        this.walkingSprite
+      );
 
       // Check for collision with enemies
-      enemies.forEach(async (_, key) => {
+      enemies.forEach((_, key) => {
         const enemy = enemies.get(key);
         if (enemy === undefined) {
           return;
         }
 
-        if (await sword.isCollidedWith(enemy)) {
+        if (sword.isCollidedWith(enemy)) {
           enemy.destroy(mainLayer.layer);
           enemies.delete(key);
         }
@@ -213,9 +217,15 @@ export class Avatar extends Entity {
   }
 
   static Sword = class {
+    private app: PIXI.Application;
     private container: PIXI.Container;
     private instance: PIXI.Graphics;
-    public constructor(container: PIXI.Container, avatar: PIXI.Sprite) {
+    public constructor(
+      app: PIXI.Application,
+      container: PIXI.Container,
+      avatar: PIXI.Sprite
+    ) {
+      this.app = app;
       this.container = container;
       this.instance = new PIXI.Graphics();
       this.instance.moveTo(
@@ -250,14 +260,13 @@ export class Avatar extends Entity {
       return INITIAL_SWORD_SIZE / 2;
     }
 
-    async isCollidedWith(ent: Entity): Promise<boolean> {
-      const tiling = await Tiling.genInstance();
+    isCollidedWith(ent: Entity): boolean {
       const enemyPoint = new PIXI.Point(
         ent.getX() +
           ent.getDisplacement() +
-          tiling.getX() -
+          this.app.stage.x -
           this.getDisplacement(),
-        ent.getY() + ent.getDisplacement() + tiling.getY()
+        ent.getY() + ent.getDisplacement() + this.app.stage.y
       );
       return this.instance
         .getBounds()
