@@ -42,27 +42,41 @@ export class MainLayer {
   }
 
   public static async genInstance(): Promise<MainLayer> {
+    const socketClient = SocketClient.getInstance();
     if (!MainLayer.instance) {
       MainLayer.instance = new MainLayer();
       const gameEventManager = GameEventManager.getInstance();
       // enemy related events
-      if (!ENABLE_MULTI_PLAYER) {
-        timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
+      timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
+        if (!ENABLE_MULTI_PLAYER) {
           gameEventManager.emit(new GenerateNewEnemyEvent());
-        });
-      } else {
-        const socketClient = SocketClient.getInstance();
+        } else {
+          socketClient.emit("handleGenerateNewEnemy", {});
+        }
+      });
+
+      if (ENABLE_MULTI_PLAYER) {
         socketClient.on("update", (data: unknown) => {
           const structuredData = data as gameStateSnapShot;
           const enemies = structuredData["enemies"];
           enemiesStateManager.resetAllEnemies(enemies);
         });
       }
+
       timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
-        gameEventManager.emit(new AvatarAttackEnemiesEvent());
+        if (!ENABLE_MULTI_PLAYER) {
+          gameEventManager.emit(new AvatarAttackEnemiesEvent());
+        } else {
+          socketClient.emit("handleAvatarAttackEnemiesEvent", {});
+        }
       });
+
       timedEventsManager.addEvent(ENEMY_ATTACK_INTERVAL, async () => {
-        gameEventManager.emit(new EnemiesAttackAvatarEvent());
+        if (!ENABLE_MULTI_PLAYER) {
+          gameEventManager.emit(new EnemiesAttackAvatarEvent());
+        } else {
+          socketClient.emit("handleEnemiesAttackAvatar", {});
+        }
       });
 
       // item related events
@@ -89,7 +103,12 @@ export class MainLayer {
       return;
     }
 
-    gameEventManager.emit(new EnemiesMoveTowardsAvatarEvent());
+    if (!ENABLE_MULTI_PLAYER) {
+      gameEventManager.emit(new EnemiesMoveTowardsAvatarEvent());
+    } else {
+      const socketClient = SocketClient.getInstance();
+      socketClient.emit("handleEnemiesMoveTowardsAvatar", {});
+    }
 
     gameEventManager.emit(new UpdateAttacksEvent());
 
