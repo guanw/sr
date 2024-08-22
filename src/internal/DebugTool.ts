@@ -8,7 +8,7 @@ import { DEBUG_BOUND_COLOR, GAME_HEIGHT, GAME_WIDTH } from "../utils/Constants";
 export class DebugTool {
   private static instance: DebugTool;
   public container: PIXI.Container;
-  private text: PIXI.Text;
+  private avatarText: PIXI.Text;
 
   // avatar bound box
   private avatarContainer = new PIXI.Container();
@@ -23,8 +23,8 @@ export class DebugTool {
 
   constructor() {
     this.container = new PIXI.Container();
-    this.text = new PIXI.Text("", { fill: "white" });
-    this.container.addChild(this.text);
+    this.avatarText = new PIXI.Text("", { fill: "white" });
+    this.container.addChild(this.avatarText);
     this.container.visible = globalState.isDebugToolVisible;
   }
 
@@ -79,8 +79,9 @@ export class DebugTool {
     const tiling = await Tiling.genInstance();
     const avatar = await Avatar.genInstance();
     const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
-    this.text.text = `
-      Position: (${-tiling.getX()}, ${-tiling.getY()})
+    this.avatarText.text = `
+      Relative Pos: (${-tiling.getX()}, ${-tiling.getY()})
+      Absolute Pos: (${avatar.getX()}, ${avatar.getY()})
       HP: ${hp}
       killed enemies: ${avatarMetaData.scoring_sytem.value}
     `;
