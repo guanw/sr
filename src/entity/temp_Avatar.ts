@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Enemy } from "./Enemy";
 import { Entity } from "./Entity";
-import Application from "./Application";
 import { MainLayer } from "../layer/MainLayer";
 import {
   MAX_HEALTH,
@@ -188,14 +187,9 @@ export class Avatar extends Entity {
   }
 
   public async genPerformAttack(enemies: Map<string, Enemy>) {
-    const instance = await Application.genInstance();
     const mainLayer = await MainLayer.genInstance();
     if (this.walkingSprite && this.walkingSprite.parent) {
-      const sword = new Avatar.Sword(
-        instance.app,
-        mainLayer.layer,
-        this.walkingSprite
-      );
+      const sword = new Avatar.Sword(mainLayer.layer, this.walkingSprite);
 
       // Check for collision with enemies
       enemies.forEach((_, key) => {
@@ -217,15 +211,9 @@ export class Avatar extends Entity {
   }
 
   static Sword = class {
-    private app: PIXI.Application;
     private container: PIXI.Container;
     private instance: PIXI.Graphics;
-    public constructor(
-      app: PIXI.Application,
-      container: PIXI.Container,
-      avatar: PIXI.Sprite
-    ) {
-      this.app = app;
+    public constructor(container: PIXI.Container, avatar: PIXI.Sprite) {
       this.container = container;
       this.instance = new PIXI.Graphics();
       this.instance.moveTo(
@@ -261,14 +249,14 @@ export class Avatar extends Entity {
     }
 
     isCollidedWith(enemy: Enemy): boolean {
-      const enemyPoint = new PIXI.Point(
-        // +16 - 25 = -9
-        enemy.getX() + enemy.getDisplacement() - this.getDisplacement(),
-        enemy.getY() + enemy.getDisplacement() - this.getDisplacement()
+      const avatarBounds = this.instance.getBounds();
+      const enemyBounds = enemy.sprite.getBounds();
+      return (
+        avatarBounds.x < enemyBounds.x + enemyBounds.width &&
+        avatarBounds.x + avatarBounds.width > enemyBounds.x &&
+        avatarBounds.y < enemyBounds.y + enemyBounds.height &&
+        avatarBounds.y + avatarBounds.height > enemyBounds.y
       );
-      return this.instance
-        .getBounds()
-        .containsPoint(enemyPoint.x, enemyPoint.y);
     }
   };
 }

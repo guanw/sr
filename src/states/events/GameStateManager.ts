@@ -1,5 +1,5 @@
-import { Avatar } from "../../entity/Avatar";
 import { Tiling } from "../../entity/Tiling";
+import { Avatar } from "../../entity/Avatar";
 import { DebugTool } from "../../internal/DebugTool";
 import { MainLayer } from "../../layer/MainLayer";
 import { PlaygroundLayer } from "../../layer/PlaygroundLayer";
