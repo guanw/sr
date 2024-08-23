@@ -34,9 +34,9 @@ export async function genHandleAvatarAttack(e: MouseEvent) {
   gameEventManager.emit(new AvatarInitiateAttackEvent(e));
 }
 
-(function () {
+export async function initEventsListener() {
   // Add event listeners for keydown and keyup events
   window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("keyup", handleKeyUp);
   window.addEventListener("click", genHandleAvatarAttack);
-})();
+}

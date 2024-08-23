@@ -1,4 +1,4 @@
-import { globalState } from "./states/events";
+import { globalState, initEventsListener } from "./states/events";
 // import { createEnvironmentReferences } from './environmentReference';
 import Application from "./entity/Application";
 import { MainLayer } from "./layer/MainLayer";
@@ -15,6 +15,8 @@ import { GameEventManager } from "./states/events/GameStateManager";
   instance.app.stage.addChild(playgroundLayer.layer);
   mainLayer.layer.visible = true;
   playgroundLayer.layer.visible = false;
+
+  initEventsListener();
 
   // Game loop
   async function gameLoop() {
