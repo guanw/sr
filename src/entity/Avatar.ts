@@ -9,8 +9,6 @@ import {
   HP_POTION_INCREASE,
   HP_TEXT_X_OFFSET,
   HP_TEXT_Y_OFFSET,
-  INITIAL_SWORD_SIZE,
-  SWORD_WIDTH,
   AVATAR_FRAME_SIZE,
   AVATAR_NUM_OF_FRAME,
   AVATAR_URL,
@@ -21,7 +19,7 @@ import {
 } from "../utils/Constants";
 import { GameOverEvent } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
-import { Helper } from "../utils/Helper";
+import { Sword } from "./Attacks/Sword";
 
 export const avatarMetaData = {
   hp_system: {
@@ -196,7 +194,7 @@ export class Avatar extends Entity {
   public async genPerformAttack(enemies: Map<string, Enemy>) {
     const mainLayer = await MainLayer.genInstance();
     if (this.walkingSprite && this.walkingSprite.parent) {
-      const sword = new Avatar.Sword(mainLayer.layer, this.walkingSprite);
+      const sword = new Sword(mainLayer.layer, this.walkingSprite);
 
       // Check for collision with enemies
       enemies.forEach((_, key) => {
@@ -216,49 +214,4 @@ export class Avatar extends Entity {
   public getHealth_DEBUG_TOOL_ONLY(): number {
     return avatarMetaData.hp_system.value;
   }
-
-  static Sword = class {
-    private container: PIXI.Container;
-    private instance: PIXI.Graphics;
-    public constructor(container: PIXI.Container, avatar: PIXI.Sprite) {
-      this.container = container;
-      this.instance = new PIXI.Graphics();
-      this.instance.moveTo(
-        avatar.x - INITIAL_SWORD_SIZE / 2,
-        avatar.y - INITIAL_SWORD_SIZE / 2
-      );
-      this.instance.lineTo(
-        avatar.x + INITIAL_SWORD_SIZE / 2,
-        avatar.y - INITIAL_SWORD_SIZE / 2
-      );
-      this.instance.lineTo(
-        avatar.x + INITIAL_SWORD_SIZE / 2,
-        avatar.y + INITIAL_SWORD_SIZE / 2
-      );
-      this.instance.lineTo(
-        avatar.x - INITIAL_SWORD_SIZE / 2,
-        avatar.y + INITIAL_SWORD_SIZE / 2
-      );
-      this.instance.lineTo(
-        avatar.x - INITIAL_SWORD_SIZE / 2,
-        avatar.y - INITIAL_SWORD_SIZE / 2
-      );
-      this.instance.stroke({ width: SWORD_WIDTH, color: 0xffd900 });
-      this.container.addChild(this.instance);
-      // Remove sword after a short delay e.g 200ms
-      setTimeout(() => {
-        this.container.removeChild(this.instance);
-      }, 200);
-    }
-
-    getDisplacement(): number {
-      return INITIAL_SWORD_SIZE / 2;
-    }
-
-    isCollidedWith(enemy: Enemy): boolean {
-      const avatarBounds = this.instance.getBounds();
-      const enemyBounds = enemy.sprite.getBounds();
-      return Helper.boundsIntersect(avatarBounds, enemyBounds);
-    }
-  };
 }

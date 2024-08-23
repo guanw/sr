@@ -17,6 +17,7 @@ import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
 import enemiesStateManager from "../states/EnemyStateManager";
 import SocketClient from "../utils/SocketClient";
 import { Avatar } from "../entity/Avatar";
+import { Sword } from "../entity/Attacks/Sword";
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
@@ -70,7 +71,7 @@ export class MainLayer {
           gameEventManager.emit(new AvatarAttackEnemiesEvent());
         } else {
           socketClient.emit("handleAvatarAttackEnemiesEvent", {});
-          new Avatar.Sword(this.instance.layer, avatar.walkingSprite);
+          new Sword(this.instance.layer, avatar.walkingSprite);
         }
       });
 
