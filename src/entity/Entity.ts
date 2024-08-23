@@ -1,12 +1,13 @@
 import { AVATAR_SPEED } from "../utils/Constants";
 
-const ENTITY_COLLIDE_RANGE = 5;
 export abstract class Entity {
   public abstract getDisplacement(): number;
   public abstract getX(): number;
   public abstract getY(): number;
   public abstract setDeltaX(x: number): void;
   public abstract setDeltaY(y: number): void;
+  public abstract get width(): number;
+  public abstract get height(): number;
 
   public moveLeft(offset = 1): void {
     this.setDeltaX(-AVATAR_SPEED * offset);
@@ -25,17 +26,12 @@ export abstract class Entity {
   }
 
   // override this for collision detection
-  isCollidedWith(ent: Entity, range = ENTITY_COLLIDE_RANGE): boolean {
-    const displacement = this.getDisplacement() / 2;
-    const currentX = this.getX() + displacement;
-    const currentY = this.getY() + displacement;
-
-    const ent_displacement = ent.getDisplacement() / 2;
-    const otherX = ent.getX() + ent_displacement;
-    const otherY = ent.getY() + ent_displacement;
-    const distance = Math.sqrt(
-      (currentX - otherX) ** 2 + (currentY - otherY) ** 2
+  isCollidedWith(ent: Entity): boolean {
+    return (
+      this.getX() < ent.getX() + ent.width &&
+      this.getX() + this.width > ent.getX() &&
+      this.getY() < ent.getY() + ent.height &&
+      this.getY() + this.height > ent.getY()
     );
-    return distance <= range;
   }
 }

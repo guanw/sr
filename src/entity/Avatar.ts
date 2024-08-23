@@ -21,6 +21,7 @@ import {
 } from "../utils/Constants";
 import { GameOverEvent } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
+import { Helper } from "../utils/Helper";
 
 export const avatarMetaData = {
   hp_system: {
@@ -113,6 +114,12 @@ export class Avatar extends Entity {
   }
   getDisplacement(): number {
     return AVATAR_DISPLACEMENT;
+  }
+  public get width(): number {
+    return this.walkingSprite.width;
+  }
+  public get height(): number {
+    return this.walkingSprite.width;
   }
 
   async walk() {
@@ -251,12 +258,7 @@ export class Avatar extends Entity {
     isCollidedWith(enemy: Enemy): boolean {
       const avatarBounds = this.instance.getBounds();
       const enemyBounds = enemy.sprite.getBounds();
-      return (
-        avatarBounds.x < enemyBounds.x + enemyBounds.width &&
-        avatarBounds.x + avatarBounds.width > enemyBounds.x &&
-        avatarBounds.y < enemyBounds.y + enemyBounds.height &&
-        avatarBounds.y + avatarBounds.height > enemyBounds.y
-      );
+      return Helper.boundsIntersect(avatarBounds, enemyBounds);
     }
   };
 }

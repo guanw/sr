@@ -4,11 +4,7 @@ import { DebugTool } from "../../internal/DebugTool";
 import { MainLayer } from "../../layer/MainLayer";
 import { PlaygroundLayer } from "../../layer/PlaygroundLayer";
 import { Menu } from "../../menu";
-import {
-  COLLECT_ITEM_RANGE,
-  COLLISION_BACKOFF_OFFSET,
-  ENEMY_ATTACK_AVATAR_RANGE,
-} from "../../utils/Constants";
+import { COLLISION_BACKOFF_OFFSET } from "../../utils/Constants";
 import attackStateManager from "../AttackStateManager";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
@@ -180,7 +176,7 @@ export class GameEventManager {
       if (enemy === undefined) {
         return;
       }
-      if (enemy.isCollidedWith(user, ENEMY_ATTACK_AVATAR_RANGE)) {
+      if (enemy.isCollidedWith(user)) {
         await user.genCollide();
       }
     });
@@ -198,7 +194,7 @@ export class GameEventManager {
       if (item === undefined) {
         return;
       }
-      if (item.isCollidedWith(user, COLLECT_ITEM_RANGE)) {
+      if (item.isCollidedWith(user)) {
         await item.genCollide();
         items.delete(key);
       }

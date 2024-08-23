@@ -23,7 +23,6 @@ export const COLLISION_BACKOFF_OFFSET = 5;
 
 // Avatar related
 export const AVATAR_SPEED = 3;
-export const COLLECT_ITEM_RANGE = 15;
 export const ENEMY_ATTACK_VALUE = 10;
 export const INITIAL_SWORD_SIZE = 50;
 export const SWORD_WIDTH = 5;
@@ -44,7 +43,6 @@ export const ENEMY_SPEED = 1;
 export const ENEMY_FRAME_SIZE = 32; // Animation frame size
 export const ENEMY_ANIMATION_SPEED = 0.1;
 export const ENEMY_FRAME_NUMBER = 6; // Number of frames in the animation
-export const ENEMY_ATTACK_AVATAR_RANGE = 10;
 
 // Item related
 export const ITEM_FRAME_SIZE = 32;

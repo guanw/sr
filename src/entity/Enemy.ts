@@ -69,6 +69,12 @@ class Enemy extends Entity {
   getDisplacement(): number {
     return ENEMY_FRAME_SIZE / 2;
   }
+  public get width(): number {
+    return this.sprite.width;
+  }
+  public get height(): number {
+    return this.sprite.height;
+  }
 
   public setPos(x: number, y: number) {
     this.sprite.x = x;
