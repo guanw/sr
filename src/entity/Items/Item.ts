@@ -30,7 +30,7 @@ export abstract class Item extends Entity {
   }
   async genCollideCallback(): Promise<void> {}
 
-  protected destroy(layer: PIXI.Container) {
+  public destroy(layer: PIXI.Container) {
     layer.removeChild(this.sprite);
   }
 }

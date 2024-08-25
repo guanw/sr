@@ -1,25 +1,26 @@
 import * as PIXI from "pixi.js";
 import { Item } from "./Item";
 import enemiesStateManager from "../../states/EnemyStateManager";
-import { Avatar } from "../Avatar";
 import { BOMB_URL, ITEM_FRAME_SIZE } from "../../utils/Constants";
 
 export class Bomb extends Item {
-  constructor(layer: PIXI.Container, avatar: Avatar, texture: PIXI.Texture) {
+  constructor(
+    layer: PIXI.Container,
+    x: number,
+    y: number,
+    texture: PIXI.Texture
+  ) {
     super();
     this.sprite = new PIXI.Sprite(texture);
     this.sprite.width = ITEM_FRAME_SIZE;
     this.sprite.height = ITEM_FRAME_SIZE;
-    [this.sprite.x, this.sprite.y] = this.placeItem(
-      avatar.getX(),
-      avatar.getY()
-    );
+    [this.sprite.x, this.sprite.y] = this.placeItem(x, y);
     layer.addChild(this.sprite);
   }
 
-  static async create(layer: PIXI.Container, avatar: Avatar) {
+  static async create(layer: PIXI.Container, x: number, y: number) {
     const texture = await PIXI.Assets.load(BOMB_URL);
-    return new Bomb(layer, avatar, texture);
+    return new Bomb(layer, x, y, texture);
   }
 
   getX(): number {

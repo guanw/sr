@@ -4,6 +4,7 @@ import { Avatar } from "../entity/Avatar";
 import { Bomb } from "../entity/Items/Bomb";
 import { Potion } from "../entity/Items/Potion";
 import { Item } from "../entity/Items/Item";
+import { ItemsSerialization, MainLayer } from "../layer/MainLayer";
 
 class ItemsStateManager {
   private items: Map<string, Item>;
@@ -17,10 +18,16 @@ class ItemsStateManager {
     const user = await Avatar.genInstance();
     switch (n) {
       case 1:
-        this.items.set(uuid, await Bomb.create(layer, user));
+        this.items.set(
+          uuid,
+          await Bomb.create(layer, user.getX(), user.getY())
+        );
         break;
       case 2:
-        this.items.set(uuid, await Potion.create(layer, user));
+        this.items.set(
+          uuid,
+          await Potion.create(layer, user.getX(), user.getY())
+        );
         break;
       default:
     }
@@ -32,6 +39,31 @@ class ItemsStateManager {
 
   public getItems(): Map<string, Item> {
     return this.items;
+  }
+
+  public async resetAllItems(items: ItemsSerialization) {
+    const mainLayer = await MainLayer.genInstance();
+    await this.destroyAllItems();
+    for (const key in items) {
+      const item = items[key];
+      switch (item.type) {
+        case "potion":
+          Potion.create(mainLayer.layer, item.x, item.y);
+          break;
+        case "bomb":
+          Bomb.create(mainLayer.layer, item.x, item.y);
+          break;
+        default:
+      }
+    }
+  }
+
+  public async destroyAllItems(): Promise<void> {
+    const mainLayer = await MainLayer.genInstance();
+    this.items.forEach((item) => {
+      item.destroy(mainLayer.layer);
+    });
+    this.items.clear();
   }
 }
 

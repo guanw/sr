@@ -19,6 +19,7 @@ import enemiesStateManager from "../states/EnemyStateManager";
 import SocketClient from "../utils/SocketClient";
 import { Avatar } from "../entity/Avatar";
 import { Sword } from "../entity/Attacks/Sword";
+import { itemsStateManager } from "../states/ItemsStateManager";
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
@@ -30,9 +31,16 @@ interface EnemyObject {
   x: number;
   y: number;
 }
+interface ItemObject {
+  x: number;
+  y: number;
+  type: string;
+}
 export type EnemiesSerialization = { [key: string]: EnemyObject };
+export type ItemsSerialization = { [key: string]: ItemObject };
 type gameStateSnapShot = {
   enemies: EnemiesSerialization;
+  items: ItemsSerialization;
   [key: string]: unknown;
 };
 
@@ -64,6 +72,9 @@ export class MainLayer {
           const structuredData = data as gameStateSnapShot;
           const enemies = structuredData["enemies"];
           enemiesStateManager.resetAllEnemies(enemies);
+
+          const items = structuredData["items"];
+          itemsStateManager.resetAllItems(items);
         });
       }
 

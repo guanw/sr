@@ -1,24 +1,26 @@
 import * as PIXI from "pixi.js";
 import { Item } from "./Item";
-import { Avatar } from "../Avatar";
 import { ITEM_FRAME_SIZE, POTION_URL } from "../../utils/Constants";
+import { Avatar } from "../Avatar";
 
 export class Potion extends Item {
-  constructor(layer: PIXI.Container, avatar: Avatar, texture: PIXI.Texture) {
+  constructor(
+    layer: PIXI.Container,
+    x: number,
+    y: number,
+    texture: PIXI.Texture
+  ) {
     super();
     this.sprite = new PIXI.Sprite(texture);
     this.sprite.width = ITEM_FRAME_SIZE;
     this.sprite.height = ITEM_FRAME_SIZE;
-    [this.sprite.x, this.sprite.y] = this.placeItem(
-      avatar.getX(),
-      avatar.getY()
-    );
+    [this.sprite.x, this.sprite.y] = this.placeItem(x, y);
     layer.addChild(this.sprite);
   }
 
-  static async create(layer: PIXI.Container, avatar: Avatar) {
+  static async create(layer: PIXI.Container, x: number, y: number) {
     const texture = await PIXI.Assets.load(POTION_URL);
-    return new Potion(layer, avatar, texture);
+    return new Potion(layer, x, y, texture);
   }
 
   setDeltaX(deltaX: number): void {
