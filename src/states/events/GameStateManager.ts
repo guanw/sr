@@ -212,39 +212,41 @@ export class GameEventManager {
   }
 
   private async genHandleMoveUser() {
-    // Move user based on key states
     const background = await Tiling.genInstance();
+    const collidedWithTiles = await background.genCheckCollisionWithAvatar();
+    // Move user based on key states
     if (avatarKeys.ArrowLeft) {
-      if (await background.genCheckCollisionWithAvatar()) {
-        await this.genMoveUserRight(background, COLLISION_BACKOFF_OFFSET);
+      if (collidedWithTiles) {
+        await this.genMoveUserRight(COLLISION_BACKOFF_OFFSET);
         return;
       }
-      await this.genMoveUserLeft(background);
+      await this.genMoveUserLeft();
     }
     if (avatarKeys.ArrowRight) {
-      if (await background.genCheckCollisionWithAvatar()) {
-        await this.genMoveUserLeft(background, COLLISION_BACKOFF_OFFSET);
+      if (collidedWithTiles) {
+        await this.genMoveUserLeft(COLLISION_BACKOFF_OFFSET);
         return;
       }
-      await this.genMoveUserRight(background);
+      await this.genMoveUserRight();
     }
     if (avatarKeys.ArrowUp) {
-      if (await background.genCheckCollisionWithAvatar()) {
-        await this.genMoveUserDown(background, COLLISION_BACKOFF_OFFSET);
+      if (collidedWithTiles) {
+        await this.genMoveUserDown(COLLISION_BACKOFF_OFFSET);
         return;
       }
-      await this.genMoveUserUp(background);
+      await this.genMoveUserUp();
     }
     if (avatarKeys.ArrowDown) {
-      if (await background.genCheckCollisionWithAvatar()) {
-        await this.genMoveUserUp(background, COLLISION_BACKOFF_OFFSET);
+      if (collidedWithTiles) {
+        await this.genMoveUserUp(COLLISION_BACKOFF_OFFSET);
         return;
       }
-      await this.genMoveUserDown(background);
+      await this.genMoveUserDown();
     }
   }
 
-  private async genMoveUserLeft(background: Tiling, moveSpeedOffset = 1) {
+  private async genMoveUserLeft(moveSpeedOffset = 1) {
+    const background = await Tiling.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     background.moveRight(moveSpeedOffset);
@@ -256,7 +258,8 @@ export class GameEventManager {
     });
   }
 
-  private async genMoveUserRight(background: Tiling, moveSpeedOffset = 1) {
+  private async genMoveUserRight(moveSpeedOffset = 1) {
+    const background = await Tiling.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     background.moveLeft(moveSpeedOffset);
@@ -268,7 +271,8 @@ export class GameEventManager {
     });
   }
 
-  private async genMoveUserUp(background: Tiling, moveSpeedOffset = 1) {
+  private async genMoveUserUp(moveSpeedOffset = 1) {
+    const background = await Tiling.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     background.moveDown(moveSpeedOffset);
@@ -280,7 +284,8 @@ export class GameEventManager {
     });
   }
 
-  private async genMoveUserDown(background: Tiling, moveSpeedOffset = 1) {
+  private async genMoveUserDown(moveSpeedOffset = 1) {
+    const background = await Tiling.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     background.moveUp(moveSpeedOffset);
