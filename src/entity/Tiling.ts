@@ -16,6 +16,7 @@ import { MainLayer } from "../layer/MainLayer";
 import { Position } from "./Application";
 import { Avatar } from "./Avatar";
 import { Helper } from "../utils/Helper";
+import { ENABLE_COLLISION } from "../utils/Knobs";
 
 export class Tiling extends Entity {
   private tilingSprite: PIXI.TilingSprite;
@@ -165,6 +166,9 @@ export class Tiling extends Entity {
   }
 
   private isCollision(avatar: Avatar, sprite: PIXI.Sprite): boolean {
+    if (!ENABLE_COLLISION) {
+      return false;
+    }
     const avatarBounds = avatar.getBounds();
     const spriteBounds = sprite.getBounds();
     return Helper.boundsIntersect(avatarBounds, spriteBounds);

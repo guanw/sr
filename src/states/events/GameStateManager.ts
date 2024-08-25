@@ -45,7 +45,6 @@ export class GameEventManager {
     if (globalState.isGamePaused) {
       return;
     }
-    await this.genMoveUser();
     /* TODO end multi-player game genMoveUser should be executed on client side */
   }
 
@@ -119,6 +118,9 @@ export class GameEventManager {
         const attackEvent = event as AvatarInitiateAttackEvent;
         await this.handleAvatarInitiateAttack(attackEvent.event);
         break;
+      }
+      case "MOVE_AVATAR": {
+        await this.genHandleMoveUser();
       }
     }
   }
@@ -209,7 +211,7 @@ export class GameEventManager {
     attackStateManager.updateAttacks();
   }
 
-  private async genMoveUser() {
+  private async genHandleMoveUser() {
     // Move user based on key states
     const background = await Tiling.genInstance();
     if (avatarKeys.ArrowLeft) {

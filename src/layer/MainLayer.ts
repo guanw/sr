@@ -7,6 +7,7 @@ import {
   EnemiesMoveTowardsAvatarEvent,
   GenerateNewEnemyEvent,
   GenerateNewItemEvent,
+  MoveAvatarEvent,
   RefreshDebugToolEvent,
   UpdateAttacksEvent,
 } from "../states/events/GameEvent";
@@ -113,6 +114,8 @@ export class MainLayer {
       const socketClient = SocketClient.getInstance();
       socketClient.emit("handleEnemiesMoveTowardsAvatar", {});
     }
+
+    gameEventManager.emit(new MoveAvatarEvent());
 
     gameEventManager.emit(new UpdateAttacksEvent());
 

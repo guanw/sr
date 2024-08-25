@@ -10,7 +10,8 @@ type EventType =
   | "ENEMIES_MOVE_TOWARDS_AVATAR"
   | "UPDATE_ATTACKS"
   | "REFRESH_DEBUG_TOOL"
-  | "AVATAR_INITIATE_ATTACK";
+  | "AVATAR_INITIATE_ATTACK"
+  | "MOVE_AVATAR";
 
 export interface GameEvent {
   type: EventType;
@@ -74,4 +75,8 @@ export class AvatarInitiateAttackEvent implements GameEvent {
   constructor(event: MouseEvent) {
     this.event = event;
   }
+}
+
+export class MoveAvatarEvent implements GameEvent {
+  type: EventType = "MOVE_AVATAR";
 }
