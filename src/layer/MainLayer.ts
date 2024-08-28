@@ -19,13 +19,14 @@ import enemiesStateManager from "../states/EnemyStateManager";
 import SocketClient from "../utils/SocketClient";
 import { Avatar } from "../entity/Avatar";
 import { Sword } from "../entity/Attacks/Sword";
+import {
+  ENEMY_APPEAR_INTERVAL,
+  AVATAR_ATTACK_INTERVAL,
+  ENEMY_ATTACK_INTERVAL,
+  ITEM_RANDOM_APPEAR_INTERVAL,
+  COLLECT_ITEM_INTERVAL,
+} from "../utils/Constants";
 // import { itemsStateManager } from "../states/ItemsStateManager";
-
-const AVATAR_ATTACK_INTERVAL = 2000;
-const ENEMY_APPEAR_INTERVAL = 3000;
-const ENEMY_ATTACK_INTERVAL = 500;
-const COLLECT_ITEM_INTERVAL = 10;
-const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 
 interface EnemyObject {
   x: number;

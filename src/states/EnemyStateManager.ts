@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from "uuid";
 import { Enemy } from "../entity/Enemy";
 import { Avatar } from "../entity/Avatar";
 import { EnemiesSerialization, MainLayer } from "../layer/MainLayer";
-import { GAME_WIDTH, GAME_HEIGHT } from "../utils/Constants";
 
 class EnemiesStateManager {
   private enemies: Map<string, Enemy>;
@@ -38,6 +37,7 @@ class EnemiesStateManager {
     const mainLayer = await MainLayer.genInstance();
     const avatar = await Avatar.genInstance();
     const previousEnemiesState = enemiesStateManager.getEnemies();
+
     // update existing enemies with new x,y
     previousEnemiesState.forEach((_, key) => {
       if (enemies[key] != undefined && previousEnemiesState.has(key)) {

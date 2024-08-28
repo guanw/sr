@@ -60,3 +60,10 @@ export const WIND_ANIMATION_SPEED = 0.1;
 
 // DebugTool related
 export const DEBUG_BOUND_COLOR = 0x3d85c6;
+
+// Events related
+export const AVATAR_ATTACK_INTERVAL = 2000;
+export const ENEMY_APPEAR_INTERVAL = 3000;
+export const ENEMY_ATTACK_INTERVAL = 500;
+export const COLLECT_ITEM_INTERVAL = 10;
+export const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
