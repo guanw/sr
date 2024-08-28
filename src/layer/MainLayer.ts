@@ -19,7 +19,8 @@ import enemiesStateManager from "../states/EnemyStateManager";
 import SocketClient from "../utils/SocketClient";
 import { Avatar } from "../entity/Avatar";
 import { Sword } from "../entity/Attacks/Sword";
-import { itemsStateManager } from "../states/ItemsStateManager";
+import { GAME_HEIGHT, GAME_WIDTH } from "../utils/Constants";
+import { Tiling } from "../entity/Tiling";
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
@@ -31,17 +32,22 @@ interface EnemyObject {
   x: number;
   y: number;
 }
+export type EnemiesSerialization = { [key: string]: EnemyObject };
 interface ItemObject {
   x: number;
   y: number;
   type: string;
 }
-export type EnemiesSerialization = { [key: string]: EnemyObject };
 export type ItemsSerialization = { [key: string]: ItemObject };
 type gameStateSnapShot = {
   enemies: EnemiesSerialization;
   items: ItemsSerialization;
   [key: string]: unknown;
+};
+export type AvatarSerialization = {
+  x: number;
+  y: number;
+  hp: number;
 };
 
 export class MainLayer {
@@ -59,24 +65,17 @@ export class MainLayer {
       MainLayer.instance = new MainLayer();
       const gameEventManager = GameEventManager.getInstance();
       // enemy related events
-      timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
-        if (!ENABLE_MULTI_PLAYER) {
-          gameEventManager.emit(new GenerateNewEnemyEvent());
-        } else {
-          socketClient.emit("handleGenerateNewEnemy", {});
-        }
-      });
-
-      if (ENABLE_MULTI_PLAYER) {
-        socketClient.on("update", (data: unknown) => {
-          const structuredData = data as gameStateSnapShot;
-          const enemies = structuredData["enemies"];
-          enemiesStateManager.resetAllEnemies(enemies);
-
-          const items = structuredData["items"];
-          itemsStateManager.resetAllItems(items);
-        });
-      }
+      // timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
+      //   if (!ENABLE_MULTI_PLAYER) {
+      //     gameEventManager.emit(new GenerateNewEnemyEvent());
+      //   } else {
+      //     socketClient.emit("handleGenerateNewEnemy", {});
+      //   }
+      // });
+      setInterval(() => {
+        socketClient.emit("handleGenerateNewEnemy", {});
+      }, 3000);
+      await Tiling.genInstance();
 
       timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
         if (!ENABLE_MULTI_PLAYER) {
@@ -102,6 +101,24 @@ export class MainLayer {
       timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, async () => {
         gameEventManager.emit(new CollectItemEvent());
       });
+
+      if (ENABLE_MULTI_PLAYER) {
+        socketClient.on("update", (data: unknown) => {
+          const structuredData = data as gameStateSnapShot;
+
+          const avatarData = structuredData["avatar"] as AvatarSerialization;
+          const latestAvatarAbsoluteX = avatarData.x;
+          const latestAvatarAbsoluteY = avatarData.y;
+          avatar.setPos(latestAvatarAbsoluteX, latestAvatarAbsoluteY);
+
+          // const enemiesSerialization = structuredData["enemies"];
+          // enemiesStateManager.refreshAllEnemies(
+          //   enemiesSerialization,
+          //   latestAvatarAbsoluteX,
+          //   latestAvatarAbsoluteY
+          // );
+        });
+      }
     }
     return MainLayer.instance;
   }
@@ -126,7 +143,12 @@ export class MainLayer {
       socketClient.emit("handleEnemiesMoveTowardsAvatar", {});
     }
 
-    gameEventManager.emit(new MoveAvatarEvent());
+    if (!ENABLE_MULTI_PLAYER) {
+      gameEventManager.emit(new MoveAvatarEvent());
+    } else {
+      const socketClient = SocketClient.getInstance();
+      socketClient.emit("handleMoveAvatar", {});
+    }
 
     gameEventManager.emit(new UpdateAttacksEvent());
 

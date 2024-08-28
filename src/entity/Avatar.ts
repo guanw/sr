@@ -33,6 +33,7 @@ export const avatarMetaData = {
 
 export class Avatar extends Entity {
   public static instance: Avatar;
+  public localAvatar = { x: 0, y: 0 };
   public walkingSprite: PIXI.AnimatedSprite;
   public attackingSprite: PIXI.AnimatedSprite;
   private static healthBarContainer = new PIXI.Graphics();
@@ -109,6 +110,12 @@ export class Avatar extends Entity {
   setDeltaY(deltaY: number): void {
     this.walkingSprite.y -= deltaY;
     this.attackingSprite.y -= deltaY;
+  }
+  setPos(x: number, y: number) {
+    this.walkingSprite.x = x;
+    this.attackingSprite.x = x;
+    this.walkingSprite.y = y;
+    this.attackingSprite.y = y;
   }
   getDisplacement(): number {
     return AVATAR_DISPLACEMENT;

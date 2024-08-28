@@ -15,6 +15,7 @@ import {
   KeyDownEvent,
   KeyUpEvent,
 } from "./GameEvent";
+import { ENABLE_MULTI_PLAYER } from "../../utils/Knobs";
 
 export class GameEventManager {
   private static instance: GameEventManager;
@@ -64,7 +65,7 @@ export class GameEventManager {
           await this.handleToggleDebugTool();
         }
 
-        if (key in avatarKeys) {
+        if (!ENABLE_MULTI_PLAYER && key in avatarKeys) {
           await this.handleAvatarMoveKeyDownEvent(keyDownEvent.event);
         }
 
@@ -161,7 +162,7 @@ export class GameEventManager {
   }
 
   private async handleAvatarMoveKeyUpEvent(e: KeyboardEvent) {
-    if (e.key in avatarKeys) {
+    if (!!ENABLE_MULTI_PLAYER && e.key in avatarKeys) {
       avatarKeys[e.key] = false;
     }
   }
