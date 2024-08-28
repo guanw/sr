@@ -19,7 +19,7 @@ import enemiesStateManager from "../states/EnemyStateManager";
 import SocketClient from "../utils/SocketClient";
 import { Avatar } from "../entity/Avatar";
 import { Sword } from "../entity/Attacks/Sword";
-import { itemsStateManager } from "../states/ItemsStateManager";
+// import { itemsStateManager } from "../states/ItemsStateManager";
 
 const AVATAR_ATTACK_INTERVAL = 2000;
 const ENEMY_APPEAR_INTERVAL = 3000;
@@ -38,8 +38,14 @@ interface ItemObject {
 }
 export type EnemiesSerialization = { [key: string]: EnemyObject };
 export type ItemsSerialization = { [key: string]: ItemObject };
-type gameStateSnapShot = {
+export type AvatarSerialization = {
+  x: number;
+  y: number;
+  type: string;
+};
+type GameStateSnapShot = {
   enemies: EnemiesSerialization;
+  avatar: AvatarSerialization;
   items: ItemsSerialization;
   [key: string]: unknown;
 };
@@ -67,17 +73,6 @@ export class MainLayer {
         }
       });
 
-      if (ENABLE_MULTI_PLAYER) {
-        socketClient.on("update", (data: unknown) => {
-          const structuredData = data as gameStateSnapShot;
-          const enemies = structuredData["enemies"];
-          enemiesStateManager.resetAllEnemies(enemies);
-
-          const items = structuredData["items"];
-          itemsStateManager.resetAllItems(items);
-        });
-      }
-
       timedEventsManager.addEvent(AVATAR_ATTACK_INTERVAL, async () => {
         if (!ENABLE_MULTI_PLAYER) {
           gameEventManager.emit(new AvatarAttackEnemiesEvent());
@@ -102,6 +97,22 @@ export class MainLayer {
       timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, async () => {
         gameEventManager.emit(new CollectItemEvent());
       });
+
+      if (ENABLE_MULTI_PLAYER) {
+        socketClient.on("update", (data: unknown) => {
+          const structuredData = data as GameStateSnapShot;
+          const avatarData = structuredData["avatar"] as AvatarSerialization;
+          const latestAvatarAbsoluteX = avatarData.x;
+          const latestAvatarAbsoluteY = avatarData.y;
+
+          const enemies = structuredData["enemies"];
+          enemiesStateManager.refreshAllEnemies(
+            enemies,
+            latestAvatarAbsoluteX,
+            latestAvatarAbsoluteY
+          );
+        });
+      }
     }
     return MainLayer.instance;
   }
@@ -126,7 +137,12 @@ export class MainLayer {
       socketClient.emit("handleEnemiesMoveTowardsAvatar", {});
     }
 
-    gameEventManager.emit(new MoveAvatarEvent());
+    if (!ENABLE_MULTI_PLAYER) {
+      gameEventManager.emit(new MoveAvatarEvent());
+    } else {
+      const socketClient = SocketClient.getInstance();
+      socketClient.emit("handleMoveAvatar", {});
+    }
 
     gameEventManager.emit(new UpdateAttacksEvent());
 

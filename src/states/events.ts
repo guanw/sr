@@ -4,6 +4,8 @@ import {
   KeyUpEvent,
 } from "./events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
+import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
+import SocketClient from "../utils/SocketClient";
 
 export const avatarKeys: { [key: string]: boolean } = {
   ArrowLeft: false,
@@ -22,11 +24,19 @@ export const globalState = {
 function handleKeyDown(e: KeyboardEvent): void {
   const gameEventManager = GameEventManager.getInstance();
   gameEventManager.emit(new KeyDownEvent(e));
+  if (ENABLE_MULTI_PLAYER) {
+    const socketClient = SocketClient.getInstance();
+    socketClient.emit("handleUserKeyDown", { key: e.key });
+  }
 }
 
 function handleKeyUp(e: KeyboardEvent): void {
   const gameEventManager = GameEventManager.getInstance();
   gameEventManager.emit(new KeyUpEvent(e));
+  if (ENABLE_MULTI_PLAYER) {
+    const socketClient = SocketClient.getInstance();
+    socketClient.emit("handleUserKeyUp", { key: e.key });
+  }
 }
 
 export async function genHandleAvatarAttack(e: MouseEvent) {

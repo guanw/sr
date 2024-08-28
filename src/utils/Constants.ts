@@ -1,6 +1,6 @@
 // Application related
 export const GAME_WIDTH = 800;
-export const GAME_HEIGHT = 600;
+export const GAME_HEIGHT = 800;
 export const FALLBACK_BACKGROUND_COLOR = 0x1099bb;
 export const AVATAR_LOCATION = { x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 };
 export const WORLD_SIZE = GAME_HEIGHT * 10;

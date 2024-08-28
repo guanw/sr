@@ -120,7 +120,7 @@ export class GameEventManager {
         break;
       }
       case "MOVE_AVATAR": {
-        await this.genHandleMoveUser();
+        await this.genHandleMoveUser(avatarKeys);
       }
     }
   }
@@ -211,7 +211,7 @@ export class GameEventManager {
     attackStateManager.updateAttacks();
   }
 
-  private async genHandleMoveUser() {
+  public async genHandleMoveUser(avatarKeys: { [key: string]: boolean }) {
     const background = await Tiling.genInstance();
     const collidedWithTiles = await background.genCheckCollisionWithAvatar();
     // Move user based on key states
