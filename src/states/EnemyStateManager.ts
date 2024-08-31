@@ -20,15 +20,6 @@ class EnemiesStateManager {
     return this.enemies;
   }
 
-  public setEnemyRelativePos(
-    key: string,
-    relativeX: number,
-    relativeY: number
-  ): void {
-    const enemy = this.enemies.get(key);
-    enemy?.setPos(enemy.getX() + relativeX, enemy.getY() + relativeY);
-  }
-
   public async refreshAllEnemies(
     enemies: EnemiesSerialization,
     latestAvatarAbsoluteX: number,
@@ -59,7 +50,7 @@ class EnemiesStateManager {
           previousAvatarAbsoluteY -
           (latestEnemyAbsoluteY - previousEnemyAbsoluteY)
         );
-        this.setEnemyRelativePos(key, relativeX, relativeY);
+        this.setRelativePos(key, relativeX, relativeY);
       }
     });
 
@@ -75,12 +66,21 @@ class EnemiesStateManager {
     Object.keys(enemies).forEach(async (key) => {
       if (!previousEnemiesState.has(key)) {
         const { x, y } = enemies[key];
-        await this.genAddEnemyAtPos(key, x, y);
+        await this.genAddAtPos(key, x, y);
       }
     });
   }
 
-  private async genAddEnemyAtPos(key: string, x: number, y: number) {
+  private setRelativePos(
+    key: string,
+    relativeX: number,
+    relativeY: number
+  ): void {
+    const enemy = this.enemies.get(key);
+    enemy?.setPos(enemy.getX() + relativeX, enemy.getY() + relativeY);
+  }
+
+  private async genAddAtPos(key: string, x: number, y: number) {
     const mainLayer = await MainLayer.genInstance();
     this.enemies.set(key, await Enemy.create(mainLayer.layer, x, y));
   }

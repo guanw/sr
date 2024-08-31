@@ -41,29 +41,81 @@ class ItemsStateManager {
     return this.items;
   }
 
-  public async resetAllItems(items: ItemsSerialization) {
+  public async refreshAllItems(
+    items: ItemsSerialization,
+    latestAvatarAbsoluteX: number,
+    latestAvatarAbsoluteY: number
+  ) {
     const mainLayer = await MainLayer.genInstance();
-    await this.destroyAllItems();
-    for (const key in items) {
-      const item = items[key];
-      switch (item.type) {
-        case "potion":
-          Potion.create(mainLayer.layer, item.x, item.y);
-          break;
-        case "bomb":
-          Bomb.create(mainLayer.layer, item.x, item.y);
-          break;
-        default:
+    const avatar = await Avatar.genInstance();
+    const previousItemsState = itemsStateManager.getItems();
+
+    // update existing items with new x,y
+    previousItemsState.forEach((_, key) => {
+      if (items[key] != undefined && previousItemsState.has(key)) {
+        const latestItemAbsoluteX = items[key].x;
+        const latestItemAbsoluteY = items[key].y;
+        const previousItemAbsoluteX = previousItemsState.get(key)!.getX();
+        const previousItemAbsoluteY = previousItemsState.get(key)!.getY();
+
+        const previousAvatarAbsoluteX = avatar.getX();
+        const previousAvatarAbsoluteY = avatar.getY();
+
+        const relativeX = -(
+          latestAvatarAbsoluteX -
+          previousAvatarAbsoluteX -
+          (latestItemAbsoluteX - previousItemAbsoluteX)
+        );
+        const relativeY = -(
+          latestAvatarAbsoluteY -
+          previousAvatarAbsoluteY -
+          (latestItemAbsoluteY - previousItemAbsoluteY)
+        );
+        this.setRelativePos(key, relativeX, relativeY);
       }
-    }
+    });
+
+    // remove items that's doesn't exist in serialization
+    previousItemsState.forEach((_, key) => {
+      if (items[key] === undefined) {
+        const item = previousItemsState.get(key);
+        item?.destroy(mainLayer.layer);
+      }
+    });
+
+    // add new items from serialization
+    Object.keys(items).forEach(async (key) => {
+      if (!previousItemsState.has(key)) {
+        const { x, y, type } = items[key];
+        await this.genAddItemAtPos(key, type, x, y);
+      }
+    });
   }
 
-  public async destroyAllItems(): Promise<void> {
+  private setRelativePos(
+    key: string,
+    relativeX: number,
+    relativeY: number
+  ): void {
+    const item = this.items.get(key);
+    item?.setPos(item.getX() + relativeX, item.getY() + relativeY);
+  }
+
+  private async genAddItemAtPos(
+    key: string,
+    type: string,
+    x: number,
+    y: number
+  ) {
     const mainLayer = await MainLayer.genInstance();
-    this.items.forEach((item) => {
-      item.destroy(mainLayer.layer);
-    });
-    this.items.clear();
+    switch (type) {
+      case "bomb":
+        this.items.set(key, await Bomb.create(mainLayer.layer, x, y));
+        break;
+      case "potion":
+        this.items.set(key, await Potion.create(mainLayer.layer, x, y));
+        break;
+    }
   }
 }
 

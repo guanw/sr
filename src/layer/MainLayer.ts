@@ -26,7 +26,7 @@ import {
   ITEM_RANDOM_APPEAR_INTERVAL,
   COLLECT_ITEM_INTERVAL,
 } from "../utils/Constants";
-// import { itemsStateManager } from "../states/ItemsStateManager";
+import { itemsStateManager } from "../states/ItemsStateManager";
 
 interface EnemyObject {
   x: number;
@@ -93,10 +93,18 @@ export class MainLayer {
 
       // item related events
       timedEventsManager.addEvent(ITEM_RANDOM_APPEAR_INTERVAL, async () => {
-        gameEventManager.emit(new GenerateNewItemEvent());
+        if (!ENABLE_MULTI_PLAYER) {
+          gameEventManager.emit(new GenerateNewItemEvent());
+        } else {
+          socketClient.emit("handleGenerateNewItem", {});
+        }
       });
       timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, async () => {
-        gameEventManager.emit(new CollectItemEvent());
+        if (!ENABLE_MULTI_PLAYER) {
+          gameEventManager.emit(new CollectItemEvent());
+        } else {
+          socketClient.emit("handleCollectItem", {});
+        }
       });
 
       if (ENABLE_MULTI_PLAYER) {
@@ -109,6 +117,13 @@ export class MainLayer {
           const enemies = structuredData["enemies"];
           enemiesStateManager.refreshAllEnemies(
             enemies,
+            latestAvatarAbsoluteX,
+            latestAvatarAbsoluteY
+          );
+
+          const items = structuredData["items"];
+          itemsStateManager.refreshAllItems(
+            items,
             latestAvatarAbsoluteX,
             latestAvatarAbsoluteY
           );

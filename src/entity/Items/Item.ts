@@ -16,6 +16,10 @@ export abstract class Item extends Entity {
   public get height(): number {
     return this.sprite.height;
   }
+  public setPos(x: number, y: number) {
+    this.sprite.x = x;
+    this.sprite.y = y;
+  }
   placeItem(centerX: number, centerY: number): [number, number] {
     return [
       centerX - AVATAR_LOCATION.x + Math.random() * GAME_WIDTH,

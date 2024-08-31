@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { Item } from "./Item";
 import enemiesStateManager from "../../states/EnemyStateManager";
 import { BOMB_URL, ITEM_FRAME_SIZE } from "../../utils/Constants";
+import { ENABLE_MULTI_PLAYER } from "../../utils/Knobs";
 
 export class Bomb extends Item {
   constructor(
@@ -14,7 +15,12 @@ export class Bomb extends Item {
     this.sprite = new PIXI.Sprite(texture);
     this.sprite.width = ITEM_FRAME_SIZE;
     this.sprite.height = ITEM_FRAME_SIZE;
-    [this.sprite.x, this.sprite.y] = this.placeItem(x, y);
+    if (!ENABLE_MULTI_PLAYER) {
+      [this.sprite.x, this.sprite.y] = this.placeItem(x, y);
+    } else {
+      this.sprite.x = x;
+      this.sprite.y = y;
+    }
     layer.addChild(this.sprite);
   }
 
