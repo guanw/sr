@@ -4,26 +4,22 @@ import Application from "./entity/Application";
 import { MainLayer } from "./layer/MainLayer";
 import { PlaygroundLayer } from "./layer/PlaygroundLayer";
 import { GameEventManager } from "./states/events/GameStateManager";
-import * as PIXI from "pixi.js";
+import { ResourceLoader } from "./ResourceLoader";
 import { LoadingView } from "./entity/LoadingView";
 
 (async () => {
-  const instance = await Application.genInstance();
-  const loadingView = new LoadingView(instance.app.stage);
-  // load assets with onProgress callback
-  const resources = await PIXI.Assets.load([], (progress: number) => {
-    loadingView.update(progress * 100);
-  });
-  loadingView.hide();
-
   // initialize app instance
-
+  const instance = await Application.genInstance();
   const mainLayer = await MainLayer.genInstance();
+  mainLayer.layer.visible = false;
   const playgroundLayer = await PlaygroundLayer.genInstance();
+
+  await LoadingView.genInstance(instance.app.stage);
+  await ResourceLoader.genInstance();
+
   const gameEventManager = GameEventManager.getInstance();
   instance.app.stage.addChild(mainLayer.layer);
   instance.app.stage.addChild(playgroundLayer.layer);
-  mainLayer.layer.visible = true;
   playgroundLayer.layer.visible = false;
 
   initEventsListener();
