@@ -1,10 +1,14 @@
 import { io, Socket } from "socket.io-client";
+import { ENABLE_MULTI_PLAYER } from "./Knobs";
 
 class SocketClient {
   private static instance: SocketClient;
-  private socket: Socket;
+  private socket: Socket | undefined;
 
   private constructor() {
+    if (!ENABLE_MULTI_PLAYER) {
+      return;
+    }
     const SERVER_URL = "http://localhost:3000"; // Update with your server URL
     this.socket = io(SERVER_URL);
 
@@ -34,12 +38,12 @@ class SocketClient {
 
   // Method to listen to a specific event
   public on(event: string, callback: (data: unknown) => void): void {
-    this.socket.on(event, callback);
+    this.socket?.on(event, callback);
   }
 
   // Method to emit a message to the server
   public emit(event: string, data: unknown): void {
-    this.socket.emit(event, data);
+    this.socket?.emit(event, data);
   }
 }
 
