@@ -1,5 +1,12 @@
 import * as PIXI from "pixi.js";
-import { GAME_HEIGHT, GAME_WIDTH } from "../utils/Constants";
+import {
+  GAME_HEIGHT,
+  GAME_WIDTH,
+  LOADING_VIEW_FILL_COLOR,
+  LOADING_VIEW_FONT_NAME,
+  LOADING_VIEW_FONT_SIZE,
+  LOADING_VIEW_TEXT,
+} from "../utils/Constants";
 import { MainLayer } from "../layer/MainLayer";
 
 export class LoadingView {
@@ -9,6 +16,9 @@ export class LoadingView {
   private stage: PIXI.Container;
 
   public static async genInstance(
+    // TODO refactor to avoid passing stage as nullable
+    // right now i have to because the first tiem init loadingView it will needs
+    // app.stage to add loading view element
     stage: PIXI.Container | null = null
   ): Promise<LoadingView> {
     if (!LoadingView.instance && stage != null) {
@@ -21,16 +31,15 @@ export class LoadingView {
     this.stage = stage;
 
     // Create a loading text
-    this.loadingText = new PIXI.Text("Loading...", {
-      fontFamily: "Arial",
-      fontSize: 24,
-      fill: 0xffffff,
+    this.loadingText = new PIXI.Text(LOADING_VIEW_TEXT, {
+      fontFamily: LOADING_VIEW_FONT_NAME,
+      fontSize: LOADING_VIEW_FONT_SIZE,
+      fill: LOADING_VIEW_FILL_COLOR,
     });
     this.loadingText.anchor.set(0.5);
     this.loadingText.x = GAME_WIDTH / 2;
     this.loadingText.y = GAME_HEIGHT / 2 - 30;
 
-    // Create a loading bar
     this.loadingBar = new PIXI.Graphics();
     this.loadingBar.beginFill(0xffffff);
     this.loadingBar.drawRect(0, 0, 300, 20);
@@ -38,7 +47,6 @@ export class LoadingView {
     this.loadingBar.x = GAME_WIDTH / 2 - 150;
     this.loadingBar.y = GAME_HEIGHT / 2;
 
-    // Add elements to the stage
     this.stage.addChild(this.loadingText);
     this.stage.addChild(this.loadingBar);
   }

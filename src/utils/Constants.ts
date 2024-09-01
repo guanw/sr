@@ -5,6 +5,12 @@ export const FALLBACK_BACKGROUND_COLOR = 0x1099bb;
 export const AVATAR_LOCATION = { x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 };
 export const WORLD_SIZE = GAME_HEIGHT * 10;
 
+// Loading view
+export const LOADING_VIEW_FONT_NAME = "Arial";
+export const LOADING_VIEW_FONT_SIZE = 24;
+export const LOADING_VIEW_FILL_COLOR = 0xffffff;
+export const LOADING_VIEW_TEXT = "Loading...";
+
 // Tiling related
 export const BASE_TILING_URL =
   "https://guanw.github.io/sr_assets/environment/ground/1.png";
