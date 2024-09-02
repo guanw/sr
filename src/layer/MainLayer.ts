@@ -42,7 +42,7 @@ export type ItemsSerialization = { [key: string]: ItemObject };
 export type AvatarSerialization = {
   x: number;
   y: number;
-  type: string;
+  hp: number;
 };
 type GameStateSnapShot = {
   enemies: EnemiesSerialization;
@@ -108,11 +108,14 @@ export class MainLayer {
       });
 
       if (ENABLE_MULTI_PLAYER) {
-        socketClient.on("update", (data: unknown) => {
+        socketClient.on("update", async (data: unknown) => {
           const structuredData = data as GameStateSnapShot;
           const avatarData = structuredData["avatar"] as AvatarSerialization;
           const latestAvatarAbsoluteX = avatarData.x;
           const latestAvatarAbsoluteY = avatarData.y;
+          const avatarHp = avatarData.hp;
+          const avatar = await Avatar.genInstance();
+          avatar.updateHealth(avatarHp);
 
           const enemies = structuredData["enemies"];
           enemiesStateManager.refreshAllEnemies(

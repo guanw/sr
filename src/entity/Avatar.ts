@@ -139,11 +139,7 @@ export class Avatar extends Entity {
   }
 
   public async genCollide(): Promise<void> {
-    const gameEventManager = GameEventManager.getInstance();
     this.updateHealth(avatarMetaData.hp_system.value - ENEMY_ATTACK_VALUE);
-    if (avatarMetaData.hp_system.value <= 0) {
-      gameEventManager.emit(new GameOverEvent());
-    }
   }
 
   public getBounds(): PIXI.Bounds {
@@ -184,6 +180,10 @@ export class Avatar extends Entity {
   public updateHealth(newHealth: number) {
     avatarMetaData.hp_system.value = newHealth;
     Avatar.healthBar.width = (avatarMetaData.hp_system.value / 100) * 100;
+    const gameEventManager = GameEventManager.getInstance();
+    if (avatarMetaData.hp_system.value <= 0) {
+      gameEventManager.emit(new GameOverEvent());
+    }
   }
 
   private renderAvatarHP() {

@@ -13,6 +13,7 @@ import { LoadingView } from "./entity/LoadingView";
   const mainLayer = await MainLayer.genInstance();
   mainLayer.layer.visible = false;
   const playgroundLayer = await PlaygroundLayer.genInstance();
+  playgroundLayer.layer.visible = false;
 
   await LoadingView.genInstance(instance.app.stage);
   await ResourceLoader.genInstance();
@@ -20,7 +21,6 @@ import { LoadingView } from "./entity/LoadingView";
   const gameEventManager = GameEventManager.getInstance();
   instance.app.stage.addChild(mainLayer.layer);
   instance.app.stage.addChild(playgroundLayer.layer);
-  playgroundLayer.layer.visible = false;
 
   initEventsListener();
 
