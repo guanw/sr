@@ -5,12 +5,11 @@ import {
   ENEMY_FRAME_NUMBER,
   ENEMY_FRAME_SIZE,
   ENEMY_SPEED,
-  ENEMY_URL,
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "../utils/Constants";
 import { Avatar, avatarMetaData } from "./Avatar";
-import { ResourceLoader } from "../ResourceLoader";
+import { ENEMY_ASSET, ResourceLoader } from "../ResourceLoader";
 
 class Enemy extends Entity {
   sprite: PIXI.AnimatedSprite;
@@ -37,7 +36,7 @@ class Enemy extends Entity {
     y: number | null = null
   ) {
     const resourceLoader = await ResourceLoader.genInstance();
-    const texture = resourceLoader.getResource(ENEMY_URL);
+    const texture = resourceLoader.getResource(ENEMY_ASSET);
     const frames = [];
     const frameWidth = ENEMY_FRAME_SIZE;
     const frameHeight = ENEMY_FRAME_SIZE;

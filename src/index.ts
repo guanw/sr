@@ -10,13 +10,13 @@ import { LoadingView } from "./entity/LoadingView";
 (async () => {
   // initialize app instance
   const instance = await Application.genInstance();
+  const loadingView = await LoadingView.genInstance(instance.app.stage);
+  await ResourceLoader.genInstance();
   const mainLayer = await MainLayer.genInstance();
   mainLayer.layer.visible = false;
   const playgroundLayer = await PlaygroundLayer.genInstance();
   playgroundLayer.layer.visible = false;
-
-  await LoadingView.genInstance(instance.app.stage);
-  await ResourceLoader.genInstance();
+  loadingView.hide();
 
   const gameEventManager = GameEventManager.getInstance();
   instance.app.stage.addChild(mainLayer.layer);

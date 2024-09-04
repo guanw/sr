@@ -1,6 +1,9 @@
 import * as PIXI from "pixi.js";
 import { LoadingView } from "./entity/LoadingView";
-import { ENEMY_URL } from "./utils/Constants";
+import { AVATAR_URL, ENEMY_URL } from "./utils/Constants";
+
+export const ENEMY_ASSET = "enemy";
+export const AVATAR_ASSET = "avatar";
 
 export class ResourceLoader {
   private static instance: ResourceLoader;
@@ -12,15 +15,12 @@ export class ResourceLoader {
     if (!ResourceLoader.instance) {
       ResourceLoader.instance = new ResourceLoader();
       const loadingView = await LoadingView.genInstance();
-      setTimeout(async () => {
-        ResourceLoader.instance.resources = await PIXI.Assets.load(
-          [ENEMY_URL],
-          (progress: number) => {
-            loadingView.update(progress * 100);
-          }
-        );
-        loadingView.hide();
-      }, 2000);
+      PIXI.Assets.add({ alias: ENEMY_ASSET, src: ENEMY_URL });
+      PIXI.Assets.add({ alias: AVATAR_ASSET, src: AVATAR_URL });
+      ResourceLoader.instance.resources = await PIXI.Assets.load([
+        ENEMY_ASSET,
+        AVATAR_ASSET,
+      ]);
     }
     return ResourceLoader.instance;
   }
