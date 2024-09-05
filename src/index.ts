@@ -1,5 +1,4 @@
 import { globalState, initEventsListener } from "./states/events";
-// import { createEnvironmentReferences } from './environmentReference';
 import Application from "./entity/Application";
 import { MainLayer } from "./layer/MainLayer";
 import { PlaygroundLayer } from "./layer/PlaygroundLayer";
