@@ -1,8 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Entity } from "./Entity";
 import {
-  GAME_HEIGHT,
-  GAME_WIDTH,
+  GAME_SIZE,
   BASE_TILING_URL,
   RANDOM_TILING_URL,
   SAND_TILING_COUNT,
@@ -11,26 +10,28 @@ import {
   PILLAR_TOP_TILING_URL,
   PILLAR_TILING_COUNT,
   TILING_SIZE,
+  TILING_LAYER,
 } from "../utils/Constants";
 import { MainLayer } from "../layer/MainLayer";
 import { Position } from "./Application";
 import { Avatar } from "./Avatar";
 import { Helper } from "../utils/Helper";
 import { ENABLE_COLLISION } from "../utils/Knobs";
+import { Background } from "./Background";
 
 export class Tiling extends Entity {
-  private tilingSprite: PIXI.TilingSprite;
+  private background: Background;
   public staticSprites: PIXI.Sprite[] = [];
   public static instance: Tiling;
-  private constructor(textures: PIXI.Texture[], layer: PIXI.Container) {
+  private constructor(
+    background: Background,
+    textures: PIXI.Texture[],
+    layer: PIXI.Container
+  ) {
     super();
-    this.tilingSprite = new PIXI.TilingSprite({
-      texture: textures[0],
-      width: GAME_WIDTH,
-      height: GAME_HEIGHT,
-    });
+    this.background = background;
 
-    const worldSize = GAME_HEIGHT * 15;
+    const worldSize = GAME_SIZE * 15;
     for (let i = 0; i < SAND_TILING_COUNT; i++) {
       const startX = Math.random() * worldSize;
       const startY = Math.random() * worldSize;
@@ -72,9 +73,8 @@ export class Tiling extends Entity {
       this.staticSprites = this.staticSprites.concat(pillarSprites);
     }
     this.staticSprites.forEach((staticSprite) => {
-      layer.addChildAt(staticSprite, 0);
+      layer.addChildAt(staticSprite, TILING_LAYER);
     });
-    layer.addChildAt(this.tilingSprite, 0);
   }
 
   private createSprites(
@@ -99,9 +99,10 @@ export class Tiling extends Entity {
 
   public static async genInstance() {
     if (!Tiling.instance) {
+      const background = await Background.genInstance();
       const mainLayer = await MainLayer.genInstance();
       const tilings = await Tiling.genLoadTiling();
-      Tiling.instance = new Tiling(tilings, mainLayer.layer);
+      Tiling.instance = new Tiling(background, tilings, mainLayer.layer);
     }
     return Tiling.instance;
   }
@@ -126,19 +127,17 @@ export class Tiling extends Entity {
   }
 
   getX(): number {
-    return this.tilingSprite.tilePosition.x;
+    return this.background.getX();
   }
   getY(): number {
-    return this.tilingSprite.tilePosition.y;
+    return this.background.getY();
   }
   setDeltaX(deltaX: number): void {
-    this.tilingSprite.tilePosition.x -= deltaX;
     this.staticSprites.forEach((sprite) => {
       sprite.x += deltaX;
     });
   }
   setDeltaY(deltaY: number): void {
-    this.tilingSprite.tilePosition.y -= deltaY;
     this.staticSprites.forEach((sprite) => {
       sprite.y += deltaY;
     });
@@ -147,11 +146,9 @@ export class Tiling extends Entity {
     throw new Error("Tiling Should not need to implement");
   }
   public get width(): number {
-    // TODO split tiling into background + static object entities and implement width for both
     throw new Error("Method not implemented.");
   }
   public get height(): number {
-    // TODO split tiling into background + static object entities and implement height for both
     throw new Error("Method not implemented.");
   }
 

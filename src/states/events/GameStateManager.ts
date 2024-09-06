@@ -15,6 +15,7 @@ import {
   KeyDownEvent,
   KeyUpEvent,
 } from "./GameEvent";
+import { Background } from "../../entity/Background";
 
 export class GameEventManager {
   private static instance: GameEventManager;
@@ -212,44 +213,45 @@ export class GameEventManager {
   }
 
   public async genHandleMoveUser(avatarKeys: { [key: string]: boolean }) {
-    const background = await Tiling.genInstance();
-    const collidedWithTiles = await background.genCheckCollisionWithAvatar();
+    const tilings = await Tiling.genInstance();
+    const collidedWithTiles = await tilings.genCheckCollisionWithAvatar();
     // Move user based on key states
     if (avatarKeys.ArrowLeft) {
       if (collidedWithTiles) {
-        await this.genMoveUserRight(COLLISION_BACKOFF_OFFSET);
+        await this.genMoveUserRight(tilings, COLLISION_BACKOFF_OFFSET);
         return;
       }
-      await this.genMoveUserLeft();
+      await this.genMoveUserLeft(tilings);
     }
     if (avatarKeys.ArrowRight) {
       if (collidedWithTiles) {
-        await this.genMoveUserLeft(COLLISION_BACKOFF_OFFSET);
+        await this.genMoveUserLeft(tilings, COLLISION_BACKOFF_OFFSET);
         return;
       }
-      await this.genMoveUserRight();
+      await this.genMoveUserRight(tilings);
     }
     if (avatarKeys.ArrowUp) {
       if (collidedWithTiles) {
-        await this.genMoveUserDown(COLLISION_BACKOFF_OFFSET);
+        await this.genMoveUserDown(tilings, COLLISION_BACKOFF_OFFSET);
         return;
       }
-      await this.genMoveUserUp();
+      await this.genMoveUserUp(tilings);
     }
     if (avatarKeys.ArrowDown) {
       if (collidedWithTiles) {
-        await this.genMoveUserUp(COLLISION_BACKOFF_OFFSET);
+        await this.genMoveUserUp(tilings, COLLISION_BACKOFF_OFFSET);
         return;
       }
-      await this.genMoveUserDown();
+      await this.genMoveUserDown(tilings);
     }
   }
 
-  private async genMoveUserLeft(moveSpeedOffset = 1) {
-    const background = await Tiling.genInstance();
+  private async genMoveUserLeft(tilings: Tiling, moveSpeedOffset = 1) {
+    const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     background.moveRight(moveSpeedOffset);
+    tilings.moveRight(moveSpeedOffset);
     items.forEach((item) => {
       item.moveRight(moveSpeedOffset);
     });
@@ -258,11 +260,12 @@ export class GameEventManager {
     });
   }
 
-  private async genMoveUserRight(moveSpeedOffset = 1) {
-    const background = await Tiling.genInstance();
+  private async genMoveUserRight(tilings: Tiling, moveSpeedOffset = 1) {
+    const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     background.moveLeft(moveSpeedOffset);
+    tilings.moveLeft(moveSpeedOffset);
     items.forEach((item) => {
       item.moveLeft(moveSpeedOffset);
     });
@@ -271,11 +274,12 @@ export class GameEventManager {
     });
   }
 
-  private async genMoveUserUp(moveSpeedOffset = 1) {
-    const background = await Tiling.genInstance();
+  private async genMoveUserUp(tilings: Tiling, moveSpeedOffset = 1) {
+    const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     background.moveDown(moveSpeedOffset);
+    tilings.moveDown(moveSpeedOffset);
     items.forEach((item) => {
       item.moveDown(moveSpeedOffset);
     });
@@ -284,11 +288,12 @@ export class GameEventManager {
     });
   }
 
-  private async genMoveUserDown(moveSpeedOffset = 1) {
-    const background = await Tiling.genInstance();
+  private async genMoveUserDown(tilings: Tiling, moveSpeedOffset = 1) {
+    const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     background.moveUp(moveSpeedOffset);
+    tilings.moveUp(moveSpeedOffset);
     items.forEach((item) => {
       item.moveUp(moveSpeedOffset);
     });

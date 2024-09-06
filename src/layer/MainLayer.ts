@@ -133,6 +133,7 @@ export class MainLayer {
         });
       }
     }
+
     return MainLayer.instance;
   }
 

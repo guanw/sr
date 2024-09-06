@@ -1,9 +1,5 @@
 import * as PIXI from "pixi.js";
-import {
-  FALLBACK_BACKGROUND_COLOR,
-  GAME_HEIGHT,
-  GAME_WIDTH,
-} from "../utils/Constants";
+import { FALLBACK_BACKGROUND_COLOR, GAME_SIZE } from "../utils/Constants";
 import { Avatar } from "./Avatar";
 
 export type Position = {
@@ -23,8 +19,8 @@ class Application {
       Application.instance = new Application();
       await Application.instance.app.init({
         backgroundColor: FALLBACK_BACKGROUND_COLOR,
-        width: GAME_WIDTH,
-        height: GAME_HEIGHT,
+        width: GAME_SIZE,
+        height: GAME_SIZE,
       });
       document.body.appendChild(Application.instance.app.canvas);
     }

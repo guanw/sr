@@ -1,9 +1,8 @@
 // Application related
-export const GAME_WIDTH = 800;
-export const GAME_HEIGHT = 800;
+export const GAME_SIZE = 800;
 export const FALLBACK_BACKGROUND_COLOR = 0x1099bb;
-export const AVATAR_LOCATION = { x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 };
-export const WORLD_SIZE = GAME_HEIGHT * 10;
+export const AVATAR_LOCATION = { x: GAME_SIZE / 2, y: GAME_SIZE / 2 };
+export const WORLD_SIZE = GAME_SIZE * 10;
 
 // Loading view
 export const LOADING_VIEW_FONT_NAME = "Arial";
@@ -26,6 +25,8 @@ export const SAND_TILING_COUNT = 1000;
 export const PILLAR_TILING_COUNT = 100;
 export const TILING_SIZE = 16;
 export const COLLISION_BACKOFF_OFFSET = 5;
+export const TILING_LAYER = 1;
+export const BACKGROUND_LAYER = 0;
 
 // Avatar related
 export const AVATAR_SPEED = 3;

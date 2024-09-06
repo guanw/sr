@@ -3,7 +3,7 @@ import { Avatar, avatarMetaData } from "../entity/Avatar";
 import { globalState } from "../states/events";
 import { Tiling } from "../entity/Tiling";
 import { MainLayer } from "../layer/MainLayer";
-import { DEBUG_BOUND_COLOR, GAME_HEIGHT, GAME_WIDTH } from "../utils/Constants";
+import { DEBUG_BOUND_COLOR, GAME_SIZE } from "../utils/Constants";
 import Application from "../entity/Application";
 
 export class DebugTool {
@@ -35,8 +35,8 @@ export class DebugTool {
       const tool = new DebugTool();
       mainLayer.layer.addChild(tool.container);
       this.instance = tool;
-      this.instance.container.x = GAME_WIDTH / 2;
-      this.instance.container.y = GAME_HEIGHT / 2;
+      this.instance.container.x = GAME_SIZE / 2;
+      this.instance.container.y = GAME_SIZE / 2;
     }
     return this.instance;
   }

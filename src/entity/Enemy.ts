@@ -5,8 +5,7 @@ import {
   ENEMY_FRAME_NUMBER,
   ENEMY_FRAME_SIZE,
   ENEMY_SPEED,
-  GAME_HEIGHT,
-  GAME_WIDTH,
+  GAME_SIZE,
 } from "../utils/Constants";
 import { Avatar, avatarMetaData } from "./Avatar";
 import { ENEMY_ASSET, ResourceLoader } from "../ResourceLoader";
@@ -25,8 +24,8 @@ class Enemy extends Entity {
     this.sprite = new PIXI.AnimatedSprite(frames);
     this.sprite.animationSpeed = ENEMY_ANIMATION_SPEED;
     this.sprite.play();
-    this.sprite.x = x ?? Math.random() * GAME_WIDTH - GAME_WIDTH / 2;
-    this.sprite.y = y ?? Math.random() * GAME_HEIGHT - GAME_HEIGHT / 2;
+    this.sprite.x = x ?? Math.random() * GAME_SIZE - GAME_SIZE / 2;
+    this.sprite.y = y ?? Math.random() * GAME_SIZE - GAME_SIZE / 2;
     layer.addChild(this.sprite);
   }
 
