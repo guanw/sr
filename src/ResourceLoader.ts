@@ -1,9 +1,10 @@
 import * as PIXI from "pixi.js";
 import { LoadingView } from "./entity/LoadingView";
-import { AVATAR_URL, ENEMY_URL } from "./utils/Constants";
+import { AVATAR_URL, BASE_TILING_URL, ENEMY_URL } from "./utils/Constants";
 
 export const ENEMY_ASSET = "enemy";
 export const AVATAR_ASSET = "avatar";
+export const BACKGROUND_ASSET = "background";
 
 export class ResourceLoader {
   private static instance: ResourceLoader;
@@ -14,12 +15,14 @@ export class ResourceLoader {
   public static async genInstance(): Promise<ResourceLoader> {
     if (!ResourceLoader.instance) {
       ResourceLoader.instance = new ResourceLoader();
-      const loadingView = await LoadingView.genInstance();
+      await LoadingView.genInstance();
       PIXI.Assets.add({ alias: ENEMY_ASSET, src: ENEMY_URL });
       PIXI.Assets.add({ alias: AVATAR_ASSET, src: AVATAR_URL });
+      PIXI.Assets.add({ alias: BACKGROUND_ASSET, src: BASE_TILING_URL });
       ResourceLoader.instance.resources = await PIXI.Assets.load([
         ENEMY_ASSET,
         AVATAR_ASSET,
+        BACKGROUND_ASSET,
       ]);
     }
     return ResourceLoader.instance;

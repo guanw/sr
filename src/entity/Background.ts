@@ -1,19 +1,16 @@
 import * as PIXI from "pixi.js";
 import { Entity } from "./Entity";
-import {
-  GAME_SIZE,
-  BASE_TILING_URL,
-  BACKGROUND_LAYER,
-} from "../utils/Constants";
+import { GAME_SIZE, BACKGROUND_LAYER } from "../utils/Constants";
 import { MainLayer } from "../layer/MainLayer";
+import { BACKGROUND_ASSET, ResourceLoader } from "../ResourceLoader";
 
 export class Background extends Entity {
   private background: PIXI.TilingSprite;
   public static instance: Background;
-  private constructor(textures: PIXI.Texture[], layer: PIXI.Container) {
+  private constructor(texture: PIXI.Texture, layer: PIXI.Container) {
     super();
     this.background = new PIXI.TilingSprite({
-      texture: textures[0],
+      texture: texture,
       width: GAME_SIZE,
       height: GAME_SIZE,
     });
@@ -24,15 +21,11 @@ export class Background extends Entity {
   public static async genInstance() {
     if (!Background.instance) {
       const mainLayer = await MainLayer.genInstance();
-      const tilings = await Background.genLoad();
-      Background.instance = new Background(tilings, mainLayer.layer);
+      const resourceLoader = await ResourceLoader.genInstance();
+      const tiling = resourceLoader.getResource(BACKGROUND_ASSET);
+      Background.instance = new Background(tiling, mainLayer.layer);
     }
     return Background.instance;
-  }
-
-  private static async genLoad() {
-    const baseTexture = await PIXI.Assets.load(BASE_TILING_URL);
-    return [baseTexture];
   }
 
   getX(): number {
