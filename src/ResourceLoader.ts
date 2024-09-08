@@ -1,10 +1,16 @@
 import * as PIXI from "pixi.js";
 import { LoadingView } from "./entity/LoadingView";
-import { AVATAR_URL, BASE_TILING_URL, ENEMY_URL } from "./utils/Constants";
+import {
+  AVATAR_URL,
+  BASE_TILING_URL,
+  ENEMY_URL,
+  WIND_URL,
+} from "./utils/Constants";
 
 export const ENEMY_ASSET = "enemy";
 export const AVATAR_ASSET = "avatar";
 export const BACKGROUND_ASSET = "background";
+export const WIND_ASSET = "wind";
 
 export class ResourceLoader {
   private static instance: ResourceLoader;
@@ -19,10 +25,12 @@ export class ResourceLoader {
       PIXI.Assets.add({ alias: ENEMY_ASSET, src: ENEMY_URL });
       PIXI.Assets.add({ alias: AVATAR_ASSET, src: AVATAR_URL });
       PIXI.Assets.add({ alias: BACKGROUND_ASSET, src: BASE_TILING_URL });
+      PIXI.Assets.add({ alias: WIND_ASSET, src: WIND_URL });
       ResourceLoader.instance.resources = await PIXI.Assets.load([
         ENEMY_ASSET,
         AVATAR_ASSET,
         BACKGROUND_ASSET,
+        WIND_ASSET,
       ]);
     }
     return ResourceLoader.instance;
