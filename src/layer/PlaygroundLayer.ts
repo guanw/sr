@@ -1,7 +1,8 @@
 import * as PIXI from "pixi.js";
 import { Bullet } from "../entity/Attacks/Bullet";
 import { Wind } from "../entity/Attacks/Wind";
-import { GAME_SIZE, ENEMY_URL } from "../utils/Constants";
+import { GAME_SIZE } from "../utils/Constants";
+import { ENEMY_ASSET, ResourceLoader } from "../ResourceLoader";
 
 export class PlaygroundLayer {
   public static instance: PlaygroundLayer;
@@ -23,7 +24,8 @@ export class PlaygroundLayer {
   }
 
   private static async createAnimatedSlime() {
-    const texture = await PIXI.Assets.load(ENEMY_URL);
+    const resourceLoader = await ResourceLoader.genInstance();
+    const texture = resourceLoader.getResource(ENEMY_ASSET);
     const frames = [];
     const frameWidth = 32; // Width of a single frame in pixels
     const frameHeight = 32; // Height of a single frame in pixels
