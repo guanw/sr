@@ -4,6 +4,7 @@ import { ENABLE_MULTI_PLAYER } from "./Knobs";
 class SocketClient {
   private static instance: SocketClient;
   private socket: Socket | undefined;
+  public socketId: string | undefined;
 
   private constructor() {
     if (!ENABLE_MULTI_PLAYER) {
@@ -15,6 +16,7 @@ class SocketClient {
     // Handle connection
     this.socket.on("connect", () => {
       console.log("Connected to the server");
+      this.socketId = this.socket?.id;
     });
 
     // Handle disconnection

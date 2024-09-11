@@ -6,10 +6,9 @@ import { GameEventManager } from "./states/events/GameStateManager";
 import { ResourceLoader } from "./ResourceLoader";
 import { LoadingView } from "./entity/LoadingView";
 
-(async () => {
-  // initialize app instance
-  const instance = await Application.genInstance();
-  const loadingView = await LoadingView.genInstance(instance.app.stage);
+async function genInitUI() {
+  const appInstance = await Application.genInstance();
+  const loadingView = await LoadingView.genInstance(appInstance.app.stage);
   await ResourceLoader.genInstance();
   const mainLayer = await MainLayer.genInstance();
   mainLayer.layer.visible = false;
@@ -17,10 +16,21 @@ import { LoadingView } from "./entity/LoadingView";
   playgroundLayer.layer.visible = false;
   loadingView.hide();
 
-  const gameEventManager = GameEventManager.getInstance();
-  instance.app.stage.addChild(mainLayer.layer);
-  instance.app.stage.addChild(playgroundLayer.layer);
+  appInstance.app.stage.addChild(mainLayer.layer);
+  appInstance.app.stage.addChild(playgroundLayer.layer);
 
+  return {
+    appInstance,
+    mainLayer,
+    playgroundLayer,
+  };
+}
+
+(async () => {
+  const gameEventManager = GameEventManager.getInstance();
+  // appInstance.app.stage.addChild(mainLayer.layer);
+  // appInstance.app.stage.addChild(playgroundLayer.layer);
+  const { appInstance, mainLayer, playgroundLayer } = await genInitUI();
   initEventsListener();
 
   // Game loop
@@ -28,7 +38,7 @@ import { LoadingView } from "./entity/LoadingView";
     const isGameOver = globalState.isGameOver;
 
     if (isGameOver) {
-      await instance.genHandleGameOver();
+      await appInstance.genHandleGameOver();
       requestAnimationFrame(gameLoop);
       return;
     }
@@ -41,7 +51,7 @@ import { LoadingView } from "./entity/LoadingView";
     }
 
     // Render the stage
-    instance.app.renderer.render(instance.app.stage);
+    appInstance.app.renderer.render(appInstance.app.stage);
 
     // Request next frame
     requestAnimationFrame(gameLoop);
