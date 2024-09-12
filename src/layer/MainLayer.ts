@@ -37,16 +37,17 @@ interface ItemObject {
   y: number;
   type: string;
 }
-export type EnemiesSerialization = { [key: string]: EnemyObject };
-export type ItemsSerialization = { [key: string]: ItemObject };
-export type AvatarSerialization = {
+interface AvatarObject {
   x: number;
   y: number;
   hp: number;
-};
+}
+export type EnemiesSerialization = { [key: string]: EnemyObject };
+export type ItemsSerialization = { [key: string]: ItemObject };
+export type AvatarsSerialization = { [key: string]: AvatarObject };
 type GameStateSnapShot = {
   enemies: EnemiesSerialization;
-  avatar: AvatarSerialization;
+  avatars: AvatarsSerialization;
   items: ItemsSerialization;
   [key: string]: unknown;
 };
@@ -78,7 +79,9 @@ export class MainLayer {
         if (!ENABLE_MULTI_PLAYER) {
           gameEventManager.emit(new AvatarAttackEnemiesEvent());
         } else {
-          socketClient.emit("handleAvatarAttackEnemiesEvent", {});
+          socketClient.emit("handleAvatarAttackEnemiesEvent", {
+            avatarId: socketClient.getSocketId(),
+          });
           new Sword(this.instance.layer, avatar.walkingSprite);
         }
       });
@@ -110,10 +113,11 @@ export class MainLayer {
       if (ENABLE_MULTI_PLAYER) {
         socketClient.on("update", async (data: unknown) => {
           const structuredData = data as GameStateSnapShot;
-          const avatarData = structuredData["avatar"] as AvatarSerialization;
-          const latestAvatarAbsoluteX = avatarData.x;
-          const latestAvatarAbsoluteY = avatarData.y;
-          const avatarHp = avatarData.hp;
+          const avatarsData = structuredData["avatars"];
+          const playerAvatar = avatarsData[socketClient.getSocketId()!];
+          const latestAvatarAbsoluteX = playerAvatar.x;
+          const latestAvatarAbsoluteY = playerAvatar.y;
+          const avatarHp = playerAvatar.hp;
           const avatar = await Avatar.genInstance();
           avatar.updateHealth(avatarHp);
 
@@ -161,7 +165,9 @@ export class MainLayer {
       gameEventManager.emit(new MoveAvatarEvent());
     } else {
       const socketClient = SocketClient.getInstance();
-      socketClient.emit("handleMoveAvatar", {});
+      socketClient.emit("handleMoveAvatar", {
+        avatarId: socketClient.getSocketId(),
+      });
     }
 
     gameEventManager.emit(new UpdateAttacksEvent());

@@ -26,7 +26,10 @@ function handleKeyDown(e: KeyboardEvent): void {
   gameEventManager.emit(new KeyDownEvent(e));
   if (ENABLE_MULTI_PLAYER) {
     const socketClient = SocketClient.getInstance();
-    socketClient.emit("handleUserKeyDown", { key: e.key });
+    socketClient.emit("handleUserKeyDown", {
+      key: e.key,
+      avatarId: socketClient.getSocketId(),
+    });
   }
 }
 
@@ -35,7 +38,10 @@ function handleKeyUp(e: KeyboardEvent): void {
   gameEventManager.emit(new KeyUpEvent(e));
   if (ENABLE_MULTI_PLAYER) {
     const socketClient = SocketClient.getInstance();
-    socketClient.emit("handleUserKeyUp", { key: e.key });
+    socketClient.emit("handleUserKeyUp", {
+      key: e.key,
+      avatarId: socketClient.getSocketId(),
+    });
   }
 }
 

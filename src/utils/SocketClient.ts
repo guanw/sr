@@ -4,7 +4,6 @@ import { ENABLE_MULTI_PLAYER } from "./Knobs";
 class SocketClient {
   private static instance: SocketClient;
   private socket: Socket | undefined;
-  public socketId: string | undefined;
 
   private constructor() {
     if (!ENABLE_MULTI_PLAYER) {
@@ -16,7 +15,6 @@ class SocketClient {
     // Handle connection
     this.socket.on("connect", () => {
       console.log("Connected to the server");
-      this.socketId = this.socket?.id;
     });
 
     // Handle disconnection
@@ -38,6 +36,10 @@ class SocketClient {
     return SocketClient.instance;
   }
 
+  public getSocketId(): string | undefined {
+    return this.socket?.id;
+  }
+
   // Method to listen to a specific event
   public on(event: string, callback: (data: unknown) => void): void {
     this.socket?.on(event, callback);
@@ -45,6 +47,11 @@ class SocketClient {
 
   // Method to emit a message to the server
   public emit(event: string, data: unknown): void {
+    const socket = this.getSocketId();
+    if (socket == null || socket == undefined) {
+      // TODO add log
+      return;
+    }
     this.socket?.emit(event, data);
   }
 }
