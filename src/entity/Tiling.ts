@@ -15,7 +15,7 @@ import {
 import { MainLayer } from "../layer/MainLayer";
 import { Position } from "./Application";
 import { Avatar } from "./Avatar";
-import { Helper } from "../utils/Helper";
+import { Direction, Helper } from "../utils/Helper";
 import { ENABLE_COLLISION } from "../utils/Knobs";
 import { Background } from "./Background";
 
@@ -152,22 +152,32 @@ export class Tiling extends Entity {
     throw new Error("Method not implemented.");
   }
 
-  public async genCheckCollisionWithAvatar(): Promise<boolean> {
+  public async genCheckCollisionWithAvatar(
+    direction: Direction
+  ): Promise<boolean> {
     const avatar = await Avatar.genInstance();
     for (const sprite of this.staticSprites) {
-      if (this.isCollision(avatar, sprite)) {
+      if (this.isCollision(avatar, sprite, direction)) {
         return true;
       }
     }
     return false;
   }
 
-  private isCollision(avatar: Avatar, sprite: PIXI.Sprite): boolean {
+  private isCollision(
+    avatar: Avatar,
+    sprite: PIXI.Sprite,
+    direction: Direction
+  ): boolean {
     if (!ENABLE_COLLISION) {
       return false;
     }
     const avatarBounds = avatar.getBounds();
     const spriteBounds = sprite.getBounds();
-    return Helper.boundsIntersect(avatarBounds, spriteBounds);
+    return Helper.DirectedboundsIntersect(
+      avatarBounds,
+      spriteBounds,
+      direction
+    );
   }
 }

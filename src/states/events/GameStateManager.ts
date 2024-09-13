@@ -4,7 +4,6 @@ import { DebugTool } from "../../internal/DebugTool";
 import { MainLayer } from "../../layer/MainLayer";
 import { PlaygroundLayer } from "../../layer/PlaygroundLayer";
 import { Menu } from "../../menu";
-import { COLLISION_BACKOFF_OFFSET } from "../../utils/Constants";
 import attackStateManager from "../AttackStateManager";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
@@ -214,32 +213,37 @@ export class GameEventManager {
 
   public async genHandleMoveUser(avatarKeys: { [key: string]: boolean }) {
     const tilings = await Tiling.genInstance();
-    const collidedWithTiles = await tilings.genCheckCollisionWithAvatar();
     // Move user based on key states
     if (avatarKeys.ArrowLeft) {
+      const collidedWithTiles = await tilings.genCheckCollisionWithAvatar(
+        "left"
+      );
       if (collidedWithTiles) {
-        await this.genMoveUserRight(tilings, COLLISION_BACKOFF_OFFSET);
         return;
       }
       await this.genMoveUserLeft(tilings);
     }
     if (avatarKeys.ArrowRight) {
+      const collidedWithTiles = await tilings.genCheckCollisionWithAvatar(
+        "right"
+      );
       if (collidedWithTiles) {
-        await this.genMoveUserLeft(tilings, COLLISION_BACKOFF_OFFSET);
         return;
       }
       await this.genMoveUserRight(tilings);
     }
     if (avatarKeys.ArrowUp) {
+      const collidedWithTiles = await tilings.genCheckCollisionWithAvatar("up");
       if (collidedWithTiles) {
-        await this.genMoveUserDown(tilings, COLLISION_BACKOFF_OFFSET);
         return;
       }
       await this.genMoveUserUp(tilings);
     }
     if (avatarKeys.ArrowDown) {
+      const collidedWithTiles = await tilings.genCheckCollisionWithAvatar(
+        "down"
+      );
       if (collidedWithTiles) {
-        await this.genMoveUserUp(tilings, COLLISION_BACKOFF_OFFSET);
         return;
       }
       await this.genMoveUserDown(tilings);

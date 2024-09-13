@@ -24,7 +24,6 @@ export const PILLAR_BOTTOM_TILING_URL =
 export const SAND_TILING_COUNT = 1000;
 export const PILLAR_TILING_COUNT = 100;
 export const TILING_SIZE = 16;
-export const COLLISION_BACKOFF_OFFSET = 5;
 export const TILING_LAYER = 1;
 export const BACKGROUND_LAYER = 0;
 
