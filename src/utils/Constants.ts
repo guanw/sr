@@ -1,4 +1,4 @@
-// Application related
+// Application
 export const GAME_SIZE = 800;
 export const FALLBACK_BACKGROUND_COLOR = 0x1099bb;
 export const AVATAR_LOCATION = { x: GAME_SIZE / 2, y: GAME_SIZE / 2 };
@@ -10,7 +10,7 @@ export const LOADING_VIEW_FONT_SIZE = 24;
 export const LOADING_VIEW_FILL_COLOR = 0xffffff;
 export const LOADING_VIEW_TEXT = "Loading...";
 
-// Tiling related
+// Tiling
 export const BASE_TILING_URL =
   "https://guanw.github.io/sr_assets/environment/ground/1.png";
 export const RANDOM_TILING_URL =
@@ -27,7 +27,7 @@ export const TILING_SIZE = 16;
 export const TILING_LAYER = 1;
 export const BACKGROUND_LAYER = 0;
 
-// Avatar related
+// Avatar
 export const AVATAR_SPEED = 3;
 export const ENEMY_ATTACK_VALUE = 10;
 export const INITIAL_SWORD_SIZE = 50;
@@ -43,20 +43,20 @@ export const AVATAR_NUM_OF_FRAME = 6;
 export const AVATAR_URL = "https://guanw.github.io/sr_assets/avatar.png";
 export const AVATAR_ANIMATION_SPEED = 0.1;
 
-// Enemy related
+// Enemy
 export const ENEMY_URL = "https://guanw.github.io/sr_assets/slime_run.png";
 export const ENEMY_SPEED = 1;
 export const ENEMY_FRAME_SIZE = 32; // Animation frame size
 export const ENEMY_ANIMATION_SPEED = 0.1;
 export const ENEMY_FRAME_NUMBER = 6; // Number of frames in the animation
 
-// Item related
+// Item
 export const ITEM_FRAME_SIZE = 32;
 export const BOMB_URL = "https://guanw.github.io/sr_assets/bomb.png";
 export const POTION_URL =
   "https://guanw.github.io/sr_assets/items/Potion01.png";
 
-// Attack related
+// Attack
 export const WIND_URL = "https://guanw.github.io/sr_assets/smoke/px_5.png";
 export const WIND_DISPLACEMENT = 32;
 export const WIND_FRAME_SIZE = 64;
@@ -64,10 +64,10 @@ export const WIND_NUM_OF_FRAME = 16;
 export const WIND_SPEED = 5;
 export const WIND_ANIMATION_SPEED = 0.1;
 
-// DebugTool related
+// DebugTool
 export const DEBUG_BOUND_COLOR = 0x3d85c6;
 
-// Events related
+// Events
 export const AVATAR_ATTACK_INTERVAL = 2000;
 export const ENEMY_APPEAR_INTERVAL = 3000;
 export const ENEMY_ATTACK_INTERVAL = 500;

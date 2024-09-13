@@ -28,8 +28,6 @@ async function genInitUI() {
 
 (async () => {
   const gameEventManager = GameEventManager.getInstance();
-  // appInstance.app.stage.addChild(mainLayer.layer);
-  // appInstance.app.stage.addChild(playgroundLayer.layer);
   const { appInstance, mainLayer, playgroundLayer } = await genInitUI();
   initEventsListener();
 

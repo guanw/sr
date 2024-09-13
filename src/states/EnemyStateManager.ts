@@ -54,7 +54,7 @@ class EnemiesStateManager {
       }
     });
 
-    // remove enemies that's doesn't exist in serialization
+    // remove enemies that don't exist in serialization
     previousEnemiesState.forEach((_, key) => {
       if (enemies[key] === undefined) {
         const enemy = previousEnemiesState.get(key);

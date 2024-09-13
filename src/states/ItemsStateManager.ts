@@ -75,7 +75,7 @@ class ItemsStateManager {
       }
     });
 
-    // remove items that's doesn't exist in serialization
+    // remove items that don't exist in serialization
     previousItemsState.forEach((_, key) => {
       if (items[key] === undefined) {
         const item = previousItemsState.get(key);

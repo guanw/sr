@@ -11,12 +11,14 @@ export class Helper {
     );
   }
 
+  // direction-based checks on bounds intersection
+  // this is useful to detect avatar/tiling collision
+  // TODO have enemy also respect the tiling collision
   static DirectedboundsIntersect(
     bounds1: PIXI.Bounds,
     bounds2: PIXI.Bounds,
     direction: Direction
   ) {
-    // Calculate the overlap in the X and Y axes
     const xOverlap =
       bounds1.x < bounds2.x + bounds2.width &&
       bounds1.x + bounds1.width > bounds2.x;
@@ -24,19 +26,14 @@ export class Helper {
       bounds1.y < bounds2.y + bounds2.height &&
       bounds1.y + bounds1.height > bounds2.y;
 
-    // Add direction-based checks
     switch (direction) {
       case "left":
-        // Check collision only when moving left
         return xOverlap && bounds1.x > bounds2.x && yOverlap;
       case "right":
-        // Check collision only when moving right
         return xOverlap && bounds1.x < bounds2.x && yOverlap;
       case "up":
-        // Check collision only when moving up
         return yOverlap && bounds1.y > bounds2.y && xOverlap;
       case "down":
-        // Check collision only when moving down
         return yOverlap && bounds1.y < bounds2.y && xOverlap;
       default:
         return false;

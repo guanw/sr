@@ -79,15 +79,12 @@ export class Avatar extends Entity {
 
   private static async genLoadTexture(texture: PIXI.Texture, row: number) {
     const frames = [];
-    const frameWidth = AVATAR_FRAME_SIZE;
-    const frameHeight = AVATAR_FRAME_SIZE;
-    const numberOfFrames = AVATAR_NUM_OF_FRAME;
-    for (let i = 0; i < numberOfFrames; i++) {
+    for (let i = 0; i < AVATAR_NUM_OF_FRAME; i++) {
       const rect = new PIXI.Rectangle(
-        i * frameWidth,
-        row * frameWidth,
-        frameWidth,
-        frameHeight
+        i * AVATAR_FRAME_SIZE,
+        row * AVATAR_FRAME_SIZE,
+        AVATAR_FRAME_SIZE,
+        AVATAR_FRAME_SIZE
       );
       frames.push(
         new PIXI.Texture({ source: texture.baseTexture, frame: rect })

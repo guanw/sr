@@ -49,7 +49,7 @@ class SocketClient {
   public emit(event: string, data: unknown): void {
     const socket = this.getSocketId();
     if (socket == null || socket == undefined) {
-      // TODO add log
+      console.log(`socket is null and event {${event}} will be dropped`);
       return;
     }
     this.socket?.emit(event, data);

@@ -4,6 +4,8 @@ import { Wind } from "../entity/Attacks/Wind";
 import { GAME_SIZE } from "../utils/Constants";
 import { ENEMY_ASSET, ResourceLoader } from "../ResourceLoader";
 
+const FRAME_SIZE = 32;
+const NUMBER_OF_FRAMES = 6;
 export class PlaygroundLayer {
   public static instance: PlaygroundLayer;
   public layer: PIXI.Container;
@@ -27,15 +29,12 @@ export class PlaygroundLayer {
     const resourceLoader = await ResourceLoader.genInstance();
     const texture = resourceLoader.getResource(ENEMY_ASSET);
     const frames = [];
-    const frameWidth = 32; // Width of a single frame in pixels
-    const frameHeight = 32; // Height of a single frame in pixels
-    const numberOfFrames = 6; // Number of frames in the animation
-    for (let i = 0; i < numberOfFrames; i++) {
+    for (let i = 0; i < NUMBER_OF_FRAMES; i++) {
       const rect = new PIXI.Rectangle(
-        i * frameWidth,
+        i * FRAME_SIZE,
         0,
-        frameWidth,
-        frameHeight
+        FRAME_SIZE,
+        FRAME_SIZE
       );
       frames.push(
         new PIXI.Texture({ source: texture.baseTexture, frame: rect })
