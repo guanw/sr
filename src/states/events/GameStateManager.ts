@@ -51,7 +51,7 @@ export class GameEventManager {
   private async handleEvent(event: GameEvent) {
     switch (event.type) {
       case "AVATAR_ATTACK_ENEMIES":
-        await this.handleAvatarAttackEnemiesEvent();
+        await this.handleAvatarAttackEnemies();
         break;
       case "KEY_DOWN": {
         const keyDownEvent = event as KeyDownEvent;
@@ -125,7 +125,7 @@ export class GameEventManager {
     }
   }
 
-  private async handleAvatarAttackEnemiesEvent() {
+  private async handleAvatarAttackEnemies() {
     const avatar = await Avatar.genInstance();
     const enemies = enemiesStateManager.getEnemies();
     await avatar.genPerformAttack(enemies);

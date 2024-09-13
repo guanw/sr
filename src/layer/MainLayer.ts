@@ -79,7 +79,7 @@ export class MainLayer {
         if (!ENABLE_MULTI_PLAYER) {
           gameEventManager.emit(new AvatarAttackEnemiesEvent());
         } else {
-          socketClient.emit("handleAvatarAttackEnemiesEvent", {
+          socketClient.emit("handleAvatarAttackEnemies", {
             avatarId: socketClient.getSocketId(),
           });
           new Sword(this.instance.layer, avatar.walkingSprite);
