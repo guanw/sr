@@ -106,7 +106,9 @@ export class MainLayer {
         if (!ENABLE_MULTI_PLAYER) {
           gameEventManager.emit(new CollectItemEvent());
         } else {
-          socketClient.emit("handleCollectItem", {});
+          socketClient.emit("handleCollectItem", {
+            avatarId: socketClient.getSocketId(),
+          });
         }
       });
 
