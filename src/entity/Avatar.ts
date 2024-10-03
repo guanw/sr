@@ -5,7 +5,6 @@ import { MainLayer } from "../layer/MainLayer";
 import {
   MAX_HEALTH,
   AVATAR_DISPLACEMENT,
-  ENEMY_ATTACK_VALUE,
   HP_POTION_INCREASE,
   HP_TEXT_X_OFFSET,
   HP_TEXT_Y_OFFSET,
@@ -135,8 +134,8 @@ export class Avatar extends Entity {
     };
   }
 
-  public async genCollide(): Promise<void> {
-    this.updateHealth(avatarMetaData.hp_system.value - ENEMY_ATTACK_VALUE);
+  public async genCollide(enemyAttackPower: number): Promise<void> {
+    this.updateHealth(avatarMetaData.hp_system.value - enemyAttackPower);
   }
 
   public getBounds(): PIXI.Bounds {

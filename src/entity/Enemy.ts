@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { Entity } from "./Entity";
 import {
   ENEMY_ANIMATION_SPEED,
+  ENEMY_ATTACK_VALUE,
   ENEMY_FRAME_NUMBER,
   ENEMY_FRAME_SIZE,
   ENEMY_SPEED,
@@ -12,6 +13,7 @@ import { ENEMY_ASSET, ResourceLoader } from "../ResourceLoader";
 
 class Enemy extends Entity {
   sprite: PIXI.AnimatedSprite;
+  public attackPower: number;
   private constructor(
     layer: PIXI.Container,
     frames: PIXI.Texture[],
@@ -21,6 +23,7 @@ class Enemy extends Entity {
   ) {
     super();
 
+    this.attackPower = Math.floor(Math.random() * ENEMY_ATTACK_VALUE) + 1;
     this.sprite = new PIXI.AnimatedSprite(frames);
     this.sprite.animationSpeed = ENEMY_ANIMATION_SPEED;
     this.sprite.play();

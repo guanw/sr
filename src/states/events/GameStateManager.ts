@@ -179,7 +179,7 @@ export class GameEventManager {
         return;
       }
       if (enemy.isCollidedWith(user)) {
-        await user.genCollide();
+        await user.genCollide(enemy.attackPower);
       }
     });
   }
