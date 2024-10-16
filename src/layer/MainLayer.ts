@@ -27,6 +27,7 @@ import {
   COLLECT_ITEM_INTERVAL,
 } from "../utils/Constants";
 import { itemsStateManager } from "../states/ItemsStateManager";
+import avatarsStateManager from "../states/AvatarsStateManager";
 
 interface EnemyObject {
   x: number;
@@ -117,11 +118,19 @@ export class MainLayer {
           const structuredData = data as GameStateSnapShot;
           const avatarsData = structuredData["avatars"];
           const playerAvatar = avatarsData[socketClient.getSocketId()!];
+          if (!playerAvatar) {
+            return;
+          }
           const latestAvatarAbsoluteX = playerAvatar.x;
           const latestAvatarAbsoluteY = playerAvatar.y;
           const avatarHp = playerAvatar.hp;
           const avatar = await Avatar.genInstance();
           avatar.updateHealth(avatarHp);
+
+          avatarsStateManager.refreshAllAvatars(
+            avatarsData,
+            socketClient.getSocketId()!
+          );
 
           const enemies = structuredData["enemies"];
           enemiesStateManager.refreshAllEnemies(

@@ -1,5 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { ENABLE_MULTI_PLAYER } from "./Knobs";
+import { Avatar } from "../entity/Avatar";
+import avatarsStateManager from "../states/AvatarsStateManager";
 
 class SocketClient {
   private static instance: SocketClient;
@@ -13,8 +15,11 @@ class SocketClient {
     this.socket = io(SERVER_URL);
 
     // Handle connection
-    this.socket.on("connect", () => {
+    this.socket.on("connect", async () => {
       console.log("Connected to the server");
+      const avatar = await Avatar.genInstance();
+      const key = this.getSocketId();
+      avatarsStateManager.addCurrentAvatar(key!, avatar);
     });
 
     // Handle disconnection

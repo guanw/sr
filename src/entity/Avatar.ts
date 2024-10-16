@@ -18,6 +18,7 @@ import { GameOverEvent } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
 import { Sword } from "./Attacks/Sword";
 import { AVATAR_ASSET, ResourceLoader } from "../ResourceLoader";
+import avatarsStateManager from "../states/AvatarsStateManager";
 
 export const avatarMetaData = {
   hp_system: {
@@ -32,20 +33,38 @@ export const avatarMetaData = {
 export class Avatar extends Entity {
   public static instance: Avatar;
   public walkingSprite: PIXI.AnimatedSprite;
-  public attackingSprite: PIXI.AnimatedSprite;
+  public attackingSprite: PIXI.AnimatedSprite | undefined;
   private static healthBarContainer = new PIXI.Graphics();
   static healthBar = new PIXI.Graphics();
 
   private constructor(
+    isMainAvatar: boolean,
     walkingTexture: PIXI.Texture[],
-    attackTexture: PIXI.Texture[]
+    attackTexture: PIXI.Texture[] = []
   ) {
     super();
-    this.walkingSprite = this.initSprite(walkingTexture);
-    this.attackingSprite = this.initSprite(attackTexture);
-    this.attackingSprite.alpha = 0;
-    this.walkingSprite.alpha = 1;
-    this.renderAvatarHP();
+
+    if (isMainAvatar) {
+      this.walkingSprite = this.initSprite(walkingTexture);
+      this.attackingSprite = this.initSprite(attackTexture);
+      this.attackingSprite.alpha = 0;
+      this.walkingSprite.alpha = 1;
+      this.renderAvatarHP();
+    } else {
+      this.walkingSprite = this.initSprite(walkingTexture);
+      this.walkingSprite.alpha = 1;
+    }
+  }
+
+  static async create(layer: PIXI.Container, x: number, y: number) {
+    const resourceLoader = await ResourceLoader.genInstance();
+    const texture = resourceLoader.getResource(AVATAR_ASSET);
+    const walkingFrames = await Avatar.genLoadTexture(texture, 0);
+    const avatar = new Avatar(false, walkingFrames, []);
+    avatar.walkingSprite.x = x;
+    avatar.walkingSprite.y = y;
+    layer.addChild(avatar.walkingSprite);
+    return avatar;
   }
 
   private initSprite(texture: PIXI.Texture[]) {
@@ -66,11 +85,13 @@ export class Avatar extends Entity {
       const texture = resourceLoader.getResource(AVATAR_ASSET);
       const walkingFrames = await Avatar.genLoadTexture(texture, 0);
       const attackFrames = await Avatar.genLoadTexture(texture, 6);
-      Avatar.instance = new Avatar(walkingFrames, attackFrames);
+      Avatar.instance = new Avatar(true, walkingFrames, attackFrames);
       await this.genInitializeHPSystem();
       const mainLayer = await MainLayer.genInstance();
       mainLayer.layer.addChild(Avatar.instance.walkingSprite);
-      mainLayer.layer.addChild(Avatar.instance.attackingSprite);
+      if (Avatar.instance.attackingSprite) {
+        mainLayer.layer.addChild(Avatar.instance.attackingSprite);
+      }
       mainLayer.layer.addChild(Avatar.healthBarContainer);
     }
     return Avatar.instance;
@@ -98,13 +119,17 @@ export class Avatar extends Entity {
   getY(): number {
     return this.walkingSprite.y;
   }
+  public setPos(x: number, y: number) {
+    this.walkingSprite.x = x;
+    this.walkingSprite.y = y;
+  }
   setDeltaX(deltaX: number): void {
     this.walkingSprite.x -= deltaX;
-    this.attackingSprite.x -= deltaX;
+    this.attackingSprite!.x -= deltaX;
   }
   setDeltaY(deltaY: number): void {
     this.walkingSprite.y -= deltaY;
-    this.attackingSprite.y -= deltaY;
+    this.attackingSprite!.y -= deltaY;
   }
   getDisplacement(): number {
     return AVATAR_DISPLACEMENT;
@@ -118,20 +143,27 @@ export class Avatar extends Entity {
 
   async walk() {
     this.walkingSprite.alpha = 1;
-    this.attackingSprite.alpha = 0;
+    this.attackingSprite!.alpha = 0;
   }
 
   async attack() {
     this.walkingSprite.alpha = 0;
-    this.attackingSprite.alpha = 1;
+    this.attackingSprite!.alpha = 1;
 
     // Automatically switch back to walking after attack animation finishes
-    this.attackingSprite.onLoop = async () => {
+    this.attackingSprite!.onLoop = async () => {
       this.walkingSprite.alpha += 0.5;
       this.walkingSprite.alpha = Math.max(this.walkingSprite.alpha, 1);
-      this.attackingSprite.alpha -= 0.5;
-      this.attackingSprite.alpha = Math.min(this.attackingSprite.alpha, 0);
+      this.attackingSprite!.alpha -= 0.5;
+      this.attackingSprite!.alpha = Math.min(this.attackingSprite!.alpha, 0);
     };
+  }
+
+  public destroy(layer: PIXI.Container) {
+    layer.removeChild(this.walkingSprite);
+    if (this.attackingSprite) {
+      layer.removeChild(this.attackingSprite);
+    }
   }
 
   public async genCollide(enemyAttackPower: number): Promise<void> {
