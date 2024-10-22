@@ -2,21 +2,25 @@ import { io, Socket } from "socket.io-client";
 import { ENABLE_MULTI_PLAYER } from "./Knobs";
 import { Avatar } from "../entity/Avatar";
 import avatarsStateManager from "../states/AvatarsStateManager";
+import { Logger } from "./Logger";
 
 class SocketClient {
   private static instance: SocketClient;
   private socket: Socket | undefined;
+  private logger: Logger | undefined;
 
   private constructor() {
     if (!ENABLE_MULTI_PLAYER) {
       return;
     }
+    this.logger = Logger.getInstance();
     const SERVER_URL = "http://localhost:3000"; // Update with your server URL
     this.socket = io(SERVER_URL);
 
     // Handle connection
     this.socket.on("connect", async () => {
-      console.log("Connected to the server");
+      this.logger!.log("Connected to the server");
+
       const avatar = await Avatar.genInstance();
       const key = this.getSocketId();
       avatarsStateManager.addCurrentAvatar(key!, avatar);
@@ -24,12 +28,12 @@ class SocketClient {
 
     // Handle disconnection
     this.socket.on("disconnect", () => {
-      console.log("Disconnected from the server");
+      this.logger!.log("Disconnected from the server");
     });
 
     // Handle connection errors
     this.socket.on("connect_error", (error) => {
-      console.error("Connection error:", error);
+      this.logger!.log(`Connection error: ${error}`, "error");
     });
   }
 
@@ -54,7 +58,10 @@ class SocketClient {
   public emit(event: string, data: unknown): void {
     const socket = this.getSocketId();
     if (socket == null || socket == undefined) {
-      console.log(`socket is null and event {${event}} will be dropped`);
+      this.logger!.log(
+        `socket is null and event {${event}} will be dropped`,
+        "warn"
+      );
       return;
     }
     this.socket?.emit(event, data);
