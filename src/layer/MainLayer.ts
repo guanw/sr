@@ -114,6 +114,10 @@ export class MainLayer {
       });
 
       if (ENABLE_MULTI_PLAYER) {
+        // socketClient.on("setup", async (data: unknown) => {
+        // TODO
+        // });
+
         socketClient.on("update", async (data: unknown) => {
           const structuredData = data as GameStateSnapShot;
           const avatarsData = structuredData["avatars"];

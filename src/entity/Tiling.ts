@@ -17,19 +17,12 @@ import { Position } from "./Application";
 import { Avatar } from "./Avatar";
 import { Direction, Helper } from "../utils/Helper";
 import { ENABLE_COLLISION } from "../utils/Knobs";
-import { Background } from "./Background";
 
 export class Tiling extends Entity {
-  private background: Background;
   public staticSprites: PIXI.Sprite[] = [];
   public static instance: Tiling;
-  private constructor(
-    background: Background,
-    textures: PIXI.Texture[],
-    layer: PIXI.Container
-  ) {
+  private constructor(textures: PIXI.Texture[], layer: PIXI.Container) {
     super();
-    this.background = background;
 
     const worldSize = GAME_SIZE * 15;
     for (let i = 0; i < SAND_TILING_COUNT; i++) {
@@ -99,10 +92,9 @@ export class Tiling extends Entity {
 
   public static async genInstance() {
     if (!Tiling.instance) {
-      const background = await Background.genInstance();
       const mainLayer = await MainLayer.genInstance();
       const tilings = await Tiling.genLoadTiling();
-      Tiling.instance = new Tiling(background, tilings, mainLayer.layer);
+      Tiling.instance = new Tiling(tilings, mainLayer.layer);
     }
     return Tiling.instance;
   }
@@ -127,10 +119,10 @@ export class Tiling extends Entity {
   }
 
   getX(): number {
-    return this.background.getX();
+    return 0;
   }
   getY(): number {
-    return this.background.getY();
+    return 0;
   }
   setDeltaX(deltaX: number): void {
     this.staticSprites.forEach((sprite) => {

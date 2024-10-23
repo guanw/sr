@@ -5,11 +5,13 @@ import { PlaygroundLayer } from "./layer/PlaygroundLayer";
 import { GameEventManager } from "./states/events/GameStateManager";
 import { ResourceLoader } from "./ResourceLoader";
 import { LoadingView } from "./entity/LoadingView";
+import { Background } from "./entity/Background";
 
 async function genInitUI() {
   const appInstance = await Application.genInstance();
   const loadingView = await LoadingView.genInstance(appInstance.app.stage);
   await ResourceLoader.genInstance();
+  await Background.genInstance();
   const mainLayer = await MainLayer.genInstance();
   mainLayer.layer.visible = false;
   const playgroundLayer = await PlaygroundLayer.genInstance();
