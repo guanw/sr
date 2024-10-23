@@ -5,7 +5,7 @@ import {
 } from "./events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
 import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
-import SocketClient from "../utils/SocketClient";
+import { SocketClient } from "../utils/SocketClient";
 
 export const avatarKeys: { [key: string]: boolean } = {
   ArrowLeft: false,

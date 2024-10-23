@@ -16,7 +16,7 @@ import { globalState } from "../states/events";
 import Application from "../entity/Application";
 import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
 import enemiesStateManager from "../states/EnemyStateManager";
-import SocketClient from "../utils/SocketClient";
+import { SocketClient } from "../utils/SocketClient";
 import { Avatar } from "../entity/Avatar";
 import { Sword } from "../entity/Attacks/Sword";
 import {

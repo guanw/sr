@@ -3,6 +3,10 @@ import { ENABLE_MULTI_PLAYER } from "./Knobs";
 import { Avatar } from "../entity/Avatar";
 import avatarsStateManager from "../states/AvatarsStateManager";
 import { Logger } from "./Logger";
+import { SetupResponse } from "../ResourceLoader";
+
+// TODO Update our server URL
+const SERVER_URL = "http://localhost:3000";
 
 class SocketClient {
   private static instance: SocketClient;
@@ -14,7 +18,6 @@ class SocketClient {
       return;
     }
     this.logger = Logger.getInstance();
-    const SERVER_URL = "http://localhost:3000"; // Update with your server URL
     this.socket = io(SERVER_URL);
 
     // Handle connection
@@ -68,4 +71,24 @@ class SocketClient {
   }
 }
 
-export default SocketClient;
+async function fetchSetupData() {
+  try {
+    const response = await fetch(SERVER_URL);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: SetupResponse = await response.json();
+
+    // TODO Properly log the data received from the server
+    console.log("Response from /setup:", data);
+    return data;
+  } catch (error) {
+    // TODO properly log error
+    console.error("Error fetching /setup data:", error);
+    return null;
+  }
+}
+
+export { SocketClient, fetchSetupData };

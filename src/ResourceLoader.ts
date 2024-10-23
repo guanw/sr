@@ -16,19 +16,28 @@ export const WIND_ASSET = "wind";
 export const BOMB_ASSET = "bomb";
 export const POTION_ASSET = "potion";
 
+export interface SetupResponse {
+  background_tile_url: string;
+}
+
 export class ResourceLoader {
   private static instance: ResourceLoader;
   private loader = new PIXI.Loader();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private resources: Record<string, any> | undefined;
 
-  public static async genInstance(): Promise<ResourceLoader> {
+  public static async genInstance(
+    setupResponse: SetupResponse | null = null
+  ): Promise<ResourceLoader> {
     if (!ResourceLoader.instance) {
       ResourceLoader.instance = new ResourceLoader();
       await LoadingView.genInstance();
       PIXI.Assets.add({ alias: ENEMY_ASSET, src: ENEMY_URL });
       PIXI.Assets.add({ alias: AVATAR_ASSET, src: AVATAR_URL });
-      PIXI.Assets.add({ alias: BACKGROUND_ASSET, src: BASE_TILING_URL });
+      PIXI.Assets.add({
+        alias: BACKGROUND_ASSET,
+        src: setupResponse?.background_tile_url ?? BASE_TILING_URL,
+      });
       PIXI.Assets.add({ alias: WIND_ASSET, src: WIND_URL });
       PIXI.Assets.add({ alias: BOMB_ASSET, src: BOMB_URL });
       PIXI.Assets.add({ alias: POTION_ASSET, src: POTION_URL });
