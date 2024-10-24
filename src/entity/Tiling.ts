@@ -100,6 +100,7 @@ export class Tiling extends Entity {
   }
 
   private static async genLoadTiling() {
+    // TODO move asset to server
     const baseTexture = await PIXI.Assets.load(BASE_TILING_URL);
     const randomGroundTexture = await PIXI.Assets.load(RANDOM_TILING_URL);
     const pillarTopTexture = await PIXI.Assets.load(PILLAR_TOP_TILING_URL);

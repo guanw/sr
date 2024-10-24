@@ -18,6 +18,11 @@ export const POTION_ASSET = "potion";
 
 export interface SetupResponse {
   background_tile_url: string;
+  enemy_url: string;
+  avatar_url: string;
+  wind_url: string;
+  bomb_url: string;
+  potion_url: string;
 }
 
 export class ResourceLoader {
@@ -32,15 +37,30 @@ export class ResourceLoader {
     if (!ResourceLoader.instance) {
       ResourceLoader.instance = new ResourceLoader();
       await LoadingView.genInstance();
-      PIXI.Assets.add({ alias: ENEMY_ASSET, src: ENEMY_URL });
-      PIXI.Assets.add({ alias: AVATAR_ASSET, src: AVATAR_URL });
+      PIXI.Assets.add({
+        alias: ENEMY_ASSET,
+        src: setupResponse?.enemy_url ?? ENEMY_URL,
+      });
+      PIXI.Assets.add({
+        alias: AVATAR_ASSET,
+        src: setupResponse?.avatar_url ?? AVATAR_URL,
+      });
       PIXI.Assets.add({
         alias: BACKGROUND_ASSET,
         src: setupResponse?.background_tile_url ?? BASE_TILING_URL,
       });
-      PIXI.Assets.add({ alias: WIND_ASSET, src: WIND_URL });
-      PIXI.Assets.add({ alias: BOMB_ASSET, src: BOMB_URL });
-      PIXI.Assets.add({ alias: POTION_ASSET, src: POTION_URL });
+      PIXI.Assets.add({
+        alias: WIND_ASSET,
+        src: setupResponse?.wind_url ?? WIND_URL,
+      });
+      PIXI.Assets.add({
+        alias: BOMB_ASSET,
+        src: setupResponse?.bomb_url ?? BOMB_URL,
+      });
+      PIXI.Assets.add({
+        alias: POTION_ASSET,
+        src: setupResponse?.potion_url ?? POTION_URL,
+      });
 
       ResourceLoader.instance.resources = await PIXI.Assets.load([
         ENEMY_ASSET,
