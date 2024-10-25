@@ -16,7 +16,7 @@ async function genInitUI() {
     setupResponse = await fetchSetupData();
   }
   const loadingView = await LoadingView.genInstance(appInstance.app.stage);
-  await ResourceLoader.genInstance(setupResponse);
+  await ResourceLoader.genInstance(setupResponse?.assets);
   await Background.genInstance();
   const mainLayer = await MainLayer.genInstance();
   mainLayer.layer.visible = false;

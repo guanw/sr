@@ -12,6 +12,7 @@ import {
   RANDOM_TILING_URL,
   WIND_URL,
 } from "./utils/Constants";
+import { TilingObject } from "./layer/MainLayer";
 
 export const ENEMY_ASSET = "enemy";
 export const AVATAR_ASSET = "avatar";
@@ -26,6 +27,11 @@ export const PILLAR_MIDDLE_TILING_ASSET = "pillar_middle_tiling";
 export const PILLAR_BOTTOM_TILING_ASSET = "pillar_bottom_tiling";
 
 export interface SetupResponse {
+  assets: AssetsResponse;
+  tilings_location: [TilingObject];
+}
+
+export interface AssetsResponse {
   background_tile_url: string;
   enemy_url: string;
   avatar_url: string;
@@ -46,56 +52,56 @@ export class ResourceLoader {
   private resources: Record<string, any> | undefined;
 
   public static async genInstance(
-    setupResponse: SetupResponse | null = null
+    assetsResponse: AssetsResponse | null = null
   ): Promise<ResourceLoader> {
     if (!ResourceLoader.instance) {
       ResourceLoader.instance = new ResourceLoader();
       await LoadingView.genInstance();
       PIXI.Assets.add({
         alias: ENEMY_ASSET,
-        src: setupResponse?.enemy_url ?? ENEMY_URL,
+        src: assetsResponse?.enemy_url ?? ENEMY_URL,
       });
       PIXI.Assets.add({
         alias: AVATAR_ASSET,
-        src: setupResponse?.avatar_url ?? AVATAR_URL,
+        src: assetsResponse?.avatar_url ?? AVATAR_URL,
       });
       PIXI.Assets.add({
         alias: BACKGROUND_ASSET,
-        src: setupResponse?.background_tile_url ?? BASE_TILING_URL,
+        src: assetsResponse?.background_tile_url ?? BASE_TILING_URL,
       });
       PIXI.Assets.add({
         alias: WIND_ASSET,
-        src: setupResponse?.wind_url ?? WIND_URL,
+        src: assetsResponse?.wind_url ?? WIND_URL,
       });
       PIXI.Assets.add({
         alias: BOMB_ASSET,
-        src: setupResponse?.bomb_url ?? BOMB_URL,
+        src: assetsResponse?.bomb_url ?? BOMB_URL,
       });
       PIXI.Assets.add({
         alias: POTION_ASSET,
-        src: setupResponse?.potion_url ?? POTION_URL,
+        src: assetsResponse?.potion_url ?? POTION_URL,
       });
       PIXI.Assets.add({
         alias: BASE_TILING_ASSET,
-        src: setupResponse?.base_tiling_url ?? BASE_TILING_URL,
+        src: assetsResponse?.base_tiling_url ?? BASE_TILING_URL,
       });
       PIXI.Assets.add({
         alias: RANDOM_TILING_ASSET,
-        src: setupResponse?.random_tiling_url ?? RANDOM_TILING_URL,
+        src: assetsResponse?.random_tiling_url ?? RANDOM_TILING_URL,
       });
       PIXI.Assets.add({
         alias: PILLAR_TOP_TILING_ASSET,
-        src: setupResponse?.pillar_top_tiling_url ?? PILLAR_TOP_TILING_URL,
+        src: assetsResponse?.pillar_top_tiling_url ?? PILLAR_TOP_TILING_URL,
       });
       PIXI.Assets.add({
         alias: PILLAR_MIDDLE_TILING_ASSET,
         src:
-          setupResponse?.pillar_middle_tiling_url ?? PILLAR_MIDDLE_TILING_URL,
+          assetsResponse?.pillar_middle_tiling_url ?? PILLAR_MIDDLE_TILING_URL,
       });
       PIXI.Assets.add({
         alias: PILLAR_BOTTOM_TILING_ASSET,
         src:
-          setupResponse?.pillar_bottom_tiling_url ?? PILLAR_BOTTOM_TILING_URL,
+          assetsResponse?.pillar_bottom_tiling_url ?? PILLAR_BOTTOM_TILING_URL,
       });
 
       ResourceLoader.instance.resources = await PIXI.Assets.load([

@@ -43,6 +43,11 @@ interface AvatarObject {
   y: number;
   hp: number;
 }
+export interface TilingObject {
+  x: number;
+  y: number;
+  type: string; // matches enum TILING
+}
 export type EnemiesSerialization = { [key: string]: EnemyObject };
 export type ItemsSerialization = { [key: string]: ItemObject };
 export type AvatarsSerialization = { [key: string]: AvatarObject };
