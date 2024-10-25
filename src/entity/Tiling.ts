@@ -2,12 +2,7 @@ import * as PIXI from "pixi.js";
 import { Entity } from "./Entity";
 import {
   GAME_SIZE,
-  BASE_TILING_URL,
-  RANDOM_TILING_URL,
   SAND_TILING_COUNT,
-  PILLAR_BOTTOM_TILING_URL,
-  PILLAR_MIDDLE_TILING_URL,
-  PILLAR_TOP_TILING_URL,
   PILLAR_TILING_COUNT,
   TILING_SIZE,
   TILING_LAYER,
@@ -17,6 +12,14 @@ import { Position } from "./Application";
 import { Avatar } from "./Avatar";
 import { Direction, Helper } from "../utils/Helper";
 import { ENABLE_COLLISION } from "../utils/Knobs";
+import {
+  BASE_TILING_ASSET,
+  PILLAR_BOTTOM_TILING_ASSET,
+  PILLAR_MIDDLE_TILING_ASSET,
+  PILLAR_TOP_TILING_ASSET,
+  RANDOM_TILING_ASSET,
+  ResourceLoader,
+} from "../ResourceLoader";
 
 export class Tiling extends Entity {
   public staticSprites: PIXI.Sprite[] = [];
@@ -100,15 +103,17 @@ export class Tiling extends Entity {
   }
 
   private static async genLoadTiling() {
-    // TODO move asset to server
-    const baseTexture = await PIXI.Assets.load(BASE_TILING_URL);
-    const randomGroundTexture = await PIXI.Assets.load(RANDOM_TILING_URL);
-    const pillarTopTexture = await PIXI.Assets.load(PILLAR_TOP_TILING_URL);
-    const pillarMiddleTexture = await PIXI.Assets.load(
-      PILLAR_MIDDLE_TILING_URL
+    const resourceLoader = await ResourceLoader.genInstance();
+    const baseTexture = resourceLoader.getResource(BASE_TILING_ASSET);
+    const randomGroundTexture = resourceLoader.getResource(RANDOM_TILING_ASSET);
+    const pillarTopTexture = resourceLoader.getResource(
+      PILLAR_TOP_TILING_ASSET
     );
-    const pillarBottomTexture = await PIXI.Assets.load(
-      PILLAR_BOTTOM_TILING_URL
+    const pillarMiddleTexture = resourceLoader.getResource(
+      PILLAR_MIDDLE_TILING_ASSET
+    );
+    const pillarBottomTexture = resourceLoader.getResource(
+      PILLAR_BOTTOM_TILING_ASSET
     );
     return [
       baseTexture,

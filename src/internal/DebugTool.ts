@@ -47,30 +47,37 @@ export class DebugTool {
 
     const mainLayer = await MainLayer.genInstance();
     if (this.container.visible) {
-      // add bounding box for avatar
-      this.avatarBoundingBox = this.createBoundingBox(this.avatarContainer);
-      mainLayer.layer.addChild(this.avatarContainer);
-
-      const avatar = await Avatar.genInstance();
-      this.updateBoundingBox(this.avatarBoundingBox, avatar.walkingSprite);
-
-      const tiling = await Tiling.genInstance();
-      // add bounding box for tilings
-      tiling.staticSprites.forEach((staticSprite) => {
-        // this.tilingContainers.push(staticSprite);
-        const tilingBoundingBox = this.createBoundingBox(staticSprite);
-        this.tilingBoundingBoxes.push(tilingBoundingBox);
-        mainLayer.layer.addChild(tilingBoundingBox);
-      });
+      await this.genRenderBoundingBox(mainLayer);
     } else {
-      // remove bounding box for avatar
-      mainLayer.layer.removeChild(this.avatarContainer);
-
-      // remove bounding box for tilings
-      this.tilingBoundingBoxes.forEach((tilingBoundingBox) => {
-        tilingBoundingBox.clear();
-      });
+      this.hideBoundingBox(mainLayer);
     }
+  }
+
+  private async genRenderBoundingBox(mainLayer: MainLayer) {
+    // add bounding box for avatar
+    this.avatarBoundingBox = this.createBoundingBox(this.avatarContainer);
+    mainLayer.layer.addChild(this.avatarContainer);
+    const avatar = await Avatar.genInstance();
+    this.updateBoundingBox(this.avatarBoundingBox, avatar.walkingSprite);
+
+    const tiling = await Tiling.genInstance();
+    // add bounding box for tilings
+    tiling.staticSprites.forEach((staticSprite) => {
+      // this.tilingContainers.push(staticSprite);
+      const tilingBoundingBox = this.createBoundingBox(staticSprite);
+      this.tilingBoundingBoxes.push(tilingBoundingBox);
+      mainLayer.layer.addChild(tilingBoundingBox);
+    });
+  }
+
+  private hideBoundingBox(mainLayer: MainLayer) {
+    // remove bounding box for avatar
+    mainLayer.layer.removeChild(this.avatarContainer);
+
+    // remove bounding box for tilings
+    this.tilingBoundingBoxes.forEach((tilingBoundingBox) => {
+      tilingBoundingBox.clear();
+    });
   }
 
   public async genUpdate() {
