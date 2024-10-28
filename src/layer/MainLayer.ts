@@ -28,6 +28,7 @@ import {
 } from "../utils/Constants";
 import { itemsStateManager } from "../states/ItemsStateManager";
 import avatarsStateManager from "../states/AvatarsStateManager";
+import { tilingsStateManager } from "../states/TilingsStateManager";
 
 interface EnemyObject {
   x: number;
@@ -50,11 +51,13 @@ export interface TilingObject {
 }
 export type EnemiesSerialization = { [key: string]: EnemyObject };
 export type ItemsSerialization = { [key: string]: ItemObject };
+export type TilingsSerialization = { [key: string]: TilingObject };
 export type AvatarsSerialization = { [key: string]: AvatarObject };
 type GameStateSnapShot = {
   enemies: EnemiesSerialization;
   avatars: AvatarsSerialization;
   items: ItemsSerialization;
+  tilings: TilingsSerialization;
   [key: string]: unknown;
 };
 
@@ -119,10 +122,6 @@ export class MainLayer {
       });
 
       if (ENABLE_MULTI_PLAYER) {
-        // socketClient.on("setup", async (data: unknown) => {
-        // TODO
-        // });
-
         socketClient.on("update", async (data: unknown) => {
           const structuredData = data as GameStateSnapShot;
           const avatarsData = structuredData["avatars"];
@@ -141,16 +140,20 @@ export class MainLayer {
             socketClient.getSocketId()!
           );
 
-          const enemies = structuredData["enemies"];
           enemiesStateManager.refreshAllEnemies(
-            enemies,
+            structuredData["enemies"],
             latestAvatarAbsoluteX,
             latestAvatarAbsoluteY
           );
 
-          const items = structuredData["items"];
           itemsStateManager.refreshAllItems(
-            items,
+            structuredData["items"],
+            latestAvatarAbsoluteX,
+            latestAvatarAbsoluteY
+          );
+
+          tilingsStateManager.refreshAllTilings(
+            structuredData["tilings"],
             latestAvatarAbsoluteX,
             latestAvatarAbsoluteY
           );

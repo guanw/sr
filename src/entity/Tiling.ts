@@ -7,7 +7,7 @@ import {
   TILING_SIZE,
   TILING_LAYER,
 } from "../utils/Constants";
-import { MainLayer } from "../layer/MainLayer";
+import { MainLayer, TilingObject } from "../layer/MainLayer";
 import { Position } from "./Application";
 import { Avatar } from "./Avatar";
 import { Direction, Helper } from "../utils/Helper";
@@ -20,13 +20,30 @@ import {
   RANDOM_TILING_ASSET,
   ResourceLoader,
 } from "../ResourceLoader";
+import { tilingsStateManager } from "../states/TilingsStateManager";
 
 export class Tiling extends Entity {
   public staticSprites: PIXI.Sprite[] = [];
   public static instance: Tiling;
-  private constructor(textures: PIXI.Texture[], layer: PIXI.Container) {
+  private constructor(
+    layer: PIXI.Container,
+    textures: PIXI.Texture[],
+    tilings_location: [TilingObject] | null = null
+  ) {
     super();
 
+    if (tilings_location === null) {
+      this.initiateOfflineTilings(textures, layer);
+      return;
+    }
+
+    this.initiateOnlineTilings(textures, layer, tilings_location);
+  }
+
+  private initiateOfflineTilings(
+    textures: PIXI.Texture[],
+    layer: PIXI.Container
+  ) {
     const worldSize = GAME_SIZE * 15;
     for (let i = 0; i < SAND_TILING_COUNT; i++) {
       const startX = Math.random() * worldSize;
@@ -73,6 +90,57 @@ export class Tiling extends Entity {
     });
   }
 
+  private initiateOnlineTilings(
+    textures: PIXI.Texture[],
+    layer: PIXI.Container,
+    tilings_location: [TilingObject]
+  ) {
+    tilings_location.forEach((element) => {
+      switch (element.type) {
+        case "SAND": {
+          const sandSprites = this.createSprites(
+            [textures[1]],
+            [
+              {
+                x: 0,
+                y: 0,
+              },
+            ],
+            element["x"],
+            element["y"]
+          );
+          this.staticSprites = this.staticSprites.concat(sandSprites);
+          break;
+        }
+        case "PILLAR": {
+          const pillarSprites = this.createSprites(
+            [textures[2], textures[3], textures[4]],
+            [
+              {
+                x: 0,
+                y: 0,
+              },
+              {
+                x: 0,
+                y: 1,
+              },
+              {
+                x: 0,
+                y: 2,
+              },
+            ],
+            element["x"],
+            element["y"]
+          );
+          this.staticSprites = this.staticSprites.concat(pillarSprites);
+        }
+      }
+    });
+    this.staticSprites.forEach((staticSprite) => {
+      layer.addChildAt(staticSprite, TILING_LAYER);
+    });
+  }
+
   private createSprites(
     textures: PIXI.Texture[],
     offsets: Position[],
@@ -93,11 +161,14 @@ export class Tiling extends Entity {
     return sprites;
   }
 
-  public static async genInstance() {
+  public static async genInstance(
+    tilings_location: [TilingObject] | null = null
+  ) {
     if (!Tiling.instance) {
       const mainLayer = await MainLayer.genInstance();
       const tilings = await Tiling.genLoadTiling();
-      Tiling.instance = new Tiling(tilings, mainLayer.layer);
+      Tiling.instance = new Tiling(mainLayer.layer, tilings, tilings_location);
+      tilingsStateManager.initTilingsState(Tiling.instance);
     }
     return Tiling.instance;
   }

@@ -6,7 +6,8 @@ import { Logger } from "./Logger";
 import { SetupResponse } from "../ResourceLoader";
 
 // TODO Update our server URL
-const SERVER_URL = "http://localhost:3000";
+const SOCKET_IO_SERVER_URL = "http://localhost:3000";
+const SERVER_SETUP_URL = SOCKET_IO_SERVER_URL + "/setup";
 
 class SocketClient {
   private static instance: SocketClient;
@@ -18,7 +19,7 @@ class SocketClient {
       return;
     }
     this.logger = Logger.getInstance();
-    this.socket = io(SERVER_URL);
+    this.socket = io(SOCKET_IO_SERVER_URL);
 
     // Handle connection
     this.socket.on("connect", async () => {
@@ -73,7 +74,7 @@ class SocketClient {
 
 async function fetchSetupData() {
   try {
-    const response = await fetch(SERVER_URL);
+    const response = await fetch(SERVER_SETUP_URL);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

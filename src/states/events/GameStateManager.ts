@@ -41,11 +41,9 @@ export class GameEventManager {
       }
     }
 
-    /* TODO start multi-player game genMoveUser should be executed on client side */
     if (globalState.isGamePaused) {
       return;
     }
-    /* TODO end multi-player game genMoveUser should be executed on client side */
   }
 
   private async handleEvent(event: GameEvent) {

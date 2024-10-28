@@ -32,7 +32,7 @@ class AvatarsStateManager {
       return;
     }
 
-    // update existing enemies with new x,y
+    // update existing other user avatars with new x,y
     previousAvatarsState.forEach((_, key) => {
       if (key === currentAvatarId) {
         return;
