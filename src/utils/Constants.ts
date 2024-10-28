@@ -10,7 +10,7 @@ export const LOADING_VIEW_FONT_SIZE = 24;
 export const LOADING_VIEW_FILL_COLOR = 0xffffff;
 export const LOADING_VIEW_TEXT = "Loading...";
 
-// Tiling
+// Tiles
 export const BASE_TILING_URL =
   "https://guanw.github.io/sr_assets/environment/ground/1.png";
 export const RANDOM_TILING_URL =

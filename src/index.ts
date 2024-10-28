@@ -8,6 +8,7 @@ import { LoadingView } from "./entity/LoadingView";
 import { Background } from "./entity/Background";
 import { fetchSetupData } from "./utils/SocketClient";
 import { ENABLE_MULTI_PLAYER } from "./utils/Knobs";
+import { tilingsStateManager } from "./states/TilingsStateManager";
 
 async function genInitUI() {
   const appInstance = await Application.genInstance();
@@ -17,6 +18,7 @@ async function genInitUI() {
   }
   const loadingView = await LoadingView.genInstance(appInstance.app.stage);
   await ResourceLoader.genInstance(setupResponse?.assets);
+
   await Background.genInstance();
   const mainLayer = await MainLayer.genInstance();
   mainLayer.layer.visible = false;
@@ -26,6 +28,7 @@ async function genInitUI() {
 
   appInstance.app.stage.addChild(mainLayer.layer);
   appInstance.app.stage.addChild(playgroundLayer.layer);
+  await tilingsStateManager.genInitializeTilings();
 
   return {
     appInstance,

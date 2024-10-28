@@ -1,4 +1,3 @@
-import { Tiling } from "../../entity/Tiling";
 import { Avatar } from "../../entity/Avatar";
 import { DebugTool } from "../../internal/DebugTool";
 import { MainLayer } from "../../layer/MainLayer";
@@ -15,6 +14,7 @@ import {
   KeyUpEvent,
 } from "./GameEvent";
 import { Background } from "../../entity/Background";
+import { tilingsStateManager } from "../TilingsStateManager";
 
 export class GameEventManager {
   private static instance: GameEventManager;
@@ -212,97 +212,107 @@ export class GameEventManager {
   }
 
   public async genHandleMoveUser(avatarKeys: { [key: string]: boolean }) {
-    const tilings = await Tiling.genInstance();
+    // const tilings = await Tiling.genInstance();
     // Move user based on key states
     if (avatarKeys.ArrowLeft) {
-      const collidedWithTiles = await tilings.genCheckCollisionWithAvatar(
-        "left"
-      );
+      const collidedWithTiles =
+        await tilingsStateManager.genCheckCollisionWithAvatar("left");
       if (collidedWithTiles) {
         return;
       }
-      await this.genMoveUserLeft(tilings);
+      await this.genMoveUserLeft();
     }
     if (avatarKeys.ArrowRight) {
-      const collidedWithTiles = await tilings.genCheckCollisionWithAvatar(
-        "right"
-      );
+      const collidedWithTiles =
+        await tilingsStateManager.genCheckCollisionWithAvatar("right");
       if (collidedWithTiles) {
         return;
       }
-      await this.genMoveUserRight(tilings);
+      await this.genMoveUserRight();
     }
     if (avatarKeys.ArrowUp) {
-      const collidedWithTiles = await tilings.genCheckCollisionWithAvatar("up");
+      const collidedWithTiles =
+        await tilingsStateManager.genCheckCollisionWithAvatar("up");
       if (collidedWithTiles) {
         return;
       }
-      await this.genMoveUserUp(tilings);
+      await this.genMoveUserUp();
     }
     if (avatarKeys.ArrowDown) {
-      const collidedWithTiles = await tilings.genCheckCollisionWithAvatar(
-        "down"
-      );
+      const collidedWithTiles =
+        await tilingsStateManager.genCheckCollisionWithAvatar("down");
       if (collidedWithTiles) {
         return;
       }
-      await this.genMoveUserDown(tilings);
+      await this.genMoveUserDown();
     }
   }
 
-  private async genMoveUserLeft(tilings: Tiling, moveSpeedOffset = 1) {
+  private async genMoveUserLeft(moveSpeedOffset = 1) {
     const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
+    const tiles = tilingsStateManager.getTilings();
     background.moveRight(moveSpeedOffset);
-    tilings.moveRight(moveSpeedOffset);
     items.forEach((item) => {
       item.moveRight(moveSpeedOffset);
     });
     enemies.forEach((enemy) => {
       enemy.moveRight(moveSpeedOffset);
     });
+    tiles.forEach((tile) => {
+      tile.moveRight(moveSpeedOffset);
+    });
   }
 
-  private async genMoveUserRight(tilings: Tiling, moveSpeedOffset = 1) {
+  private async genMoveUserRight(moveSpeedOffset = 1) {
     const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
+    const tiles = tilingsStateManager.getTilings();
     background.moveLeft(moveSpeedOffset);
-    tilings.moveLeft(moveSpeedOffset);
     items.forEach((item) => {
       item.moveLeft(moveSpeedOffset);
     });
     enemies.forEach((enemy) => {
       enemy.moveLeft(moveSpeedOffset);
     });
+    tiles.forEach((tile) => {
+      tile.moveLeft(moveSpeedOffset);
+    });
   }
 
-  private async genMoveUserUp(tilings: Tiling, moveSpeedOffset = 1) {
+  private async genMoveUserUp(moveSpeedOffset = 1) {
     const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
+    const tiles = tilingsStateManager.getTilings();
     background.moveDown(moveSpeedOffset);
-    tilings.moveDown(moveSpeedOffset);
     items.forEach((item) => {
       item.moveDown(moveSpeedOffset);
     });
     enemies.forEach((enemy) => {
       enemy.moveDown(moveSpeedOffset);
     });
+    tiles.forEach((tile) => {
+      tile.moveDown(moveSpeedOffset);
+    });
   }
 
-  private async genMoveUserDown(tilings: Tiling, moveSpeedOffset = 1) {
+  private async genMoveUserDown(moveSpeedOffset = 1) {
     const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
+    const tiles = tilingsStateManager.getTilings();
     background.moveUp(moveSpeedOffset);
-    tilings.moveUp(moveSpeedOffset);
     items.forEach((item) => {
       item.moveUp(moveSpeedOffset);
     });
     enemies.forEach((enemy) => {
       enemy.moveUp(moveSpeedOffset);
+    });
+    tiles.forEach((tile) => {
+      tile.moveUp(moveSpeedOffset);
     });
   }
 

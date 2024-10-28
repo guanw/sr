@@ -1,10 +1,10 @@
 import * as PIXI from "pixi.js";
 import { Avatar, avatarMetaData } from "../entity/Avatar";
 import { globalState } from "../states/events";
-import { Tiling } from "../entity/Tiling";
 import { MainLayer } from "../layer/MainLayer";
 import { DEBUG_BOUND_COLOR, GAME_SIZE } from "../utils/Constants";
 import Application from "../entity/Application";
+import { tilingsStateManager } from "../states/TilingsStateManager";
 
 export class DebugTool {
   private static instance: DebugTool;
@@ -16,7 +16,7 @@ export class DebugTool {
   private avatarBoundingBox!: PIXI.Graphics;
 
   // tiling bound box
-  private tilingBoundingBoxes: PIXI.Graphics[] = [];
+  private tilingBoundingBoxes: { [key: string]: PIXI.Graphics } = {};
 
   // TODO P1
   // item bound box
@@ -60,12 +60,12 @@ export class DebugTool {
     const avatar = await Avatar.genInstance();
     this.updateBoundingBox(this.avatarBoundingBox, avatar.walkingSprite);
 
-    const tiling = await Tiling.genInstance();
+    const tiles = await tilingsStateManager.getTilings();
     // add bounding box for tilings
-    tiling.staticSprites.forEach((staticSprite) => {
+    tiles.forEach((tile, key) => {
       // this.tilingContainers.push(staticSprite);
-      const tilingBoundingBox = this.createBoundingBox(staticSprite);
-      this.tilingBoundingBoxes.push(tilingBoundingBox);
+      const tilingBoundingBox = this.createBoundingBox(tile.sprite);
+      this.tilingBoundingBoxes[key] = tilingBoundingBox;
       mainLayer.layer.addChild(tilingBoundingBox);
     });
   }
@@ -75,8 +75,8 @@ export class DebugTool {
     mainLayer.layer.removeChild(this.avatarContainer);
 
     // remove bounding box for tilings
-    this.tilingBoundingBoxes.forEach((tilingBoundingBox) => {
-      tilingBoundingBox.clear();
+    Object.keys(this.tilingBoundingBoxes).forEach((key) => {
+      this.tilingBoundingBoxes[key].clear();
     });
   }
 
@@ -84,20 +84,28 @@ export class DebugTool {
     if (!globalState.isDebugToolVisible) {
       return;
     }
-    const tiling = await Tiling.genInstance();
+    // const tiling = await Tiling.genInstance();
     const avatar = await Avatar.genInstance();
     const app = await Application.genInstance();
     const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
     this.avatarText.text = `
-      Relative Position: (${-tiling.getX()}, ${-tiling.getY()})
       Absoluate: (${avatar.getX()}, ${avatar.getY()})
       Stage Position: (${app.app.stage.x}, ${app.app.stage.y})
       HP: ${hp}
       killed enemies: ${avatarMetaData.scoring_sytem.value}
     `;
 
-    this.tilingBoundingBoxes.forEach((boundingBox, i) => {
-      this.updateBoundingBox(boundingBox, tiling.staticSprites[i]);
+    // this.tilingBoundingBoxes.forEach((boundingBox, i) => {
+    //   this.updateBoundingBox(boundingBox, tiling.staticSprites[i]);
+    // });
+    const tiles = await tilingsStateManager.getTilings();
+    // add bounding box for tilings
+    Object.keys(this.tilingBoundingBoxes).forEach((key) => {
+      // this.tilingBoundingBoxes[key].clear();
+      this.updateBoundingBox(
+        this.tilingBoundingBoxes[key],
+        tiles.get(key)?.sprite
+      );
     });
   }
 
@@ -108,7 +116,10 @@ export class DebugTool {
   }
 
   // Function to update the bounding box position
-  public updateBoundingBox(graphics: PIXI.Graphics, sprite: PIXI.Sprite) {
+  public updateBoundingBox(
+    graphics: PIXI.Graphics,
+    sprite: PIXI.Sprite | undefined
+  ) {
     if (sprite == undefined) {
       return;
     }
