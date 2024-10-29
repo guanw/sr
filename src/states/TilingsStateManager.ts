@@ -95,7 +95,7 @@ class TilingsStateManager {
     for (let i = 0; i < PILLAR_TILING_COUNT; i++) {
       const x = Math.random() * worldSize;
       const y = Math.random() * worldSize;
-      const pillarBottomTile = new Tile(mainLayer.layer, x, y, textures[4]);
+      const pillarBottomTile = new Tile(mainLayer.layer, x, y, textures[2]);
       const pillarMiddleTile = new Tile(
         mainLayer.layer,
         x,
@@ -106,7 +106,7 @@ class TilingsStateManager {
         mainLayer.layer,
         x,
         y + TILING_SIZE * 2,
-        textures[2]
+        textures[4]
       );
       let uuid = uuidv4();
       this.tiles.set(uuid, pillarBottomTile);
@@ -114,8 +114,6 @@ class TilingsStateManager {
       this.tiles.set(uuid, pillarMiddleTile);
       uuid = uuidv4();
       this.tiles.set(uuid, pillarTopTile);
-
-      console.log("offline tiles: ", this.tiles);
     }
   }
 
