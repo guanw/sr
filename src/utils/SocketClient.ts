@@ -31,9 +31,22 @@ class SocketClient {
     });
 
     // Handle disconnection
+    const reconnectButton = document.getElementById("reconnect-container");
     this.socket.on("disconnect", () => {
       this.logger!.log("Disconnected from the server");
+      if (reconnectButton) {
+        reconnectButton.style.display = "flex";
+        const gameCanvas = document.getElementById("game-canvas");
+        if (gameCanvas) {
+          gameCanvas.style.display = "none";
+        }
+      }
     });
+    if (reconnectButton) {
+      reconnectButton.addEventListener("click", () => {
+        location.reload();
+      });
+    }
 
     // Handle connection errors
     this.socket.on("connect_error", (error) => {

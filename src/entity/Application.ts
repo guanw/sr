@@ -22,7 +22,9 @@ class Application {
         width: GAME_SIZE,
         height: GAME_SIZE,
       });
-      document.body.appendChild(Application.instance.app.canvas);
+      const canvas = Application.instance.app.canvas;
+      canvas.id = "game-canvas";
+      document.body.appendChild(canvas);
     }
     return Application.instance;
   }
