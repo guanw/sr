@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <style>
+      #reconnect-container {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      #reconnect-button {
+        padding: 1em 2em;
+        font-size: 1.2em;
+        cursor: pointer;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+    </style>
     <title>Game SR</title>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <script src="src/index.ts"></script>
     <div id="reconnect-container" style="display: none">
-      <p>You have been disconnected from the game</p>
       <button id="reconnect-button">Reconnect</button>
     </div>
   </body>

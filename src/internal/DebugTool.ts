@@ -63,7 +63,6 @@ export class DebugTool {
     const tiles = await tilingsStateManager.getTilings();
     // add bounding box for tilings
     tiles.forEach((tile, key) => {
-      // this.tilingContainers.push(staticSprite);
       const tilingBoundingBox = this.createBoundingBox(tile.sprite);
       this.tilingBoundingBoxes[key] = tilingBoundingBox;
       mainLayer.layer.addChild(tilingBoundingBox);
