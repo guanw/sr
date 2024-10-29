@@ -10,7 +10,7 @@ import {
 import { MainLayer, TilingsSerialization } from "../layer/MainLayer";
 import { Direction, Helper } from "../utils/Helper";
 import { Avatar } from "../entity/Avatar";
-import { ENABLE_COLLISION } from "../utils/Knobs";
+import { ENABLE_COLLISION_OFFSITE_ONLY } from "../utils/Knobs";
 import {
   BASE_TILING_ASSET,
   PILLAR_BOTTOM_TILING_ASSET,
@@ -162,7 +162,7 @@ class TilingsStateManager {
     sprite: PIXI.Sprite,
     direction: Direction
   ): boolean {
-    if (!ENABLE_COLLISION) {
+    if (!ENABLE_COLLISION_OFFSITE_ONLY) {
       return false;
     }
     const avatarBounds = avatar.getBounds();
