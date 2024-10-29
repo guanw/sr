@@ -12,7 +12,7 @@ import {
   RANDOM_TILING_URL,
   WIND_URL,
 } from "./utils/Constants";
-import { TilingObject } from "./layer/MainLayer";
+import { TilingObject, TilingsSerialization } from "./layer/MainLayer";
 
 export const ENEMY_ASSET = "enemy";
 export const AVATAR_ASSET = "avatar";
@@ -28,7 +28,7 @@ export const PILLAR_BOTTOM_TILING_ASSET = "pillar_bottom_tiling";
 
 export interface SetupResponse {
   assets: AssetsResponse;
-  tilings_location: [TilingObject];
+  tilings: TilingsSerialization;
 }
 
 export interface AssetsResponse {

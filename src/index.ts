@@ -28,7 +28,13 @@ async function genInitUI() {
 
   appInstance.app.stage.addChild(mainLayer.layer);
   appInstance.app.stage.addChild(playgroundLayer.layer);
-  await tilingsStateManager.genInitializeTilings();
+  if (ENABLE_MULTI_PLAYER) {
+    await tilingsStateManager.genInitializeOnlineTilings(
+      setupResponse?.tilings
+    );
+  } else {
+    await tilingsStateManager.genInitializeOfflineTilings();
+  }
 
   return {
     appInstance,

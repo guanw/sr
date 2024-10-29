@@ -1,4 +1,3 @@
-import { Tiling } from "../entity/Tiling";
 import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from "uuid";
 import { Tile } from "../entity/Tiles/Tile";
@@ -8,7 +7,7 @@ import {
   SAND_TILING_COUNT,
   TILING_SIZE,
 } from "../utils/Constants";
-import { MainLayer } from "../layer/MainLayer";
+import { MainLayer, TilingsSerialization } from "../layer/MainLayer";
 import { Direction, Helper } from "../utils/Helper";
 import { Avatar } from "../entity/Avatar";
 import { ENABLE_COLLISION } from "../utils/Knobs";
@@ -20,6 +19,15 @@ import {
   RANDOM_TILING_ASSET,
   ResourceLoader,
 } from "../ResourceLoader";
+import { Logger } from "../utils/Logger";
+
+// NOTE: this needs to match TILING on sr-server
+enum TILING {
+  SAND = "SAND",
+  TOP_PILLAR = "TOP_PILLAR",
+  MIDDLE_PILLAR = "MIDDLE_PILLAR",
+  BOTTOM_PILLAR = "BOTTOM_PILLAR",
+}
 
 class TilingsStateManager {
   private tiles: Map<string, Tile>;
@@ -27,7 +35,49 @@ class TilingsStateManager {
     this.tiles = new Map<string, Tile>();
   }
 
-  public async genInitializeTilings() {
+  public async genInitializeOnlineTilings(
+    tilings: TilingsSerialization | undefined
+  ) {
+    if (tilings === undefined) {
+      const logger = Logger.getInstance();
+      logger.log("tilings not available from server", "warn");
+      return;
+    }
+    const mainLayer = await MainLayer.genInstance();
+    const textures = await TilingsStateManager.genLoadTiling();
+
+    Object.keys(tilings).forEach((key) => {
+      const tile = tilings[key];
+      const x = tile.x;
+      const y = tile.y;
+      switch (tile.type) {
+        case TILING.SAND: {
+          const sandTile = new Tile(mainLayer.layer, x, y, textures[1]);
+          this.tiles.set(key, sandTile);
+          break;
+        }
+        case TILING.TOP_PILLAR: {
+          const pillarTopTile = new Tile(mainLayer.layer, x, y, textures[4]);
+          this.tiles.set(key, pillarTopTile);
+          break;
+        }
+        case TILING.MIDDLE_PILLAR: {
+          const pillarMiddleTile = new Tile(mainLayer.layer, x, y, textures[3]);
+          this.tiles.set(key, pillarMiddleTile);
+          break;
+        }
+        case TILING.BOTTOM_PILLAR: {
+          const pillarBottomTile = new Tile(mainLayer.layer, x, y, textures[2]);
+          this.tiles.set(key, pillarBottomTile);
+          break;
+        }
+      }
+    });
+
+    console.log("online tiles: ", this.tiles);
+  }
+
+  public async genInitializeOfflineTilings() {
     const worldSize = GAME_SIZE * 15;
     const textures = await TilingsStateManager.genLoadTiling();
     const mainLayer = await MainLayer.genInstance();
@@ -45,7 +95,7 @@ class TilingsStateManager {
     for (let i = 0; i < PILLAR_TILING_COUNT; i++) {
       const x = Math.random() * worldSize;
       const y = Math.random() * worldSize;
-      const pillarBottomTile = new Tile(mainLayer.layer, x, y, textures[2]);
+      const pillarBottomTile = new Tile(mainLayer.layer, x, y, textures[4]);
       const pillarMiddleTile = new Tile(
         mainLayer.layer,
         x,
@@ -56,7 +106,7 @@ class TilingsStateManager {
         mainLayer.layer,
         x,
         y + TILING_SIZE * 2,
-        textures[3]
+        textures[2]
       );
       let uuid = uuidv4();
       this.tiles.set(uuid, pillarBottomTile);
@@ -64,6 +114,8 @@ class TilingsStateManager {
       this.tiles.set(uuid, pillarMiddleTile);
       uuid = uuidv4();
       this.tiles.set(uuid, pillarTopTile);
+
+      console.log("offline tiles: ", this.tiles);
     }
   }
 
@@ -122,47 +174,51 @@ class TilingsStateManager {
     );
   }
 
-  //   public async refreshAllTilings(
-  //     tilings: TilingsSerialization,
-  //     latestAvatarAbsoluteX: number,
-  //     latestAvatarAbsoluteY: number
-  //   ) {
-  //     const avatar = await Avatar.genInstance();
-  //     const previousAvatarAbsoluteX = avatar.getX();
-  //     const previousAvatarAbsoluteY = avatar.getY();
-  //     const previousTilingsState = tilingsStateManager.getTilings();
+  public async refreshAllTilings(
+    tilings: TilingsSerialization,
+    latestAvatarAbsoluteX: number,
+    latestAvatarAbsoluteY: number
+  ) {
+    const avatar = await Avatar.genInstance();
+    const previousAvatarAbsoluteX = avatar.getX();
+    const previousAvatarAbsoluteY = avatar.getY();
+    const previousTilingsState = tilingsStateManager.getTilings();
 
-  //     // update existing items with new x,y
-  //     previousTilingsState.forEach((_, key) => {
-  //       if (items[key] != undefined && previousTilingsState.has(key)) {
-  //         const latestItemAbsoluteX = items[key].x;
-  //         const latestItemAbsoluteY = items[key].y;
-  //         const previousItemAbsoluteX = previousTilingsState.get(key)!.getX();
-  //         const previousItemAbsoluteY = previousTilingsState.get(key)!.getY();
+    // update existing items with new x,y
+    for (const key of previousTilingsState.keys()) {
+      const previousTileState = previousTilingsState.get(key);
+      if (!tilings || !previousTileState || !(key in tilings)) {
+        return;
+      }
 
-  //         const relativeX = -(
-  //           latestAvatarAbsoluteX -
-  //           previousAvatarAbsoluteX -
-  //           (latestItemAbsoluteX - previousItemAbsoluteX)
-  //         );
-  //         const relativeY = -(
-  //           latestAvatarAbsoluteY -
-  //           previousAvatarAbsoluteY -
-  //           (latestItemAbsoluteY - previousItemAbsoluteY)
-  //         );
-  //         this.setRelativePos(key, relativeX, relativeY);
-  //       }
-  //     });
-  //   }
+      const latestTilingAbsoluteX = tilings[key].x;
+      const latestTilingAbsoluteY = tilings[key].y;
+      const previousTilingAbsoluteX = previousTileState.getX();
+      const previousTilingAbsoluteY = previousTileState.getY();
 
-  //   private setRelativePos(
-  //     tilingSprite: PIXI.Sprite,
-  //     relativeX: number,
-  //     relativeY: number
-  //   ): void {
-  //     tilingSprite.x += relativeX;
-  //     tilingSprite.y += relativeY;
-  //   }
+      const relativeX = -(
+        latestAvatarAbsoluteX -
+        previousAvatarAbsoluteX -
+        (latestTilingAbsoluteX - previousTilingAbsoluteX)
+      );
+      const relativeY = -(
+        latestAvatarAbsoluteY -
+        previousAvatarAbsoluteY -
+        (latestTilingAbsoluteY - previousTilingAbsoluteY)
+      );
+      this.setRelativePos(key, relativeX, relativeY);
+    }
+  }
+
+  private setRelativePos(
+    key: string,
+    relativeX: number,
+    relativeY: number
+  ): void {
+    const tile = this.tiles.get(key);
+    tile?.setDeltaX(relativeX);
+    tile?.setDeltaY(relativeY);
+  }
 }
 const tilingsStateManager = new TilingsStateManager();
 export { tilingsStateManager };

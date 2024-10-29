@@ -41,11 +41,9 @@ export class GameEventManager {
       }
     }
 
-    /* TODO start multi-player game genMoveUser should be executed on client side */
     if (globalState.isGamePaused) {
       return;
     }
-    /* TODO end multi-player game genMoveUser should be executed on client side */
   }
 
   private async handleEvent(event: GameEvent) {
@@ -212,7 +210,6 @@ export class GameEventManager {
   }
 
   public async genHandleMoveUser(avatarKeys: { [key: string]: boolean }) {
-    // const tilings = await Tiling.genInstance();
     // Move user based on key states
     if (avatarKeys.ArrowLeft) {
       const collidedWithTiles =

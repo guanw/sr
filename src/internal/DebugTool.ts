@@ -84,7 +84,6 @@ export class DebugTool {
     if (!globalState.isDebugToolVisible) {
       return;
     }
-    // const tiling = await Tiling.genInstance();
     const avatar = await Avatar.genInstance();
     const app = await Application.genInstance();
     const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
@@ -95,13 +94,9 @@ export class DebugTool {
       killed enemies: ${avatarMetaData.scoring_sytem.value}
     `;
 
-    // this.tilingBoundingBoxes.forEach((boundingBox, i) => {
-    //   this.updateBoundingBox(boundingBox, tiling.staticSprites[i]);
-    // });
     const tiles = await tilingsStateManager.getTilings();
     // add bounding box for tilings
     Object.keys(this.tilingBoundingBoxes).forEach((key) => {
-      // this.tilingBoundingBoxes[key].clear();
       this.updateBoundingBox(
         this.tilingBoundingBoxes[key],
         tiles.get(key)?.sprite

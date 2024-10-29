@@ -48,6 +48,8 @@ class ItemsStateManager {
   ) {
     const mainLayer = await MainLayer.genInstance();
     const avatar = await Avatar.genInstance();
+    const previousAvatarAbsoluteX = avatar.getX();
+    const previousAvatarAbsoluteY = avatar.getY();
     const previousItemsState = itemsStateManager.getItems();
 
     // update existing items with new x,y
@@ -57,9 +59,6 @@ class ItemsStateManager {
         const latestItemAbsoluteY = items[key].y;
         const previousItemAbsoluteX = previousItemsState.get(key)!.getX();
         const previousItemAbsoluteY = previousItemsState.get(key)!.getY();
-
-        const previousAvatarAbsoluteX = avatar.getX();
-        const previousAvatarAbsoluteY = avatar.getY();
 
         const relativeX = -(
           latestAvatarAbsoluteX -
