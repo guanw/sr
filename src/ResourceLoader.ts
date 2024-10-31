@@ -5,6 +5,7 @@ import {
   BASE_TILING_URL,
   BOMB_URL,
   ENEMY_URL,
+  SKILL_SLOT_MAGIC,
   PILLAR_BOTTOM_TILING_URL,
   PILLAR_MIDDLE_TILING_URL,
   PILLAR_TOP_TILING_URL,
@@ -12,7 +13,7 @@ import {
   RANDOM_TILING_URL,
   WIND_URL,
 } from "./utils/Constants";
-import { TilingObject, TilingsSerialization } from "./layer/MainLayer";
+import { TilingsSerialization } from "./layer/MainLayer";
 
 export const ENEMY_ASSET = "enemy";
 export const AVATAR_ASSET = "avatar";
@@ -25,6 +26,7 @@ export const RANDOM_TILING_ASSET = "random_tiling";
 export const PILLAR_TOP_TILING_ASSET = "pillar_top_tiling";
 export const PILLAR_MIDDLE_TILING_ASSET = "pillar_middle_tiling";
 export const PILLAR_BOTTOM_TILING_ASSET = "pillar_bottom_tiling";
+export const SKILL_SLOT_MAGIC_ASSET = "skill_slot_magic";
 
 export interface SetupResponse {
   assets: AssetsResponse;
@@ -43,6 +45,7 @@ export interface AssetsResponse {
   pillar_top_tiling_url: string;
   pillar_middle_tiling_url: string;
   pillar_bottom_tiling_url: string;
+  skill_slot_magic: string;
 }
 
 export class ResourceLoader {
@@ -103,6 +106,10 @@ export class ResourceLoader {
         src:
           assetsResponse?.pillar_bottom_tiling_url ?? PILLAR_BOTTOM_TILING_URL,
       });
+      PIXI.Assets.add({
+        alias: SKILL_SLOT_MAGIC_ASSET,
+        src: assetsResponse?.skill_slot_magic ?? SKILL_SLOT_MAGIC,
+      });
 
       ResourceLoader.instance.resources = await PIXI.Assets.load([
         ENEMY_ASSET,
@@ -115,6 +122,7 @@ export class ResourceLoader {
         PILLAR_TOP_TILING_ASSET,
         PILLAR_MIDDLE_TILING_ASSET,
         PILLAR_BOTTOM_TILING_ASSET,
+        SKILL_SLOT_MAGIC_ASSET,
       ]);
     }
     return ResourceLoader.instance;

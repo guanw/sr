@@ -67,6 +67,10 @@ export const WIND_ANIMATION_SPEED = 0.1;
 // DebugTool
 export const DEBUG_BOUND_COLOR = 0x3d85c6;
 
+// SkillSlot
+export const SKILL_SLOT_MAGIC =
+  "https://guanw.github.io/sr_assets/items/Wand.png";
+
 // Events
 export const AVATAR_ATTACK_INTERVAL = 2000;
 export const ENEMY_APPEAR_INTERVAL = 3000;

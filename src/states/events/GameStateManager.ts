@@ -15,6 +15,9 @@ import {
 } from "./GameEvent";
 import { Background } from "../../entity/Background";
 import { tilingsStateManager } from "../TilingsStateManager";
+import SkillSlot from "../../entity/SkillSlot";
+
+const SKILL_SLOT_KEYS = "1234567890";
 
 export class GameEventManager {
   private static instance: GameEventManager;
@@ -56,14 +59,17 @@ export class GameEventManager {
         const key = keyDownEvent.event.key;
         if (key === "m" || key === "M") {
           await this.handleToggleMenu();
+          return;
         }
 
         if (key === "d" || key === "D") {
           await this.handleToggleDebugTool();
+          return;
         }
 
         if (key in avatarKeys) {
           await this.handleAvatarMoveKeyDownEvent(keyDownEvent.event);
+          return;
         }
 
         if (key === "p" || key === "P") {
@@ -72,6 +78,14 @@ export class GameEventManager {
           const playgroundLayer = await PlaygroundLayer.genInstance();
           mainLayer.layer.visible = !globalState.isPlaygroundActive;
           playgroundLayer.layer.visible = globalState.isPlaygroundActive;
+          return;
+        }
+
+        if (SKILL_SLOT_KEYS.includes(key)) {
+          const skillSlot = await SkillSlot.genInstance();
+          const skillIndex = parseInt(key) - 1;
+          skillSlot.triggerSkill(skillIndex);
+          return;
         }
         break;
       }
