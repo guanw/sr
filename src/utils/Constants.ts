@@ -24,7 +24,7 @@ export const PILLAR_MIDDLE_TILING_URL =
   "https://guanw.github.io/sr_assets/environment/pillar/2.png";
 export const PILLAR_BOTTOM_TILING_URL =
   "https://guanw.github.io/sr_assets/environment/pillar/3.png";
-export const SAND_TILING_COUNT = 1000;
+export const SAND_TILING_COUNT = 100;
 export const PILLAR_TILING_COUNT = 100;
 export const TILING_SIZE = 16;
 export const TILING_LAYER = 1;
