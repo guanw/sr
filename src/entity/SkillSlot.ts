@@ -80,7 +80,7 @@ export default class SkillSlot {
   }
 
   public triggerSkill(index: number) {
-    if (index >= SKILL_LENGTH) {
+    if (index >= SKILL_LENGTH || index < 0) {
       return;
     }
     const skill = this.skills[index];

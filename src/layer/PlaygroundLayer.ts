@@ -1,9 +1,9 @@
 import * as PIXI from "pixi.js";
 import { Bullet } from "../entity/Attacks/Bullet";
 import { Wind } from "../entity/Attacks/Wind";
-import { ATTACK_AUDIO, GAME_WINDOW_SIZE } from "../utils/Constants";
+import { ATTACK_AUDIO_KEY, GAME_WINDOW_SIZE } from "../utils/Constants";
 import { ENEMY_ASSET, ResourceLoader } from "../ResourceLoader";
-import { loadSound, playSound } from "../audio/Audio";
+import { playSound } from "../audio/Audio";
 
 const FRAME_SIZE = 32;
 const NUMBER_OF_FRAMES = 6;
@@ -24,17 +24,12 @@ export class PlaygroundLayer {
 
       window.addEventListener("keypress", async (e: KeyboardEvent) => {
         if (e.key === "0") {
-          await PlaygroundLayer.genTestSound();
+          playSound(ATTACK_AUDIO_KEY);
         }
       });
     }
 
     return PlaygroundLayer.instance;
-  }
-
-  private static async genTestSound() {
-    await loadSound(ATTACK_AUDIO, "attack");
-    playSound("attack");
   }
 
   private static async createAnimatedSlime() {

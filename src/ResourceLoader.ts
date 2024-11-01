@@ -12,8 +12,11 @@ import {
   POTION_URL,
   RANDOM_TILING_URL,
   WIND_URL,
+  ATTACK_AUDIO,
+  ATTACK_AUDIO_KEY,
 } from "./utils/Constants";
 import { TilingsSerialization } from "./layer/MainLayer";
+import { loadSound } from "./audio/Audio";
 
 export const ENEMY_ASSET = "enemy";
 export const AVATAR_ASSET = "avatar";
@@ -50,9 +53,9 @@ export interface AssetsResponse {
 
 export class ResourceLoader {
   private static instance: ResourceLoader;
-  private loader = new PIXI.Loader();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private resources: Record<string, any> | undefined;
+  private soundBuffers: { [key: string]: AudioBuffer } = {};
 
   public static async genInstance(
     assetsResponse: AssetsResponse | null = null
@@ -60,72 +63,81 @@ export class ResourceLoader {
     if (!ResourceLoader.instance) {
       ResourceLoader.instance = new ResourceLoader();
       await LoadingView.genInstance();
-      PIXI.Assets.add({
-        alias: ENEMY_ASSET,
-        src: assetsResponse?.enemy_url ?? ENEMY_URL,
-      });
-      PIXI.Assets.add({
-        alias: AVATAR_ASSET,
-        src: assetsResponse?.avatar_url ?? AVATAR_URL,
-      });
-      PIXI.Assets.add({
-        alias: BACKGROUND_ASSET,
-        src: assetsResponse?.background_tile_url ?? BASE_TILING_URL,
-      });
-      PIXI.Assets.add({
-        alias: WIND_ASSET,
-        src: assetsResponse?.wind_url ?? WIND_URL,
-      });
-      PIXI.Assets.add({
-        alias: BOMB_ASSET,
-        src: assetsResponse?.bomb_url ?? BOMB_URL,
-      });
-      PIXI.Assets.add({
-        alias: POTION_ASSET,
-        src: assetsResponse?.potion_url ?? POTION_URL,
-      });
-      PIXI.Assets.add({
-        alias: BASE_TILING_ASSET,
-        src: assetsResponse?.base_tiling_url ?? BASE_TILING_URL,
-      });
-      PIXI.Assets.add({
-        alias: RANDOM_TILING_ASSET,
-        src: assetsResponse?.random_tiling_url ?? RANDOM_TILING_URL,
-      });
-      PIXI.Assets.add({
-        alias: PILLAR_TOP_TILING_ASSET,
-        src: assetsResponse?.pillar_top_tiling_url ?? PILLAR_TOP_TILING_URL,
-      });
-      PIXI.Assets.add({
-        alias: PILLAR_MIDDLE_TILING_ASSET,
-        src:
-          assetsResponse?.pillar_middle_tiling_url ?? PILLAR_MIDDLE_TILING_URL,
-      });
-      PIXI.Assets.add({
-        alias: PILLAR_BOTTOM_TILING_ASSET,
-        src:
-          assetsResponse?.pillar_bottom_tiling_url ?? PILLAR_BOTTOM_TILING_URL,
-      });
-      PIXI.Assets.add({
-        alias: SKILL_SLOT_MAGIC_ASSET,
-        src: assetsResponse?.skill_slot_magic ?? SKILL_SLOT_MAGIC,
-      });
-
-      ResourceLoader.instance.resources = await PIXI.Assets.load([
-        ENEMY_ASSET,
-        AVATAR_ASSET,
-        BACKGROUND_ASSET,
-        WIND_ASSET,
-        BOMB_ASSET,
-        BASE_TILING_ASSET,
-        RANDOM_TILING_ASSET,
-        PILLAR_TOP_TILING_ASSET,
-        PILLAR_MIDDLE_TILING_ASSET,
-        PILLAR_BOTTOM_TILING_ASSET,
-        SKILL_SLOT_MAGIC_ASSET,
-      ]);
+      await ResourceLoader.genLoadImageResources(assetsResponse);
+      await ResourceLoader.genLoadAudioResources();
     }
     return ResourceLoader.instance;
+  }
+
+  private static async genLoadAudioResources() {
+    await loadSound(ATTACK_AUDIO, ATTACK_AUDIO_KEY);
+  }
+
+  private static async genLoadImageResources(
+    assetsResponse: AssetsResponse | null = null
+  ) {
+    PIXI.Assets.add({
+      alias: ENEMY_ASSET,
+      src: assetsResponse?.enemy_url ?? ENEMY_URL,
+    });
+    PIXI.Assets.add({
+      alias: AVATAR_ASSET,
+      src: assetsResponse?.avatar_url ?? AVATAR_URL,
+    });
+    PIXI.Assets.add({
+      alias: BACKGROUND_ASSET,
+      src: assetsResponse?.background_tile_url ?? BASE_TILING_URL,
+    });
+    PIXI.Assets.add({
+      alias: WIND_ASSET,
+      src: assetsResponse?.wind_url ?? WIND_URL,
+    });
+    PIXI.Assets.add({
+      alias: BOMB_ASSET,
+      src: assetsResponse?.bomb_url ?? BOMB_URL,
+    });
+    PIXI.Assets.add({
+      alias: POTION_ASSET,
+      src: assetsResponse?.potion_url ?? POTION_URL,
+    });
+    PIXI.Assets.add({
+      alias: BASE_TILING_ASSET,
+      src: assetsResponse?.base_tiling_url ?? BASE_TILING_URL,
+    });
+    PIXI.Assets.add({
+      alias: RANDOM_TILING_ASSET,
+      src: assetsResponse?.random_tiling_url ?? RANDOM_TILING_URL,
+    });
+    PIXI.Assets.add({
+      alias: PILLAR_TOP_TILING_ASSET,
+      src: assetsResponse?.pillar_top_tiling_url ?? PILLAR_TOP_TILING_URL,
+    });
+    PIXI.Assets.add({
+      alias: PILLAR_MIDDLE_TILING_ASSET,
+      src: assetsResponse?.pillar_middle_tiling_url ?? PILLAR_MIDDLE_TILING_URL,
+    });
+    PIXI.Assets.add({
+      alias: PILLAR_BOTTOM_TILING_ASSET,
+      src: assetsResponse?.pillar_bottom_tiling_url ?? PILLAR_BOTTOM_TILING_URL,
+    });
+    PIXI.Assets.add({
+      alias: SKILL_SLOT_MAGIC_ASSET,
+      src: assetsResponse?.skill_slot_magic ?? SKILL_SLOT_MAGIC,
+    });
+
+    ResourceLoader.instance.resources = await PIXI.Assets.load([
+      ENEMY_ASSET,
+      AVATAR_ASSET,
+      BACKGROUND_ASSET,
+      WIND_ASSET,
+      BOMB_ASSET,
+      BASE_TILING_ASSET,
+      RANDOM_TILING_ASSET,
+      PILLAR_TOP_TILING_ASSET,
+      PILLAR_MIDDLE_TILING_ASSET,
+      PILLAR_BOTTOM_TILING_ASSET,
+      SKILL_SLOT_MAGIC_ASSET,
+    ]);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
