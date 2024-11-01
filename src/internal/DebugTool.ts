@@ -9,13 +9,10 @@ import { tilingsStateManager } from "../states/TilingsStateManager";
 export class DebugTool {
   private static instance: DebugTool;
   public container: PIXI.Container;
+
   private avatarText: PIXI.Text;
 
-  // avatar bound box
-  private avatarContainer = new PIXI.Container();
   private avatarBoundingBox!: PIXI.Graphics;
-
-  // tiling bound box
   private tilingBoundingBoxes: { [key: string]: PIXI.Graphics } = {};
 
   // TODO P1
@@ -49,19 +46,19 @@ export class DebugTool {
     if (this.container.visible) {
       await this.genRenderBoundingBox(mainLayer);
     } else {
-      this.hideBoundingBox(mainLayer);
+      this.hideBoundingBox();
     }
   }
 
   private async genRenderBoundingBox(mainLayer: MainLayer) {
-    // add bounding box for avatar
-    this.avatarBoundingBox = this.createBoundingBox(this.avatarContainer);
-    mainLayer.layer.addChild(this.avatarContainer);
     const avatar = await Avatar.genInstance();
+    // add bounding box for avatar
+    this.avatarBoundingBox = this.createBoundingBox(avatar.walkingSprite);
     this.updateBoundingBox(this.avatarBoundingBox, avatar.walkingSprite);
+    mainLayer.layer.addChild(this.avatarBoundingBox);
 
-    const tiles = await tilingsStateManager.getTilings();
     // add bounding box for tilings
+    const tiles = await tilingsStateManager.getTilings();
     tiles.forEach((tile, key) => {
       const tilingBoundingBox = this.createBoundingBox(tile.sprite);
       this.tilingBoundingBoxes[key] = tilingBoundingBox;
@@ -69,9 +66,9 @@ export class DebugTool {
     });
   }
 
-  private hideBoundingBox(mainLayer: MainLayer) {
+  private hideBoundingBox() {
     // remove bounding box for avatar
-    mainLayer.layer.removeChild(this.avatarContainer);
+    this.avatarBoundingBox.clear();
 
     // remove bounding box for tilings
     Object.keys(this.tilingBoundingBoxes).forEach((key) => {
@@ -94,7 +91,7 @@ export class DebugTool {
     `;
 
     const tiles = await tilingsStateManager.getTilings();
-    // add bounding box for tilings
+    // update bounding box for tilings
     Object.keys(this.tilingBoundingBoxes).forEach((key) => {
       this.updateBoundingBox(
         this.tilingBoundingBoxes[key],

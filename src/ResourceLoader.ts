@@ -55,7 +55,6 @@ export class ResourceLoader {
   private static instance: ResourceLoader;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private resources: Record<string, any> | undefined;
-  private soundBuffers: { [key: string]: AudioBuffer } = {};
 
   public static async genInstance(
     assetsResponse: AssetsResponse | null = null

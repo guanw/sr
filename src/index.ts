@@ -10,43 +10,10 @@ import { fetchSetupData } from "./utils/SocketClient";
 import { ENABLE_MULTI_PLAYER } from "./utils/Knobs";
 import { tilingsStateManager } from "./states/TilingsStateManager";
 
-async function genInitUI() {
-  const appInstance = await Application.genInstance();
-  let setupResponse: SetupResponse | null = null;
-  if (ENABLE_MULTI_PLAYER) {
-    setupResponse = await fetchSetupData();
-  }
-  const loadingView = await LoadingView.genInstance(appInstance.app.stage);
-  await ResourceLoader.genInstance(setupResponse?.assets);
-
-  await Background.genInstance();
-  const mainLayer = await MainLayer.genInstance();
-  mainLayer.layer.visible = false;
-  const playgroundLayer = await PlaygroundLayer.genInstance();
-  playgroundLayer.layer.visible = false;
-  loadingView.hide();
-
-  appInstance.app.stage.addChild(mainLayer.layer);
-  appInstance.app.stage.addChild(playgroundLayer.layer);
-  if (ENABLE_MULTI_PLAYER) {
-    await tilingsStateManager.genInitializeOnlineTilings(
-      setupResponse?.tilings
-    );
-  } else {
-    await tilingsStateManager.genInitializeOfflineTilings();
-  }
-
-  return {
-    appInstance,
-    mainLayer,
-    playgroundLayer,
-  };
-}
-
 (async () => {
   const gameEventManager = GameEventManager.getInstance();
-  const { appInstance, mainLayer, playgroundLayer } = await genInitUI();
-  initEventsListener();
+  const { appInstance, mainLayer, playgroundLayer } =
+    await genSetupGameEnvironment();
 
   // Game loop
   async function gameLoop() {
@@ -75,3 +42,48 @@ async function genInitUI() {
   // Start the game loop
   gameLoop();
 })();
+
+async function genSetupGameEnvironment() {
+  // set up app instance and render loading view
+  const appInstance = await Application.genInstance();
+  const loadingView = await LoadingView.genInstance(appInstance.app.stage);
+
+  // fetch setup data from server if possible
+  let setupResponse: SetupResponse | null = null;
+  if (ENABLE_MULTI_PLAYER) {
+    setupResponse = await fetchSetupData();
+  }
+
+  // initially load assets
+  await ResourceLoader.genInstance(setupResponse?.assets);
+
+  // set up game layer + playground layer
+  await Background.genInstance();
+  const mainLayer = await MainLayer.genInstance();
+  const playgroundLayer = await PlaygroundLayer.genInstance();
+  mainLayer.layer.visible = false;
+  playgroundLayer.layer.visible = false;
+  appInstance.app.stage.addChild(mainLayer.layer);
+  appInstance.app.stage.addChild(playgroundLayer.layer);
+
+  // set up tiles
+  if (ENABLE_MULTI_PLAYER) {
+    await tilingsStateManager.genInitializeOnlineTilings(
+      setupResponse?.tilings
+    );
+  } else {
+    await tilingsStateManager.genInitializeOfflineTilings();
+  }
+
+  // init event listener for input
+  initEventsListener();
+
+  // hide loading view
+  loadingView.hide();
+
+  return {
+    appInstance,
+    mainLayer,
+    playgroundLayer,
+  };
+}
