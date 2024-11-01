@@ -66,6 +66,7 @@ export const WIND_FRAME_SIZE = 64;
 export const WIND_NUM_OF_FRAME = 16;
 export const WIND_SPEED = 5;
 export const WIND_ANIMATION_SPEED = 0.1;
+export const ATTACK_AUDIO = "https://guanw.github.io/sr_assets/audio/sword.mp3";
 
 // DebugTool
 export const DEBUG_BOUND_COLOR = 0x3d85c6;
