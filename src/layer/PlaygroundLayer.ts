@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Bullet } from "../entity/Attacks/Bullet";
 import { Wind } from "../entity/Attacks/Wind";
-import { GAME_SIZE } from "../utils/Constants";
+import { GAME_WINDOW_SIZE } from "../utils/Constants";
 import { ENEMY_ASSET, ResourceLoader } from "../ResourceLoader";
 
 const FRAME_SIZE = 32;
@@ -44,8 +44,8 @@ export class PlaygroundLayer {
     // Set animation speed (frames per second)
     animatedSlime.animationSpeed = 0.1;
     animatedSlime.play();
-    animatedSlime.x = GAME_SIZE / 2;
-    animatedSlime.y = GAME_SIZE / 2;
+    animatedSlime.x = GAME_WINDOW_SIZE / 2;
+    animatedSlime.y = GAME_WINDOW_SIZE / 2;
 
     document.addEventListener("click", async (event) => {
       const targetX = event.clientX;
@@ -57,8 +57,8 @@ export class PlaygroundLayer {
 
   private static async attack(targetX: number, targetY: number) {
     const wind = await Wind.create(
-      GAME_SIZE / 2,
-      GAME_SIZE / 2,
+      GAME_WINDOW_SIZE / 2,
+      GAME_WINDOW_SIZE / 2,
       targetX,
       targetY
     );
@@ -66,8 +66,8 @@ export class PlaygroundLayer {
     PlaygroundLayer.instance.layer.addChild(wind.instance);
 
     const bullet = new Bullet(
-      GAME_SIZE / 2 + 16,
-      GAME_SIZE / 2 + 16,
+      GAME_WINDOW_SIZE / 2 + 16,
+      GAME_WINDOW_SIZE / 2 + 16,
       targetX,
       targetY
     );

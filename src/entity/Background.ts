@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Entity } from "./Entity";
-import { GAME_SIZE, BACKGROUND_LAYER } from "../utils/Constants";
+import { GAME_WINDOW_SIZE, BACKGROUND_LAYER } from "../utils/Constants";
 import { MainLayer } from "../layer/MainLayer";
 import { BACKGROUND_ASSET, ResourceLoader } from "../ResourceLoader";
 
@@ -11,8 +11,8 @@ export class Background extends Entity {
     super();
     this.background = new PIXI.TilingSprite({
       texture: texture,
-      width: GAME_SIZE,
-      height: GAME_SIZE,
+      width: GAME_WINDOW_SIZE,
+      height: GAME_WINDOW_SIZE,
     });
 
     layer.addChildAt(this.background, BACKGROUND_LAYER);

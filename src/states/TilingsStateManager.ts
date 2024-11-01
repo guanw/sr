@@ -2,10 +2,11 @@ import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from "uuid";
 import { Tile } from "../entity/Tiles/Tile";
 import {
-  GAME_SIZE,
+  GAME_WINDOW_SIZE,
   PILLAR_TILING_COUNT,
   SAND_TILING_COUNT,
   TILING_SIZE,
+  WORLD_SIZE_EXPANSION,
 } from "../utils/Constants";
 import { MainLayer, TilingsSerialization } from "../layer/MainLayer";
 import { Direction, Helper } from "../utils/Helper";
@@ -78,7 +79,7 @@ class TilingsStateManager {
   }
 
   public async genInitializeOfflineTilings() {
-    const worldSize = GAME_SIZE * 15;
+    const worldSize = GAME_WINDOW_SIZE * WORLD_SIZE_EXPANSION;
     const textures = await TilingsStateManager.genLoadTiling();
     const mainLayer = await MainLayer.genInstance();
 

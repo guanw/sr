@@ -11,7 +11,7 @@ import {
   AVATAR_FRAME_SIZE,
   AVATAR_NUM_OF_FRAME,
   AVATAR_ANIMATION_SPEED,
-  GAME_SIZE,
+  GAME_WINDOW_SIZE,
   AVATAR_SIZE,
 } from "../utils/Constants";
 import { GameOverEvent } from "../states/events/GameEvent";
@@ -74,8 +74,8 @@ export class Avatar extends Entity {
     sprite.height = AVATAR_SIZE;
     sprite.animationSpeed = AVATAR_ANIMATION_SPEED;
     sprite.play();
-    sprite.x = GAME_SIZE / 2;
-    sprite.y = GAME_SIZE / 2;
+    sprite.x = GAME_WINDOW_SIZE / 2;
+    sprite.y = GAME_WINDOW_SIZE / 2;
     return sprite;
   }
 

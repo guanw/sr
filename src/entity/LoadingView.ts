@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import {
-  GAME_SIZE,
+  GAME_WINDOW_SIZE,
   LOADING_VIEW_FILL_COLOR,
   LOADING_VIEW_FONT_NAME,
   LOADING_VIEW_FONT_SIZE,
@@ -36,15 +36,15 @@ export class LoadingView {
       fill: LOADING_VIEW_FILL_COLOR,
     });
     this.loadingText.anchor.set(0.5);
-    this.loadingText.x = GAME_SIZE / 2;
-    this.loadingText.y = GAME_SIZE / 2 - 30;
+    this.loadingText.x = GAME_WINDOW_SIZE / 2;
+    this.loadingText.y = GAME_WINDOW_SIZE / 2 - 30;
 
     this.loadingBar = new PIXI.Graphics();
     this.loadingBar.beginFill(0xffffff);
     this.loadingBar.drawRect(0, 0, 300, 20);
     this.loadingBar.endFill();
-    this.loadingBar.x = GAME_SIZE / 2 - 150;
-    this.loadingBar.y = GAME_SIZE / 2;
+    this.loadingBar.x = GAME_WINDOW_SIZE / 2 - 150;
+    this.loadingBar.y = GAME_WINDOW_SIZE / 2;
 
     this.stage.addChild(this.loadingText);
     this.stage.addChild(this.loadingBar);

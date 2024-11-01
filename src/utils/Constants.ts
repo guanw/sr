@@ -1,8 +1,11 @@
 // Application
-export const GAME_SIZE = 800;
+export const GAME_WINDOW_SIZE = 800;
+export const WORLD_SIZE_EXPANSION = 7;
 export const FALLBACK_BACKGROUND_COLOR = 0x1099bb;
-export const AVATAR_LOCATION = { x: GAME_SIZE / 2, y: GAME_SIZE / 2 };
-export const WORLD_SIZE = GAME_SIZE * 10;
+export const AVATAR_LOCATION = {
+  x: GAME_WINDOW_SIZE / 2,
+  y: GAME_WINDOW_SIZE / 2,
+};
 
 // Loading view
 export const LOADING_VIEW_FONT_NAME = "Arial";

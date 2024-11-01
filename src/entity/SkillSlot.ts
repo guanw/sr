@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { GAME_SIZE } from "../utils/Constants";
+import { GAME_WINDOW_SIZE } from "../utils/Constants";
 import { ResourceLoader, SKILL_SLOT_MAGIC_ASSET } from "../ResourceLoader";
 import { Logger } from "../utils/Logger";
 
@@ -21,8 +21,8 @@ export default class SkillSlot {
 
   constructor(layer: PIXI.Container) {
     this.container = new PIXI.Container();
-    this.container.x = GAME_SIZE / 2 - 100;
-    this.container.y = (GAME_SIZE * 3.0) / 4 + 50;
+    this.container.x = GAME_WINDOW_SIZE / 2 - 100;
+    this.container.y = (GAME_WINDOW_SIZE * 3.0) / 4 + 50;
 
     layer.addChild(this.container);
   }

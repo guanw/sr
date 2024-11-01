@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import { Avatar, avatarMetaData } from "../entity/Avatar";
 import { globalState } from "../states/events";
 import { MainLayer } from "../layer/MainLayer";
-import { DEBUG_BOUND_COLOR, GAME_SIZE } from "../utils/Constants";
+import { DEBUG_BOUND_COLOR, GAME_WINDOW_SIZE } from "../utils/Constants";
 import Application from "../entity/Application";
 import { tilingsStateManager } from "../states/TilingsStateManager";
 
@@ -35,8 +35,8 @@ export class DebugTool {
       const tool = new DebugTool();
       mainLayer.layer.addChild(tool.container);
       this.instance = tool;
-      this.instance.container.x = GAME_SIZE / 2;
-      this.instance.container.y = GAME_SIZE / 2;
+      this.instance.container.x = GAME_WINDOW_SIZE / 2;
+      this.instance.container.y = GAME_WINDOW_SIZE / 2;
     }
     return this.instance;
   }

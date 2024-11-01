@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { MainLayer } from "../../layer/MainLayer";
 import { Entity } from "../Entity";
-import { GAME_SIZE, AVATAR_LOCATION } from "../../utils/Constants";
+import { GAME_WINDOW_SIZE, AVATAR_LOCATION } from "../../utils/Constants";
 
 export abstract class Item extends Entity {
   sprite!: PIXI.Sprite;
@@ -18,8 +18,8 @@ export abstract class Item extends Entity {
   }
   placeItem(centerX: number, centerY: number): [number, number] {
     return [
-      centerX - AVATAR_LOCATION.x + Math.random() * GAME_SIZE,
-      centerY - AVATAR_LOCATION.y + Math.random() * GAME_SIZE,
+      centerX - AVATAR_LOCATION.x + Math.random() * GAME_WINDOW_SIZE,
+      centerY - AVATAR_LOCATION.y + Math.random() * GAME_WINDOW_SIZE,
     ];
   }
 
