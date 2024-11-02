@@ -8,7 +8,6 @@ import {
   GenerateNewEnemyEvent,
   GenerateNewItemEvent,
   MoveAvatarEvent,
-  RefreshDebugToolEvent,
   UpdateAttacksEvent,
 } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
@@ -200,8 +199,6 @@ export class MainLayer {
     }
 
     gameEventManager.emit(new UpdateAttacksEvent());
-
-    gameEventManager.emit(new RefreshDebugToolEvent());
 
     timedEventsManager.update();
   }

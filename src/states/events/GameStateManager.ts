@@ -122,10 +122,6 @@ export class GameEventManager {
         await this.handleUpdateAttacks();
         break;
       }
-      case "REFRESH_DEBUG_TOOL": {
-        await this.handleRefreshDebugTool();
-        break;
-      }
       case "AVATAR_INITIATE_ATTACK": {
         const attackEvent = event as AvatarInitiateAttackEvent;
         await this.handleAvatarInitiateAttack(attackEvent.event);
@@ -163,13 +159,6 @@ export class GameEventManager {
   private async handleToggleDebugTool() {
     const debugTool = await DebugTool.genInstance();
     await debugTool.toggle();
-  }
-  private async handleRefreshDebugTool() {
-    if (!globalState.isDebugToolVisible) {
-      return;
-    }
-    const debugTool = await DebugTool.genInstance();
-    await debugTool.genUpdate();
   }
 
   private async handleAvatarMoveKeyUpEvent(e: KeyboardEvent) {

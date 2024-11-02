@@ -65,10 +65,6 @@ export class UpdateAttacksEvent implements GameEvent {
   type: EventType = "UPDATE_ATTACKS";
 }
 
-export class RefreshDebugToolEvent implements GameEvent {
-  type: EventType = "REFRESH_DEBUG_TOOL";
-}
-
 export class AvatarInitiateAttackEvent implements GameEvent {
   type: EventType = "AVATAR_INITIATE_ATTACK";
   event: MouseEvent;

@@ -5,12 +5,12 @@ import { MainLayer } from "../layer/MainLayer";
 import { DEBUG_BOUND_COLOR, GAME_WINDOW_SIZE } from "../utils/Constants";
 import Application from "../entity/Application";
 import { tilingsStateManager } from "../states/TilingsStateManager";
+import { Plugin } from "../PluginManager";
 
-export class DebugTool {
+export class DebugTool extends Plugin {
   private static instance: DebugTool;
-  public container: PIXI.Container;
-
-  private avatarText: PIXI.Text;
+  public container!: PIXI.Container;
+  private avatarText!: PIXI.Text;
 
   private avatarBoundingBox!: PIXI.Graphics;
   private tilingBoundingBoxes: { [key: string]: PIXI.Graphics } = {};
@@ -19,23 +19,48 @@ export class DebugTool {
   // item bound box
   // enemy bound box
 
-  constructor() {
+  static async genInstance() {
+    if (!this.instance) {
+      const tool = new DebugTool();
+      this.instance = tool;
+    }
+    return this.instance;
+  }
+
+  async genInitialize(): Promise<void> {
     this.container = new PIXI.Container();
     this.avatarText = new PIXI.Text("", { fill: "white" });
     this.container.addChild(this.avatarText);
     this.container.visible = globalState.isDebugToolVisible;
+
+    const mainLayer = await MainLayer.genInstance();
+    mainLayer.layer.addChild(this.container);
+    this.container.x = GAME_WINDOW_SIZE / 2;
+    this.container.y = GAME_WINDOW_SIZE / 2;
   }
 
-  static async genInstance() {
-    if (!this.instance) {
-      const mainLayer = await MainLayer.genInstance();
-      const tool = new DebugTool();
-      mainLayer.layer.addChild(tool.container);
-      this.instance = tool;
-      this.instance.container.x = GAME_WINDOW_SIZE / 2;
-      this.instance.container.y = GAME_WINDOW_SIZE / 2;
+  async genUpdate(): Promise<void> {
+    if (!globalState.isDebugToolVisible) {
+      return;
     }
-    return this.instance;
+    const avatar = await Avatar.genInstance();
+    const app = await Application.genInstance();
+    const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
+    this.avatarText.text = `
+      Absoluate: (${avatar.getX()}, ${avatar.getY()})
+      Stage Position: (${app.app.stage.x}, ${app.app.stage.y})
+      HP: ${hp}
+      killed enemies: ${avatarMetaData.scoring_sytem.value}
+    `;
+
+    const tiles = await tilingsStateManager.getTilings();
+    // update bounding box for tilings
+    Object.keys(this.tilingBoundingBoxes).forEach((key) => {
+      this.updateBoundingBox(
+        this.tilingBoundingBoxes[key],
+        tiles.get(key)?.sprite
+      );
+    });
   }
 
   public async toggle() {
@@ -73,30 +98,6 @@ export class DebugTool {
     // remove bounding box for tilings
     Object.keys(this.tilingBoundingBoxes).forEach((key) => {
       this.tilingBoundingBoxes[key].clear();
-    });
-  }
-
-  public async genUpdate() {
-    if (!globalState.isDebugToolVisible) {
-      return;
-    }
-    const avatar = await Avatar.genInstance();
-    const app = await Application.genInstance();
-    const hp = avatar.getHealth_DEBUG_TOOL_ONLY();
-    this.avatarText.text = `
-      Absoluate: (${avatar.getX()}, ${avatar.getY()})
-      Stage Position: (${app.app.stage.x}, ${app.app.stage.y})
-      HP: ${hp}
-      killed enemies: ${avatarMetaData.scoring_sytem.value}
-    `;
-
-    const tiles = await tilingsStateManager.getTilings();
-    // update bounding box for tilings
-    Object.keys(this.tilingBoundingBoxes).forEach((key) => {
-      this.updateBoundingBox(
-        this.tilingBoundingBoxes[key],
-        tiles.get(key)?.sprite
-      );
     });
   }
 

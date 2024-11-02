@@ -9,6 +9,8 @@ import { Background } from "./entity/Background";
 import { fetchSetupData } from "./utils/SocketClient";
 import { ENABLE_MULTI_PLAYER } from "./utils/Knobs";
 import { tilingsStateManager } from "./states/TilingsStateManager";
+import pluginManager from "./PluginManager";
+import { DebugTool } from "./internal/DebugTool";
 
 (async () => {
   const gameEventManager = GameEventManager.getInstance();
@@ -31,6 +33,8 @@ import { tilingsStateManager } from "./states/TilingsStateManager";
     } else {
       await playgroundLayer.update();
     }
+
+    await pluginManager.genUpdateAll();
 
     // Render the stage
     appInstance.app.renderer.render(appInstance.app.stage);
@@ -77,6 +81,11 @@ async function genSetupGameEnvironment() {
 
   // init event listener for input
   initEventsListener();
+
+  // register and initialize plugins that's not dependent on multi-player states
+  const debugTool = await DebugTool.genInstance();
+  pluginManager.registerPlugin(debugTool);
+  await pluginManager.genInitializeAll();
 
   // hide loading view
   loadingView.hide();
