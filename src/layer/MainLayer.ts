@@ -179,9 +179,6 @@ export class MainLayer {
       return;
     }
 
-    const skillSlot = await SkillSlot.genInstance();
-    skillSlot.updateCooldowns();
-
     if (!ENABLE_MULTI_PLAYER) {
       gameEventManager.emit(new EnemiesMoveTowardsAvatarEvent());
     } else {

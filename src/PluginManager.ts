@@ -1,16 +1,8 @@
 // plugin will be functionality that's not depended on multi-player states
-export abstract class Plugin {
-  constructor() {
-    if (new.target === Plugin) {
-      throw new Error(
-        "Plugin is an abstract class and cannot be instantiated directly."
-      );
-    }
-  }
+export interface Plugin {
+  genInitialize(): Promise<void>;
 
-  abstract genInitialize(): Promise<void>;
-
-  abstract genUpdate(): Promise<void>;
+  genUpdate(): Promise<void>;
 }
 
 class PluginManager {

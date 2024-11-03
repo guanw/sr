@@ -2,6 +2,8 @@ import * as PIXI from "pixi.js";
 import { GAME_WINDOW_SIZE } from "../utils/Constants";
 import { ResourceLoader, SKILL_SLOT_MAGIC_ASSET } from "../ResourceLoader";
 import { Logger } from "../utils/Logger";
+import { MainLayer } from "../layer/MainLayer";
+import { Plugin } from "../PluginManager";
 
 const SKILL_COOLDOWN_TIME = 3000; // Cooldown time in milliseconds
 const RADIUS = 35;
@@ -14,29 +16,59 @@ interface Skill {
   cooldownTime: number; // Cooldown duration
 }
 
-export default class SkillSlot {
+export default class SkillSlot implements Plugin {
   private static instance: SkillSlot;
-  private container: PIXI.Container;
+  private container!: PIXI.Container;
   private skills: Skill[] = [];
 
-  constructor(layer: PIXI.Container) {
+  async genInitialize(): Promise<void> {
+    const mainLayer = await MainLayer.genInstance();
     this.container = new PIXI.Container();
     this.container.x = GAME_WINDOW_SIZE / 2 - 100;
     this.container.y = (GAME_WINDOW_SIZE * 3.0) / 4 + 50;
+    mainLayer.layer.addChild(this.container);
 
-    layer.addChild(this.container);
+    // TODO use different icon to render skill slots
+    await SkillSlot.instance.genAddSkill();
+    await SkillSlot.instance.genAddSkill();
+    await SkillSlot.instance.genAddSkill();
+    await SkillSlot.instance.genAddSkill();
+  }
+
+  async genUpdate(): Promise<void> {
+    const currentTime = Date.now();
+
+    this.skills.forEach((skill) => {
+      const timeElapsed = currentTime - skill.lastUsed;
+      if (timeElapsed < skill.cooldownTime) {
+        const cooldownProgress = timeElapsed / skill.cooldownTime;
+        const angle = Math.PI * 2 * (1 - cooldownProgress);
+
+        // Draw the circular cooldown effect
+        skill.cooldownOverlay.clear();
+        skill.cooldownOverlay.beginFill(0x000000, 0.5);
+        skill.cooldownOverlay.moveTo(0, 0); // Center point of the arc
+        skill.cooldownOverlay.arc(
+          0,
+          0,
+          25,
+          -Math.PI / 2,
+          angle - Math.PI / 2,
+          true
+        );
+        skill.cooldownOverlay.lineTo(0, 0);
+        skill.cooldownOverlay.endFill();
+      } else {
+        skill.cooldownOverlay.clear(); // Hide cooldown overlay
+      }
+    });
   }
 
   public static async genInstance(
     stage: PIXI.Container | null = null
   ): Promise<SkillSlot> {
     if (!SkillSlot.instance && stage != null) {
-      SkillSlot.instance = new SkillSlot(stage);
-      // TODO use different icon to render skill slots
-      await SkillSlot.instance.genAddSkill();
-      await SkillSlot.instance.genAddSkill();
-      await SkillSlot.instance.genAddSkill();
-      await SkillSlot.instance.genAddSkill();
+      SkillSlot.instance = new SkillSlot();
     }
     return SkillSlot.instance;
   }
@@ -93,34 +125,5 @@ export default class SkillSlot {
     } else {
       logger.log(`Skill ${index + 1} is on cooldown`);
     }
-  }
-
-  public updateCooldowns() {
-    const currentTime = Date.now();
-
-    this.skills.forEach((skill) => {
-      const timeElapsed = currentTime - skill.lastUsed;
-      if (timeElapsed < skill.cooldownTime) {
-        const cooldownProgress = timeElapsed / skill.cooldownTime;
-        const angle = Math.PI * 2 * (1 - cooldownProgress);
-
-        // Draw the circular cooldown effect
-        skill.cooldownOverlay.clear();
-        skill.cooldownOverlay.beginFill(0x000000, 0.5);
-        skill.cooldownOverlay.moveTo(0, 0); // Center point of the arc
-        skill.cooldownOverlay.arc(
-          0,
-          0,
-          25,
-          -Math.PI / 2,
-          angle - Math.PI / 2,
-          true
-        );
-        skill.cooldownOverlay.lineTo(0, 0);
-        skill.cooldownOverlay.endFill();
-      } else {
-        skill.cooldownOverlay.clear(); // Hide cooldown overlay
-      }
-    });
   }
 }

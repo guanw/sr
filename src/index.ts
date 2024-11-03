@@ -11,6 +11,7 @@ import { ENABLE_MULTI_PLAYER } from "./utils/Knobs";
 import { tilingsStateManager } from "./states/TilingsStateManager";
 import pluginManager from "./PluginManager";
 import { DebugTool } from "./internal/DebugTool";
+import SkillSlot from "./entity/SkillSlot";
 
 (async () => {
   const gameEventManager = GameEventManager.getInstance();
@@ -84,7 +85,9 @@ async function genSetupGameEnvironment() {
 
   // register and initialize plugins that's not dependent on multi-player states
   const debugTool = await DebugTool.genInstance();
+  const skillSlot = await SkillSlot.genInstance();
   pluginManager.registerPlugin(debugTool);
+  pluginManager.registerPlugin(skillSlot);
   await pluginManager.genInitializeAll();
 
   // hide loading view

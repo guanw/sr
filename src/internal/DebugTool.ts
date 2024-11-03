@@ -7,7 +7,7 @@ import Application from "../entity/Application";
 import { tilingsStateManager } from "../states/TilingsStateManager";
 import { Plugin } from "../PluginManager";
 
-export class DebugTool extends Plugin {
+export class DebugTool implements Plugin {
   private static instance: DebugTool;
   public container!: PIXI.Container;
   private avatarText!: PIXI.Text;
@@ -21,8 +21,7 @@ export class DebugTool extends Plugin {
 
   static async genInstance() {
     if (!this.instance) {
-      const tool = new DebugTool();
-      this.instance = tool;
+      this.instance = new DebugTool();
     }
     return this.instance;
   }
