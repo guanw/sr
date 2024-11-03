@@ -32,7 +32,7 @@ export const BACKGROUND_LAYER = 0;
 
 // Avatar
 export const AVATAR_SPEED = 3;
-export const ENEMY_ATTACK_VALUE = 10;
+export const ENEMY_ATTACK_VALUE = 2;
 export const INITIAL_SWORD_SIZE = 50;
 export const SWORD_WIDTH = 5;
 export const MAX_HEALTH = 100;
@@ -75,9 +75,9 @@ export const SKILL_SLOT_MAGIC =
   "https://guanw.github.io/sr_assets/items/Wand.png";
 
 // Events
-export const AVATAR_ATTACK_INTERVAL = 2000;
+export const AVATAR_ATTACK_INTERVAL = 500;
 export const ENEMY_APPEAR_INTERVAL = 3000;
-export const ENEMY_ATTACK_INTERVAL = 500;
+export const ENEMY_ATTACK_INTERVAL = 16;
 export const COLLECT_ITEM_INTERVAL = 10;
 export const ITEM_RANDOM_APPEAR_INTERVAL = 10000;
 

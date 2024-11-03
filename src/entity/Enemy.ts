@@ -23,7 +23,7 @@ class Enemy extends Entity {
   ) {
     super();
 
-    this.attackPower = Math.floor(Math.random() * ENEMY_ATTACK_VALUE) + 1;
+    this.attackPower = Math.ceil(Math.random() * ENEMY_ATTACK_VALUE);
     this.sprite = new PIXI.AnimatedSprite(frames);
     this.sprite.animationSpeed = ENEMY_ANIMATION_SPEED;
     this.sprite.play();
