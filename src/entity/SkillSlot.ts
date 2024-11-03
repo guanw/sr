@@ -1,9 +1,10 @@
 import * as PIXI from "pixi.js";
-import { GAME_WINDOW_SIZE } from "../utils/Constants";
+import { ATTACK_AUDIO_KEY, GAME_WINDOW_SIZE } from "../utils/Constants";
 import { ResourceLoader, SKILL_SLOT_MAGIC_ASSET } from "../ResourceLoader";
 import { Logger } from "../utils/Logger";
 import { MainLayer } from "../layer/MainLayer";
 import { Plugin } from "../PluginManager";
+import { playSound } from "../audio/Audio";
 
 const SKILL_COOLDOWN_TIME = 3000; // Cooldown time in milliseconds
 const RADIUS = 35;
@@ -121,6 +122,7 @@ export default class SkillSlot implements Plugin {
     const logger = Logger.getInstance();
     if (currentTime - skill.lastUsed >= skill.cooldownTime) {
       logger.log(`Triggered skill ${index + 1}`);
+      playSound(ATTACK_AUDIO_KEY);
       skill.lastUsed = currentTime;
     } else {
       logger.log(`Skill ${index + 1} is on cooldown`);

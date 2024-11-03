@@ -50,10 +50,6 @@ export class LoadingView {
     this.stage.addChild(this.loadingBar);
   }
 
-  public update(progress: number) {
-    this.loadingBar.scale.x = progress / 100;
-  }
-
   public async hide() {
     this.stage.removeChild(this.loadingText);
     this.stage.removeChild(this.loadingBar);
