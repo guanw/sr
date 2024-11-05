@@ -1,5 +1,3 @@
-import { AVATAR_SPEED } from "../utils/Constants";
-
 export abstract class Entity {
   public abstract getDisplacement(): number;
   public abstract getX(): number;
@@ -9,20 +7,20 @@ export abstract class Entity {
   public abstract get width(): number;
   public abstract get height(): number;
 
-  public moveLeft(offset = 1): void {
-    this.setDeltaX(-AVATAR_SPEED * offset);
+  public moveLeft(speed: number): void {
+    this.setDeltaX(-speed);
   }
 
-  public moveRight(offset = 1): void {
-    this.setDeltaX(AVATAR_SPEED * offset);
+  public moveRight(speed: number): void {
+    this.setDeltaX(speed);
   }
 
-  public moveDown(offset = 1): void {
-    this.setDeltaY(AVATAR_SPEED * offset);
+  public moveDown(speed: number): void {
+    this.setDeltaY(speed);
   }
 
-  public moveUp(offset = 1): void {
-    this.setDeltaY(-AVATAR_SPEED * offset);
+  public moveUp(speed: number): void {
+    this.setDeltaY(-speed);
   }
 
   // override this for collision detection

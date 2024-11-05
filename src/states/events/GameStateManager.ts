@@ -16,6 +16,7 @@ import {
 import { Background } from "../../entity/Background";
 import { tilingsStateManager } from "../TilingsStateManager";
 import SkillSlot from "../../entity/SkillSlot";
+import { AVATAR_SPEED } from "../../utils/Constants";
 
 const SKILL_SLOT_KEYS = "1234567890";
 
@@ -174,15 +175,18 @@ export class GameEventManager {
   private async handleEnemiesAttackAvatar() {
     const enemies = enemiesStateManager.getEnemies();
     const user: Avatar = await Avatar.genInstance();
-    enemies.forEach(async (_, key) => {
-      const enemy = enemies.get(key);
+    let enemyBumpsAvatar = false;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const [_, enemy] of enemies.entries()) {
       if (enemy === undefined) {
         return;
       }
       if (enemy.isCollidedWith(user)) {
         await user.genCollide(enemy.attackPower);
+        enemyBumpsAvatar = true;
       }
-    });
+    }
+    user.speed = enemyBumpsAvatar ? (AVATAR_SPEED * 2.0) / 3 : AVATAR_SPEED;
   }
 
   private async handleGenerateNewItem() {
@@ -248,71 +252,75 @@ export class GameEventManager {
     }
   }
 
-  private async genMoveUserLeft(moveSpeedOffset = 1) {
+  private async genMoveUserLeft() {
+    const avatar = await Avatar.genInstance();
     const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     const tiles = tilingsStateManager.getTilings();
-    background.moveRight(moveSpeedOffset);
+    background.moveRight(avatar.speed);
     items.forEach((item) => {
-      item.moveRight(moveSpeedOffset);
+      item.moveRight(avatar.speed);
     });
     enemies.forEach((enemy) => {
-      enemy.moveRight(moveSpeedOffset);
+      enemy.moveRight(avatar.speed);
     });
     tiles.forEach((tile) => {
-      tile.moveRight(moveSpeedOffset);
+      tile.moveRight(avatar.speed);
     });
   }
 
-  private async genMoveUserRight(moveSpeedOffset = 1) {
+  private async genMoveUserRight() {
+    const avatar = await Avatar.genInstance();
     const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     const tiles = tilingsStateManager.getTilings();
-    background.moveLeft(moveSpeedOffset);
+    background.moveLeft(avatar.speed);
     items.forEach((item) => {
-      item.moveLeft(moveSpeedOffset);
+      item.moveLeft(avatar.speed);
     });
     enemies.forEach((enemy) => {
-      enemy.moveLeft(moveSpeedOffset);
+      enemy.moveLeft(avatar.speed);
     });
     tiles.forEach((tile) => {
-      tile.moveLeft(moveSpeedOffset);
+      tile.moveLeft(avatar.speed);
     });
   }
 
-  private async genMoveUserUp(moveSpeedOffset = 1) {
+  private async genMoveUserUp() {
+    const avatar = await Avatar.genInstance();
     const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     const tiles = tilingsStateManager.getTilings();
-    background.moveDown(moveSpeedOffset);
+    background.moveDown(avatar.speed);
     items.forEach((item) => {
-      item.moveDown(moveSpeedOffset);
+      item.moveDown(avatar.speed);
     });
     enemies.forEach((enemy) => {
-      enemy.moveDown(moveSpeedOffset);
+      enemy.moveDown(avatar.speed);
     });
     tiles.forEach((tile) => {
-      tile.moveDown(moveSpeedOffset);
+      tile.moveDown(avatar.speed);
     });
   }
 
-  private async genMoveUserDown(moveSpeedOffset = 1) {
+  private async genMoveUserDown() {
+    const avatar = await Avatar.genInstance();
     const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     const tiles = tilingsStateManager.getTilings();
-    background.moveUp(moveSpeedOffset);
+    background.moveUp(avatar.speed);
     items.forEach((item) => {
-      item.moveUp(moveSpeedOffset);
+      item.moveUp(avatar.speed);
     });
     enemies.forEach((enemy) => {
-      enemy.moveUp(moveSpeedOffset);
+      enemy.moveUp(avatar.speed);
     });
     tiles.forEach((tile) => {
-      tile.moveUp(moveSpeedOffset);
+      tile.moveUp(avatar.speed);
     });
   }
 

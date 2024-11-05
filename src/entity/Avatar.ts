@@ -13,12 +13,12 @@ import {
   AVATAR_ANIMATION_SPEED,
   GAME_WINDOW_SIZE,
   AVATAR_SIZE,
+  AVATAR_SPEED,
 } from "../utils/Constants";
 import { GameOverEvent } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
 import { Sword } from "./Attacks/Sword";
 import { AVATAR_ASSET, ResourceLoader } from "../ResourceLoader";
-import avatarsStateManager from "../states/AvatarsStateManager";
 
 export const avatarMetaData = {
   hp_system: {
@@ -36,6 +36,7 @@ export class Avatar extends Entity {
   public attackingSprite: PIXI.AnimatedSprite | undefined;
   private static healthBarContainer = new PIXI.Graphics();
   static healthBar = new PIXI.Graphics();
+  public speed = AVATAR_SPEED;
 
   private constructor(
     isMainAvatar: boolean,

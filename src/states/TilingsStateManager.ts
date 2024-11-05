@@ -74,8 +74,6 @@ class TilingsStateManager {
         }
       }
     });
-
-    console.log("online tiles: ", this.tiles);
   }
 
   public async genInitializeOfflineTilings() {

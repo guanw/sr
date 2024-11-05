@@ -86,6 +86,7 @@ class SocketClient {
 }
 
 async function fetchSetupData() {
+  const logger = Logger.getInstance();
   try {
     const response = await fetch(SERVER_SETUP_URL);
 
@@ -95,12 +96,10 @@ async function fetchSetupData() {
 
     const data: SetupResponse = await response.json();
 
-    // TODO Properly log the data received from the server
-    console.log("Response from /setup:", data);
+    logger.log(`Response from /setup: ${data}`);
     return data;
   } catch (error) {
-    // TODO properly log error
-    console.error("Error fetching /setup data:", error);
+    logger.log(`Error fetching /setup data: ${error}`, "error");
     return null;
   }
 }
