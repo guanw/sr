@@ -4,10 +4,12 @@ import { Wind } from "../entity/Attacks/Wind";
 import { ATTACK_AUDIO_KEY, GAME_WINDOW_SIZE } from "../utils/Constants";
 import { ENEMY_ASSET, ResourceLoader } from "../ResourceLoader";
 import { playSound } from "../audio/Audio";
+import { Plugin } from "../PluginManager";
+import { globalState } from "../states/events";
 
 const FRAME_SIZE = 32;
 const NUMBER_OF_FRAMES = 6;
-export class PlaygroundLayer {
+export class PlaygroundLayer implements Plugin {
   public static instance: PlaygroundLayer;
   public layer: PIXI.Container;
   static bullets: Bullet[] = [];
@@ -17,18 +19,35 @@ export class PlaygroundLayer {
     this.layer = new PIXI.Container();
   }
 
+  async genInitialize(): Promise<void> {
+    await PlaygroundLayer.createAnimatedSlime();
+
+    window.addEventListener("keypress", async (e: KeyboardEvent) => {
+      if (e.key === "0") {
+        playSound(ATTACK_AUDIO_KEY);
+      }
+    });
+
+    PlaygroundLayer.instance.layer.visible = false;
+  }
+
+  async genUpdate(): Promise<void> {
+    if (!globalState.isPlaygroundActive) {
+      return;
+    }
+    PlaygroundLayer.bullets.forEach((attackPower: Bullet) => {
+      attackPower.move();
+    });
+
+    PlaygroundLayer.winds.forEach((wind: Wind) => {
+      wind.move();
+    });
+  }
+
   public static async genInstance(): Promise<PlaygroundLayer> {
     if (!PlaygroundLayer.instance) {
       PlaygroundLayer.instance = new PlaygroundLayer();
-      await PlaygroundLayer.createAnimatedSlime();
-
-      window.addEventListener("keypress", async (e: KeyboardEvent) => {
-        if (e.key === "0") {
-          playSound(ATTACK_AUDIO_KEY);
-        }
-      });
     }
-
     return PlaygroundLayer.instance;
   }
 
@@ -80,15 +99,5 @@ export class PlaygroundLayer {
     );
     PlaygroundLayer.bullets.push(bullet);
     PlaygroundLayer.instance.layer.addChild(bullet.instance);
-  }
-
-  async update() {
-    PlaygroundLayer.bullets.forEach((attackPower: Bullet) => {
-      attackPower.move();
-    });
-
-    PlaygroundLayer.winds.forEach((wind: Wind) => {
-      wind.move();
-    });
   }
 }

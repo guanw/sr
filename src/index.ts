@@ -15,8 +15,7 @@ import { skillSlot } from "./entity/SkillSlot";
 
 (async () => {
   const gameEventManager = GameEventManager.getInstance();
-  const { appInstance, mainLayer, playgroundLayer } =
-    await genSetupGameEnvironment();
+  const { appInstance } = await genSetupGameEnvironment();
 
   // Game loop
   async function gameLoop() {
@@ -29,11 +28,6 @@ import { skillSlot } from "./entity/SkillSlot";
     }
 
     gameEventManager.processEvents();
-    if (!globalState.isPlaygroundActive) {
-      await mainLayer.update();
-    } else {
-      await playgroundLayer.update();
-    }
 
     await pluginManager.genUpdateAll();
 
@@ -66,8 +60,6 @@ async function genSetupGameEnvironment() {
   await Background.genInstance();
   const mainLayer = await MainLayer.genInstance();
   const playgroundLayer = await PlaygroundLayer.genInstance();
-  mainLayer.layer.visible = false;
-  playgroundLayer.layer.visible = false;
   appInstance.app.stage.addChild(mainLayer.layer);
   appInstance.app.stage.addChild(playgroundLayer.layer);
 
@@ -86,6 +78,8 @@ async function genSetupGameEnvironment() {
   // register and initialize plugins that's not dependent on multi-player states
   pluginManager.registerPlugin(debugTool);
   pluginManager.registerPlugin(skillSlot);
+  pluginManager.registerPlugin(mainLayer);
+  pluginManager.registerPlugin(playgroundLayer);
   await pluginManager.genInitializeAll();
 
   // hide loading view
@@ -93,7 +87,5 @@ async function genSetupGameEnvironment() {
 
   return {
     appInstance,
-    mainLayer,
-    playgroundLayer,
   };
 }
