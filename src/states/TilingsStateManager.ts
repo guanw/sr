@@ -8,7 +8,7 @@ import {
   TILING_SIZE,
   WORLD_SIZE_EXPANSION,
 } from "../utils/Constants";
-import { MainLayer, TilingsSerialization } from "../layer/MainLayer";
+import { mainLayer, TilingsSerialization } from "../layer/MainLayer";
 import { Direction, Helper } from "../utils/Helper";
 import { Avatar } from "../entity/Avatar";
 import { ENABLE_COLLISION_OFFSITE_ONLY } from "../utils/Knobs";
@@ -44,7 +44,6 @@ class TilingsStateManager {
       logger.log("tilings not available from server", "warn");
       return;
     }
-    const mainLayer = await MainLayer.genInstance();
     const textures = await TilingsStateManager.genLoadTiling();
 
     Object.keys(tilings).forEach((key) => {
@@ -79,7 +78,6 @@ class TilingsStateManager {
   public async genInitializeOfflineTilings() {
     const worldSize = GAME_WINDOW_SIZE * WORLD_SIZE_EXPANSION;
     const textures = await TilingsStateManager.genLoadTiling();
-    const mainLayer = await MainLayer.genInstance();
 
     // initialize sand tiles
     for (let i = 0; i < SAND_TILING_COUNT; i++) {

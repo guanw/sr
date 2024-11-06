@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Entity } from "./Entity";
 import { GAME_WINDOW_SIZE, BACKGROUND_LAYER } from "../utils/Constants";
-import { MainLayer } from "../layer/MainLayer";
+import { mainLayer } from "../layer/MainLayer";
 import { BACKGROUND_ASSET, ResourceLoader } from "../ResourceLoader";
 
 export class Background extends Entity {
@@ -20,7 +20,6 @@ export class Background extends Entity {
 
   public static async genInstance() {
     if (!Background.instance) {
-      const mainLayer = await MainLayer.genInstance();
       const resourceLoader = await ResourceLoader.genInstance();
       const tiling = resourceLoader.getResource(BACKGROUND_ASSET);
       Background.instance = new Background(tiling, mainLayer.layer);

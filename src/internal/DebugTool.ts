@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Avatar, avatarMetaData } from "../entity/Avatar";
 import { globalState } from "../states/events";
-import { MainLayer } from "../layer/MainLayer";
+import { mainLayer } from "../layer/MainLayer";
 import { DEBUG_BOUND_COLOR, GAME_WINDOW_SIZE } from "../utils/Constants";
 import Application from "../entity/Application";
 import { tilingsStateManager } from "../states/TilingsStateManager";
@@ -24,7 +24,6 @@ class DebugTool implements Plugin {
     this.container.addChild(this.avatarText);
     this.container.visible = globalState.isDebugToolVisible;
 
-    const mainLayer = await MainLayer.genInstance();
     mainLayer.layer.addChild(this.container);
     this.container.x = GAME_WINDOW_SIZE / 2;
     this.container.y = GAME_WINDOW_SIZE / 2;
@@ -58,15 +57,14 @@ class DebugTool implements Plugin {
     globalState.isDebugToolVisible = !globalState.isDebugToolVisible;
     this.container.visible = globalState.isDebugToolVisible;
 
-    const mainLayer = await MainLayer.genInstance();
     if (this.container.visible) {
-      await this.genRenderBoundingBox(mainLayer);
+      await this.genRenderBoundingBox();
     } else {
       this.hideBoundingBox();
     }
   }
 
-  private async genRenderBoundingBox(mainLayer: MainLayer) {
+  private async genRenderBoundingBox() {
     const avatar = await Avatar.genInstance();
     // add bounding box for avatar
     this.avatarBoundingBox = this.createBoundingBox(avatar.walkingSprite);

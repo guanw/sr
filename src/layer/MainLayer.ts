@@ -61,7 +61,7 @@ type GameStateSnapShot = {
   [key: string]: unknown;
 };
 
-export class MainLayer implements Plugin {
+class MainLayer implements Plugin {
   public static instance: MainLayer;
   public layer: PIXI.Container;
 
@@ -196,11 +196,7 @@ export class MainLayer implements Plugin {
 
     timedEventsManager.update();
   }
-
-  public static async genInstance(): Promise<MainLayer> {
-    if (!MainLayer.instance) {
-      MainLayer.instance = new MainLayer();
-    }
-    return MainLayer.instance;
-  }
 }
+
+const mainLayer = new MainLayer();
+export { mainLayer };

@@ -6,7 +6,7 @@ import {
   LOADING_VIEW_FONT_SIZE,
   LOADING_VIEW_TEXT,
 } from "../utils/Constants";
-import { MainLayer } from "../layer/MainLayer";
+import { mainLayer } from "../layer/MainLayer";
 
 export class LoadingView {
   private static instance: LoadingView;
@@ -53,7 +53,6 @@ export class LoadingView {
   public async hide() {
     this.stage.removeChild(this.loadingText);
     this.stage.removeChild(this.loadingBar);
-    const mainLayer = await MainLayer.genInstance();
     mainLayer.layer.visible = true;
   }
 }

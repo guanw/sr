@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Helper } from "../../utils/Helper";
-import { MainLayer } from "../../layer/MainLayer";
+import { mainLayer } from "../../layer/MainLayer";
 import enemiesStateManager from "../../states/EnemyStateManager";
 import attackStateManager from "../../states/AttackStateManager";
 import {
@@ -60,7 +60,7 @@ export class Wind {
     }
 
     const wind = new Wind(frames, x, y, targetX, targetY);
-    MainLayer.instance.layer.addChild(wind.instance);
+    mainLayer.layer.addChild(wind.instance);
     return wind;
   }
 
@@ -87,7 +87,7 @@ export class Wind {
       }
 
       if (Helper.boundsIntersect(attackBounds, enemyBounds)) {
-        enemy.destroy(MainLayer.instance.layer);
+        enemy.destroy(mainLayer.layer);
         enemies.delete(key);
         this.explode();
         attackStateManager.removeAttack(windKey);

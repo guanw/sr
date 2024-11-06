@@ -4,7 +4,7 @@ import { Avatar } from "../entity/Avatar";
 import { Bomb } from "../entity/Items/Bomb";
 import { Potion } from "../entity/Items/Potion";
 import { Item } from "../entity/Items/Item";
-import { ItemsSerialization, MainLayer } from "../layer/MainLayer";
+import { ItemsSerialization, mainLayer } from "../layer/MainLayer";
 
 class ItemsStateManager {
   private items: Map<string, Item>;
@@ -46,7 +46,6 @@ class ItemsStateManager {
     latestAvatarAbsoluteX: number,
     latestAvatarAbsoluteY: number
   ) {
-    const mainLayer = await MainLayer.genInstance();
     const avatar = await Avatar.genInstance();
     const previousAvatarAbsoluteX = avatar.getX();
     const previousAvatarAbsoluteY = avatar.getY();
@@ -106,7 +105,6 @@ class ItemsStateManager {
     x: number,
     y: number
   ) {
-    const mainLayer = await MainLayer.genInstance();
     switch (type) {
       case "bomb":
         this.items.set(key, await Bomb.create(mainLayer.layer, x, y));

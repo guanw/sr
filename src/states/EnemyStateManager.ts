@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { Enemy } from "../entity/Enemy";
 import { Avatar } from "../entity/Avatar";
-import { EnemiesSerialization, MainLayer } from "../layer/MainLayer";
+import { EnemiesSerialization, mainLayer } from "../layer/MainLayer";
 
 class EnemiesStateManager {
   private enemies: Map<string, Enemy>;
@@ -11,7 +11,6 @@ class EnemiesStateManager {
   }
 
   public async genAddEnemy() {
-    const mainLayer = await MainLayer.genInstance();
     const uuid = uuidv4();
     this.enemies.set(uuid, await Enemy.create(mainLayer.layer));
   }
@@ -25,7 +24,6 @@ class EnemiesStateManager {
     latestAvatarAbsoluteX: number,
     latestAvatarAbsoluteY: number
   ) {
-    const mainLayer = await MainLayer.genInstance();
     const avatar = await Avatar.genInstance();
     const previousEnemiesState = enemiesStateManager.getEnemies();
 
@@ -81,12 +79,10 @@ class EnemiesStateManager {
   }
 
   private async genAddAtPos(key: string, x: number, y: number) {
-    const mainLayer = await MainLayer.genInstance();
     this.enemies.set(key, await Enemy.create(mainLayer.layer, x, y));
   }
 
   public async destroyAllEnemies(): Promise<void> {
-    const mainLayer = await MainLayer.genInstance();
     this.enemies.forEach((enemy) => {
       enemy.destroy(mainLayer.layer);
     });

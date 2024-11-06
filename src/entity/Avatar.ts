@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Enemy } from "./Enemy";
 import { Entity } from "./Entity";
-import { MainLayer } from "../layer/MainLayer";
+import { mainLayer } from "../layer/MainLayer";
 import {
   MAX_HEALTH,
   AVATAR_DISPLACEMENT,
@@ -88,7 +88,6 @@ export class Avatar extends Entity {
       const attackFrames = await Avatar.genLoadTexture(texture, 6);
       Avatar.instance = new Avatar(true, walkingFrames, attackFrames);
       await this.genInitializeHPSystem();
-      const mainLayer = await MainLayer.genInstance();
       mainLayer.layer.addChild(Avatar.instance.walkingSprite);
       if (Avatar.instance.attackingSprite) {
         mainLayer.layer.addChild(Avatar.instance.attackingSprite);
@@ -221,7 +220,6 @@ export class Avatar extends Entity {
   }
 
   public async genPerformAttack(enemies: Map<string, Enemy>) {
-    const mainLayer = await MainLayer.genInstance();
     if (this.walkingSprite && this.walkingSprite.parent) {
       const sword = new Sword(mainLayer.layer, this.walkingSprite);
 

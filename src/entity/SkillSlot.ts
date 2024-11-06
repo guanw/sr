@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import { ATTACK_AUDIO_KEY, GAME_WINDOW_SIZE } from "../utils/Constants";
 import { ResourceLoader, SKILL_SLOT_MAGIC_ASSET } from "../ResourceLoader";
 import { Logger } from "../utils/Logger";
-import { MainLayer } from "../layer/MainLayer";
+import { mainLayer } from "../layer/MainLayer";
 import { Plugin } from "../PluginManager";
 import { playSound } from "../audio/Audio";
 
@@ -23,7 +23,6 @@ export default class SkillSlot implements Plugin {
   private skills: Skill[] = [];
 
   async genInitialize(): Promise<void> {
-    const mainLayer = await MainLayer.genInstance();
     this.container = new PIXI.Container();
     this.container.x = GAME_WINDOW_SIZE / 2 - 100;
     this.container.y = (GAME_WINDOW_SIZE * 3.0) / 4 + 50;

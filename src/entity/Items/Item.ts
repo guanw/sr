@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { MainLayer } from "../../layer/MainLayer";
+import { mainLayer } from "../../layer/MainLayer";
 import { Entity } from "../Entity";
 import { GAME_WINDOW_SIZE, AVATAR_LOCATION } from "../../utils/Constants";
 
@@ -24,7 +24,6 @@ export abstract class Item extends Entity {
   }
 
   async genCollide(): Promise<void> {
-    const mainLayer = await MainLayer.genInstance();
     this.destroy(mainLayer.layer);
     await this.genCollideCallback();
   }

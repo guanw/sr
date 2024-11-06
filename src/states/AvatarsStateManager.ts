@@ -1,5 +1,5 @@
 import { Avatar } from "../entity/Avatar";
-import { AvatarsSerialization, MainLayer } from "../layer/MainLayer";
+import { AvatarsSerialization, mainLayer } from "../layer/MainLayer";
 
 class AvatarsStateManager {
   private avatars: Map<string, Avatar>;
@@ -20,7 +20,6 @@ class AvatarsStateManager {
     avatars: AvatarsSerialization,
     currentAvatarId: string
   ) {
-    const mainLayer = await MainLayer.genInstance();
     const previousAvatarsState = avatarsStateManager.getAvatars();
     const latestCurrentAvatarAbsoluteX = avatars[currentAvatarId].x;
     const latestCurrentAvatarAbsoluteY = avatars[currentAvatarId].y;
@@ -84,7 +83,6 @@ class AvatarsStateManager {
   }
 
   private async genAddAtPos(key: string, x: number, y: number) {
-    const mainLayer = await MainLayer.genInstance();
     this.avatars.set(key, await Avatar.create(mainLayer.layer, x, y));
   }
 
@@ -96,11 +94,6 @@ class AvatarsStateManager {
     const avatar = this.avatars.get(key);
     avatar?.setPos(avatar.getX() + relativeX, avatar.getY() + relativeY);
   }
-
-  // private async genAddAtPos(key: string, x: number, y: number) {
-  //   const mainLayer = await MainLayer.genInstance();
-  //   this.enemies.set(key, await Enemy.create(mainLayer.layer, x, y));
-  // }
 }
 
 const avatarsStateManager = new AvatarsStateManager();
