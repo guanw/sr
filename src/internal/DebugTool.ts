@@ -7,8 +7,7 @@ import Application from "../entity/Application";
 import { tilingsStateManager } from "../states/TilingsStateManager";
 import { Plugin } from "../PluginManager";
 
-export class DebugTool implements Plugin {
-  private static instance: DebugTool;
+class DebugTool implements Plugin {
   public container!: PIXI.Container;
   private avatarText!: PIXI.Text;
 
@@ -18,13 +17,6 @@ export class DebugTool implements Plugin {
   // TODO P1
   // item bound box
   // enemy bound box
-
-  static async genInstance() {
-    if (!this.instance) {
-      this.instance = new DebugTool();
-    }
-    return this.instance;
-  }
 
   async genInitialize(): Promise<void> {
     this.container = new PIXI.Container();
@@ -124,3 +116,6 @@ export class DebugTool implements Plugin {
     graphics.stroke({ width: 3, color: DEBUG_BOUND_COLOR });
   }
 }
+
+const debugTool = new DebugTool();
+export { debugTool };

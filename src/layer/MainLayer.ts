@@ -28,7 +28,6 @@ import {
 import { itemsStateManager } from "../states/ItemsStateManager";
 import avatarsStateManager from "../states/AvatarsStateManager";
 import { tilingsStateManager } from "../states/TilingsStateManager";
-import SkillSlot from "../entity/SkillSlot";
 
 interface EnemyObject {
   x: number;
@@ -75,7 +74,6 @@ export class MainLayer {
     if (!MainLayer.instance) {
       MainLayer.instance = new MainLayer();
       const gameEventManager = GameEventManager.getInstance();
-      await SkillSlot.genInstance(MainLayer.instance.layer);
 
       // enemy related events
       timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {

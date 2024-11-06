@@ -1,5 +1,5 @@
 import { Avatar } from "../../entity/Avatar";
-import { DebugTool } from "../../internal/DebugTool";
+import { debugTool } from "../../internal/DebugTool";
 import { MainLayer } from "../../layer/MainLayer";
 import { PlaygroundLayer } from "../../layer/PlaygroundLayer";
 import { Menu } from "../../menu";
@@ -15,7 +15,7 @@ import {
 } from "./GameEvent";
 import { Background } from "../../entity/Background";
 import { tilingsStateManager } from "../TilingsStateManager";
-import SkillSlot from "../../entity/SkillSlot";
+import { skillSlot } from "../../entity/SkillSlot";
 import { AVATAR_SPEED } from "../../utils/Constants";
 
 const SKILL_SLOT_KEYS = "1234567890";
@@ -83,7 +83,6 @@ export class GameEventManager {
         }
 
         if (SKILL_SLOT_KEYS.includes(key)) {
-          const skillSlot = await SkillSlot.genInstance();
           const skillIndex = parseInt(key) - 1;
           skillSlot.triggerSkill(skillIndex);
           return;
@@ -158,7 +157,6 @@ export class GameEventManager {
   }
 
   private async handleToggleDebugTool() {
-    const debugTool = await DebugTool.genInstance();
     await debugTool.toggle();
   }
 

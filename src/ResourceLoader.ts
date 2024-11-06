@@ -61,7 +61,6 @@ export class ResourceLoader {
   ): Promise<ResourceLoader> {
     if (!ResourceLoader.instance) {
       ResourceLoader.instance = new ResourceLoader();
-      await LoadingView.genInstance();
       await ResourceLoader.genLoadImageResources(assetsResponse);
       await ResourceLoader.genLoadAudioResources();
     }

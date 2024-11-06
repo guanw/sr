@@ -30,10 +30,10 @@ export default class SkillSlot implements Plugin {
     mainLayer.layer.addChild(this.container);
 
     // TODO use different icon to render skill slots
-    await SkillSlot.instance.genAddSkill();
-    await SkillSlot.instance.genAddSkill();
-    await SkillSlot.instance.genAddSkill();
-    await SkillSlot.instance.genAddSkill();
+    await this.genAddSkill();
+    await this.genAddSkill();
+    await this.genAddSkill();
+    await this.genAddSkill();
   }
 
   async genUpdate(): Promise<void> {
@@ -63,15 +63,6 @@ export default class SkillSlot implements Plugin {
         skill.cooldownOverlay.clear(); // Hide cooldown overlay
       }
     });
-  }
-
-  public static async genInstance(
-    stage: PIXI.Container | null = null
-  ): Promise<SkillSlot> {
-    if (!SkillSlot.instance && stage != null) {
-      SkillSlot.instance = new SkillSlot();
-    }
-    return SkillSlot.instance;
   }
 
   private async genAddSkill() {
@@ -129,3 +120,6 @@ export default class SkillSlot implements Plugin {
     }
   }
 }
+
+const skillSlot = new SkillSlot();
+export { skillSlot };
