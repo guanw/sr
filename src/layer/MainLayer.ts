@@ -62,7 +62,6 @@ type GameStateSnapShot = {
 };
 
 class MainLayer implements Plugin {
-  public static instance: MainLayer;
   public layer: PIXI.Container;
 
   constructor() {
@@ -90,7 +89,7 @@ class MainLayer implements Plugin {
         socketClient.emit("handleAvatarAttackEnemies", {
           avatarId: socketClient.getSocketId(),
         });
-        new Sword(MainLayer.instance.layer, avatar.walkingSprite);
+        new Sword(this.layer, avatar.walkingSprite);
       }
     });
 

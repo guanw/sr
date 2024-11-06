@@ -1,7 +1,7 @@
 import { Avatar } from "../../entity/Avatar";
 import { debugTool } from "../../internal/DebugTool";
 import { mainLayer } from "../../layer/MainLayer";
-import { PlaygroundLayer } from "../../layer/PlaygroundLayer";
+import { playgroundLayer } from "../../layer/PlaygroundLayer";
 import { Menu } from "../../menu";
 import attackStateManager from "../AttackStateManager";
 import enemiesStateManager from "../EnemyStateManager";
@@ -75,7 +75,6 @@ export class GameEventManager {
 
         if (key === "p" || key === "P") {
           globalState.isPlaygroundActive = !globalState.isPlaygroundActive;
-          const playgroundLayer = await PlaygroundLayer.genInstance();
           mainLayer.layer.visible = !globalState.isPlaygroundActive;
           playgroundLayer.layer.visible = globalState.isPlaygroundActive;
           return;

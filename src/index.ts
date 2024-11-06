@@ -1,7 +1,7 @@
 import { globalState, initEventsListener } from "./states/events";
 import Application from "./entity/Application";
 import { mainLayer } from "./layer/MainLayer";
-import { PlaygroundLayer } from "./layer/PlaygroundLayer";
+import { playgroundLayer } from "./layer/PlaygroundLayer";
 import { GameEventManager } from "./states/events/GameStateManager";
 import { ResourceLoader, SetupResponse } from "./ResourceLoader";
 import { LoadingView } from "./entity/LoadingView";
@@ -58,7 +58,6 @@ async function genSetupGameEnvironment() {
 
   // set up game layer + playground layer
   await Background.genInstance();
-  const playgroundLayer = await PlaygroundLayer.genInstance();
   appInstance.app.stage.addChild(mainLayer.layer);
   appInstance.app.stage.addChild(playgroundLayer.layer);
 

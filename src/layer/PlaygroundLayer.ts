@@ -9,18 +9,17 @@ import { globalState } from "../states/events";
 
 const FRAME_SIZE = 32;
 const NUMBER_OF_FRAMES = 6;
-export class PlaygroundLayer implements Plugin {
-  public static instance: PlaygroundLayer;
+class PlaygroundLayer implements Plugin {
   public layer: PIXI.Container;
-  static bullets: Bullet[] = [];
-  static winds: Wind[] = [];
+  bullets: Bullet[] = [];
+  winds: Wind[] = [];
 
   constructor() {
     this.layer = new PIXI.Container();
   }
 
   async genInitialize(): Promise<void> {
-    await PlaygroundLayer.createAnimatedSlime();
+    await this.createAnimatedSlime();
 
     window.addEventListener("keypress", async (e: KeyboardEvent) => {
       if (e.key === "0") {
@@ -28,30 +27,23 @@ export class PlaygroundLayer implements Plugin {
       }
     });
 
-    PlaygroundLayer.instance.layer.visible = false;
+    this.layer.visible = false;
   }
 
   async genUpdate(): Promise<void> {
     if (!globalState.isPlaygroundActive) {
       return;
     }
-    PlaygroundLayer.bullets.forEach((attackPower: Bullet) => {
+    this.bullets.forEach((attackPower: Bullet) => {
       attackPower.move();
     });
 
-    PlaygroundLayer.winds.forEach((wind: Wind) => {
+    this.winds.forEach((wind: Wind) => {
       wind.move();
     });
   }
 
-  public static async genInstance(): Promise<PlaygroundLayer> {
-    if (!PlaygroundLayer.instance) {
-      PlaygroundLayer.instance = new PlaygroundLayer();
-    }
-    return PlaygroundLayer.instance;
-  }
-
-  private static async createAnimatedSlime() {
+  private async createAnimatedSlime() {
     const resourceLoader = await ResourceLoader.genInstance();
     const texture = resourceLoader.getResource(ENEMY_ASSET);
     const frames = [];
@@ -76,20 +68,20 @@ export class PlaygroundLayer implements Plugin {
     document.addEventListener("click", async (event) => {
       const targetX = event.clientX;
       const targetY = event.clientY;
-      await PlaygroundLayer.attack(targetX, targetY);
+      await this.attack(targetX, targetY);
     });
-    PlaygroundLayer.instance.layer.addChild(animatedSlime);
+    this.layer.addChild(animatedSlime);
   }
 
-  private static async attack(targetX: number, targetY: number) {
+  private async attack(targetX: number, targetY: number) {
     const wind = await Wind.create(
       GAME_WINDOW_SIZE / 2,
       GAME_WINDOW_SIZE / 2,
       targetX,
       targetY
     );
-    PlaygroundLayer.winds.push(wind);
-    PlaygroundLayer.instance.layer.addChild(wind.instance);
+    this.winds.push(wind);
+    this.layer.addChild(wind.instance);
 
     const bullet = new Bullet(
       GAME_WINDOW_SIZE / 2 + 16,
@@ -97,7 +89,10 @@ export class PlaygroundLayer implements Plugin {
       targetX,
       targetY
     );
-    PlaygroundLayer.bullets.push(bullet);
-    PlaygroundLayer.instance.layer.addChild(bullet.instance);
+    this.bullets.push(bullet);
+    this.layer.addChild(bullet.instance);
   }
 }
+
+const playgroundLayer = new PlaygroundLayer();
+export { playgroundLayer };
