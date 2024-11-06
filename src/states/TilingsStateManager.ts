@@ -18,7 +18,7 @@ import {
   PILLAR_MIDDLE_TILING_ASSET,
   PILLAR_TOP_TILING_ASSET,
   RANDOM_TILING_ASSET,
-  ResourceLoader,
+  resourceLoader,
 } from "../ResourceLoader";
 import { Logger } from "../utils/Logger";
 
@@ -115,7 +115,6 @@ class TilingsStateManager {
   }
 
   private static async genLoadTiling() {
-    const resourceLoader = await ResourceLoader.genInstance();
     const baseTexture = resourceLoader.getResource(BASE_TILING_ASSET);
     const randomGroundTexture = resourceLoader.getResource(RANDOM_TILING_ASSET);
     const pillarTopTexture = resourceLoader.getResource(

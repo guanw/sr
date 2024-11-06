@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import { Bullet } from "../entity/Attacks/Bullet";
 import { Wind } from "../entity/Attacks/Wind";
 import { ATTACK_AUDIO_KEY, GAME_WINDOW_SIZE } from "../utils/Constants";
-import { ENEMY_ASSET, ResourceLoader } from "../ResourceLoader";
+import { ENEMY_ASSET, resourceLoader } from "../ResourceLoader";
 import { playSound } from "../audio/Audio";
 import { Plugin } from "../PluginManager";
 import { globalState } from "../states/events";
@@ -44,7 +44,6 @@ class PlaygroundLayer implements Plugin {
   }
 
   private async createAnimatedSlime() {
-    const resourceLoader = await ResourceLoader.genInstance();
     const texture = resourceLoader.getResource(ENEMY_ASSET);
     const frames = [];
     for (let i = 0; i < NUMBER_OF_FRAMES; i++) {

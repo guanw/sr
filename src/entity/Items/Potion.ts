@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import { Item } from "./Item";
 import { ITEM_FRAME_SIZE } from "../../utils/Constants";
 import { Avatar } from "../Avatar";
-import { POTION_ASSET, ResourceLoader } from "../../ResourceLoader";
+import { POTION_ASSET, resourceLoader } from "../../ResourceLoader";
 
 export class Potion extends Item {
   constructor(
@@ -20,7 +20,6 @@ export class Potion extends Item {
   }
 
   static async create(layer: PIXI.Container, x: number, y: number) {
-    const resourceLoader = await ResourceLoader.genInstance();
     const texture = resourceLoader.getResource(POTION_ASSET);
     return new Potion(layer, x, y, texture);
   }

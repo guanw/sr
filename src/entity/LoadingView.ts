@@ -9,25 +9,12 @@ import {
 import { mainLayer } from "../layer/MainLayer";
 
 export class LoadingView {
-  private static instance: LoadingView;
   private loadingText: PIXI.Text;
   private loadingBar: PIXI.Graphics;
   private stage: PIXI.Container;
 
-  public static async genInstance(
-    // TODO refactor to avoid passing stage as nullable
-    // right now i have to because the first tiem init loadingView it will needs
-    // app.stage to add loading view element
-    stage: PIXI.Container | null = null
-  ): Promise<LoadingView> {
-    if (!LoadingView.instance && stage != null) {
-      LoadingView.instance = new LoadingView(stage);
-    }
-    return LoadingView.instance;
-  }
-
-  private constructor(stage: PIXI.Container) {
-    this.stage = stage;
+  constructor() {
+    this.stage = mainLayer.layer;
 
     // Create a loading text
     this.loadingText = new PIXI.Text(LOADING_VIEW_TEXT, {
@@ -56,3 +43,6 @@ export class LoadingView {
     mainLayer.layer.visible = true;
   }
 }
+
+const loadingView = new LoadingView();
+export { loadingView };

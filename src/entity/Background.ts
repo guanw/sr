@@ -2,29 +2,20 @@ import * as PIXI from "pixi.js";
 import { Entity } from "./Entity";
 import { GAME_WINDOW_SIZE, BACKGROUND_LAYER } from "../utils/Constants";
 import { mainLayer } from "../layer/MainLayer";
-import { BACKGROUND_ASSET, ResourceLoader } from "../ResourceLoader";
+import { BACKGROUND_ASSET, resourceLoader } from "../ResourceLoader";
 
-export class Background extends Entity {
-  private background: PIXI.TilingSprite;
-  public static instance: Background;
-  private constructor(texture: PIXI.Texture, layer: PIXI.Container) {
-    super();
+class Background extends Entity {
+  private background!: PIXI.TilingSprite;
+
+  public async genInitialize() {
+    const tiling = resourceLoader.getResource(BACKGROUND_ASSET);
     this.background = new PIXI.TilingSprite({
-      texture: texture,
+      texture: tiling,
       width: GAME_WINDOW_SIZE,
       height: GAME_WINDOW_SIZE,
     });
 
-    layer.addChildAt(this.background, BACKGROUND_LAYER);
-  }
-
-  public static async genInstance() {
-    if (!Background.instance) {
-      const resourceLoader = await ResourceLoader.genInstance();
-      const tiling = resourceLoader.getResource(BACKGROUND_ASSET);
-      Background.instance = new Background(tiling, mainLayer.layer);
-    }
-    return Background.instance;
+    mainLayer.layer.addChildAt(this.background, BACKGROUND_LAYER);
   }
 
   getX(): number {
@@ -49,3 +40,6 @@ export class Background extends Entity {
     throw new Error("Method not implemented.");
   }
 }
+
+const background = new Background();
+export { background };

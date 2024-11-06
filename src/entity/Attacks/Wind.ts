@@ -9,7 +9,7 @@ import {
   WIND_NUM_OF_FRAME,
   WIND_SPEED,
 } from "../../utils/Constants";
-import { ResourceLoader, WIND_ASSET } from "../../ResourceLoader";
+import { resourceLoader, WIND_ASSET } from "../../ResourceLoader";
 
 export class Wind {
   instance: PIXI.AnimatedSprite;
@@ -41,7 +41,6 @@ export class Wind {
     targetX: number,
     targetY: number
   ) {
-    const resourceLoader = await ResourceLoader.genInstance();
     const texture = resourceLoader.getResource(WIND_ASSET);
     const frames = [];
     const frameWidth = WIND_FRAME_SIZE; // Width of a single frame in pixels

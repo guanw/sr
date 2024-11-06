@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { ATTACK_AUDIO_KEY, GAME_WINDOW_SIZE } from "../utils/Constants";
-import { ResourceLoader, SKILL_SLOT_MAGIC_ASSET } from "../ResourceLoader";
+import { resourceLoader, SKILL_SLOT_MAGIC_ASSET } from "../ResourceLoader";
 import { Logger } from "../utils/Logger";
 import { mainLayer } from "../layer/MainLayer";
 import { Plugin } from "../PluginManager";
@@ -66,7 +66,6 @@ export default class SkillSlot implements Plugin {
 
   private async genAddSkill() {
     if (this.skills.length > SKILL_LENGTH) return;
-    const resourceLoader = await ResourceLoader.genInstance();
     const texture = resourceLoader.getResource(SKILL_SLOT_MAGIC_ASSET);
 
     const boundary = new PIXI.Graphics();

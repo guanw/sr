@@ -18,7 +18,7 @@ import {
 import { GameOverEvent } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
 import { Sword } from "./Attacks/Sword";
-import { AVATAR_ASSET, ResourceLoader } from "../ResourceLoader";
+import { AVATAR_ASSET, resourceLoader } from "../ResourceLoader";
 
 export const avatarMetaData = {
   hp_system: {
@@ -58,7 +58,6 @@ export class Avatar extends Entity {
   }
 
   static async create(layer: PIXI.Container, x: number, y: number) {
-    const resourceLoader = await ResourceLoader.genInstance();
     const texture = resourceLoader.getResource(AVATAR_ASSET);
     const walkingFrames = await Avatar.genLoadTexture(texture, 0);
     const avatar = new Avatar(false, walkingFrames, []);
@@ -82,7 +81,6 @@ export class Avatar extends Entity {
 
   public static async genInstance(): Promise<Avatar> {
     if (!Avatar.instance) {
-      const resourceLoader = await ResourceLoader.genInstance();
       const texture = resourceLoader.getResource(AVATAR_ASSET);
       const walkingFrames = await Avatar.genLoadTexture(texture, 0);
       const attackFrames = await Avatar.genLoadTexture(texture, 6);

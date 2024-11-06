@@ -3,7 +3,7 @@ import { Item } from "./Item";
 import enemiesStateManager from "../../states/EnemyStateManager";
 import { ITEM_FRAME_SIZE } from "../../utils/Constants";
 import { ENABLE_MULTI_PLAYER } from "../../utils/Knobs";
-import { BOMB_ASSET, ResourceLoader } from "../../ResourceLoader";
+import { BOMB_ASSET, resourceLoader } from "../../ResourceLoader";
 
 export class Bomb extends Item {
   constructor(
@@ -26,7 +26,6 @@ export class Bomb extends Item {
   }
 
   static async create(layer: PIXI.Container, x: number, y: number) {
-    const resourceLoader = await ResourceLoader.genInstance();
     const texture = resourceLoader.getResource(BOMB_ASSET);
     return new Bomb(layer, x, y, texture);
   }

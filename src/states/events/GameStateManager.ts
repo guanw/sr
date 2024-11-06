@@ -13,7 +13,7 @@ import {
   KeyDownEvent,
   KeyUpEvent,
 } from "./GameEvent";
-import { Background } from "../../entity/Background";
+import { background } from "../../entity/Background";
 import { tilingsStateManager } from "../TilingsStateManager";
 import { skillSlot } from "../../entity/SkillSlot";
 import { AVATAR_SPEED } from "../../utils/Constants";
@@ -250,7 +250,6 @@ export class GameEventManager {
 
   private async genMoveUserLeft() {
     const avatar = await Avatar.genInstance();
-    const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     const tiles = tilingsStateManager.getTilings();
@@ -268,7 +267,6 @@ export class GameEventManager {
 
   private async genMoveUserRight() {
     const avatar = await Avatar.genInstance();
-    const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     const tiles = tilingsStateManager.getTilings();
@@ -286,7 +284,6 @@ export class GameEventManager {
 
   private async genMoveUserUp() {
     const avatar = await Avatar.genInstance();
-    const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     const tiles = tilingsStateManager.getTilings();
@@ -304,7 +301,6 @@ export class GameEventManager {
 
   private async genMoveUserDown() {
     const avatar = await Avatar.genInstance();
-    const background = await Background.genInstance();
     const items = itemsStateManager.getItems();
     const enemies = enemiesStateManager.getEnemies();
     const tiles = tilingsStateManager.getTilings();

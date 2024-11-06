@@ -3,9 +3,9 @@ import Application from "./entity/Application";
 import { mainLayer } from "./layer/MainLayer";
 import { playgroundLayer } from "./layer/PlaygroundLayer";
 import { GameEventManager } from "./states/events/GameStateManager";
-import { ResourceLoader, SetupResponse } from "./ResourceLoader";
-import { LoadingView } from "./entity/LoadingView";
-import { Background } from "./entity/Background";
+import { resourceLoader, SetupResponse } from "./ResourceLoader";
+import { loadingView } from "./entity/LoadingView";
+import { background } from "./entity/Background";
 import { fetchSetupData } from "./utils/SocketClient";
 import { ENABLE_MULTI_PLAYER } from "./utils/Knobs";
 import { tilingsStateManager } from "./states/TilingsStateManager";
@@ -45,7 +45,6 @@ import { skillSlot } from "./entity/SkillSlot";
 async function genSetupGameEnvironment() {
   // set up app instance and render loading view
   const appInstance = await Application.genInstance();
-  const loadingView = await LoadingView.genInstance(appInstance.app.stage);
 
   // fetch setup data from server if possible
   let setupResponse: SetupResponse | null = null;
@@ -54,10 +53,10 @@ async function genSetupGameEnvironment() {
   }
 
   // initially load assets
-  await ResourceLoader.genInstance(setupResponse?.assets);
+  await resourceLoader.genInitialize(setupResponse?.assets);
 
   // set up game layer + playground layer
-  await Background.genInstance();
+  await background.genInitialize();
   appInstance.app.stage.addChild(mainLayer.layer);
   appInstance.app.stage.addChild(playgroundLayer.layer);
 

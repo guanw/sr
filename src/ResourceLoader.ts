@@ -1,5 +1,4 @@
 import * as PIXI from "pixi.js";
-import { LoadingView } from "./entity/LoadingView";
 import {
   AVATAR_URL,
   BASE_TILING_URL,
@@ -52,26 +51,21 @@ export interface AssetsResponse {
 }
 
 export class ResourceLoader {
-  private static instance: ResourceLoader;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private resources: Record<string, any> | undefined;
 
-  public static async genInstance(
+  public async genInitialize(
     assetsResponse: AssetsResponse | null = null
-  ): Promise<ResourceLoader> {
-    if (!ResourceLoader.instance) {
-      ResourceLoader.instance = new ResourceLoader();
-      await ResourceLoader.genLoadImageResources(assetsResponse);
-      await ResourceLoader.genLoadAudioResources();
-    }
-    return ResourceLoader.instance;
+  ): Promise<void> {
+    await this.genLoadImageResources(assetsResponse);
+    await this.genLoadAudioResources();
   }
 
-  private static async genLoadAudioResources() {
+  private async genLoadAudioResources() {
     await loadSound(ATTACK_AUDIO, ATTACK_AUDIO_KEY);
   }
 
-  private static async genLoadImageResources(
+  private async genLoadImageResources(
     assetsResponse: AssetsResponse | null = null
   ) {
     PIXI.Assets.add({
@@ -123,7 +117,7 @@ export class ResourceLoader {
       src: assetsResponse?.skill_slot_magic ?? SKILL_SLOT_MAGIC,
     });
 
-    ResourceLoader.instance.resources = await PIXI.Assets.load([
+    this.resources = await PIXI.Assets.load([
       ENEMY_ASSET,
       AVATAR_ASSET,
       BACKGROUND_ASSET,
@@ -143,3 +137,6 @@ export class ResourceLoader {
     return this.resources ? this.resources[name] : undefined;
   }
 }
+
+const resourceLoader = new ResourceLoader();
+export { resourceLoader };

@@ -9,7 +9,7 @@ import {
   GAME_WINDOW_SIZE,
 } from "../utils/Constants";
 import { Avatar, avatarMetaData } from "./Avatar";
-import { ENEMY_ASSET, ResourceLoader } from "../ResourceLoader";
+import { ENEMY_ASSET, resourceLoader } from "../ResourceLoader";
 
 class Enemy extends Entity {
   sprite: PIXI.AnimatedSprite;
@@ -39,7 +39,6 @@ class Enemy extends Entity {
     x: number | null = null,
     y: number | null = null
   ) {
-    const resourceLoader = await ResourceLoader.genInstance();
     const texture = resourceLoader.getResource(ENEMY_ASSET);
     const frames = [];
     const frameWidth = ENEMY_FRAME_SIZE;
