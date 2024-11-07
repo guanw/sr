@@ -41,7 +41,7 @@ class ItemsStateManager {
     return this.items;
   }
 
-  public async refreshAllItems(
+  public async syncAllItems(
     items: ItemsSerialization,
     latestAvatarAbsoluteX: number,
     latestAvatarAbsoluteY: number

@@ -16,7 +16,7 @@ class AvatarsStateManager {
     return this.avatars;
   }
 
-  public async refreshAllAvatars(
+  public async syncAllAvatars(
     avatars: AvatarsSerialization,
     currentAvatarId: string
   ) {

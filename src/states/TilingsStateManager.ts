@@ -168,7 +168,7 @@ class TilingsStateManager {
     );
   }
 
-  public async refreshAllTilings(
+  public async syncAllTilings(
     tilings: TilingsSerialization,
     latestAvatarAbsoluteX: number,
     latestAvatarAbsoluteY: number

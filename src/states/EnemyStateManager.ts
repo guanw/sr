@@ -19,7 +19,7 @@ class EnemiesStateManager {
     return this.enemies;
   }
 
-  public async refreshAllEnemies(
+  public async syncAllEnemies(
     enemies: EnemiesSerialization,
     latestAvatarAbsoluteX: number,
     latestAvatarAbsoluteY: number

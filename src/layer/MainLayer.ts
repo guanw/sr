@@ -29,6 +29,7 @@ import { itemsStateManager } from "../states/ItemsStateManager";
 import avatarsStateManager from "../states/AvatarsStateManager";
 import { tilingsStateManager } from "../states/TilingsStateManager";
 import { Plugin } from "../PluginManager";
+import { menu } from "../menu";
 
 interface EnemyObject {
   x: number;
@@ -58,6 +59,7 @@ type GameStateSnapShot = {
   avatars: AvatarsSerialization;
   items: ItemsSerialization;
   tilings: TilingsSerialization;
+  gameStopped: boolean;
   [key: string]: unknown;
 };
 
@@ -122,6 +124,8 @@ class MainLayer implements Plugin {
     if (ENABLE_MULTI_PLAYER) {
       socketClient.on("update", async (data: unknown) => {
         const structuredData = data as GameStateSnapShot;
+        this.syncGameState(structuredData);
+
         const avatarsData = structuredData["avatars"];
         const playerAvatar = avatarsData[socketClient.getSocketId()!];
         if (!playerAvatar) {
@@ -133,30 +137,36 @@ class MainLayer implements Plugin {
         const avatar = await Avatar.genInstance();
         avatar.updateHealth(avatarHp);
 
-        avatarsStateManager.refreshAllAvatars(
+        avatarsStateManager.syncAllAvatars(
           avatarsData,
           socketClient.getSocketId()!
         );
 
-        enemiesStateManager.refreshAllEnemies(
+        enemiesStateManager.syncAllEnemies(
           structuredData["enemies"],
           latestAvatarAbsoluteX,
           latestAvatarAbsoluteY
         );
 
-        itemsStateManager.refreshAllItems(
+        itemsStateManager.syncAllItems(
           structuredData["items"],
           latestAvatarAbsoluteX,
           latestAvatarAbsoluteY
         );
 
-        tilingsStateManager.refreshAllTilings(
+        tilingsStateManager.syncAllTilings(
           structuredData["tilings"],
           latestAvatarAbsoluteX,
           latestAvatarAbsoluteY
         );
       });
     }
+  }
+
+  /* pause game if gameStopped is true */
+  private syncGameState(structuredData: GameStateSnapShot) {
+    globalState.isGamePaused = structuredData.gameStopped;
+    menu.setMenuVisibility(globalState.isGamePaused);
   }
 
   async genUpdate(): Promise<void> {
