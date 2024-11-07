@@ -2,7 +2,7 @@ import { Avatar } from "../../entity/Avatar";
 import { debugTool } from "../../internal/DebugTool";
 import { mainLayer } from "../../layer/MainLayer";
 import { playgroundLayer } from "../../layer/PlaygroundLayer";
-import { Menu } from "../../menu";
+import { menu } from "../../menu";
 import attackStateManager from "../AttackStateManager";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
@@ -147,11 +147,7 @@ export class GameEventManager {
 
   private async handleToggleMenu() {
     globalState.isGamePaused = !globalState.isGamePaused;
-    const menu = await Menu.genInstance();
     menu.setMenuVisibility(globalState.isGamePaused);
-    if (globalState.isGamePaused) {
-      menu.genUpdateMenuPosition();
-    }
   }
 
   private async handleToggleDebugTool() {

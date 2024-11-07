@@ -12,6 +12,7 @@ import { tilingsStateManager } from "./states/TilingsStateManager";
 import pluginManager from "./PluginManager";
 import { debugTool } from "./internal/DebugTool";
 import { skillSlot } from "./entity/SkillSlot";
+import { menu } from "./menu";
 
 (async () => {
   const gameEventManager = GameEventManager.getInstance();
@@ -59,6 +60,7 @@ async function genSetupGameEnvironment() {
   await background.genInitialize();
   appInstance.app.stage.addChild(mainLayer.layer);
   appInstance.app.stage.addChild(playgroundLayer.layer);
+  await menu.genInitialize(appInstance.app);
 
   // set up tiles
   if (ENABLE_MULTI_PLAYER) {

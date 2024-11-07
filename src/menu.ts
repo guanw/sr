@@ -1,10 +1,8 @@
 import * as PIXI from "pixi.js";
-import Application from "./entity/Application";
 
-export class Menu {
-  private static instance: Menu;
-  public container: PIXI.Container;
-  constructor(app: PIXI.Application<PIXI.Renderer>) {
+class Menu {
+  public container!: PIXI.Container;
+  async genInitialize(app: PIXI.Application<PIXI.Renderer>) {
     this.container = new PIXI.Container();
     const menuBackground = new PIXI.Graphics();
     menuBackground.beginFill(0x000000, 0.5);
@@ -31,21 +29,10 @@ export class Menu {
     this.container.visible = false; // Hide the menu initially
   }
 
-  public static async genInstance(): Promise<Menu> {
-    const app = await Application.genInstance();
-    if (!Menu.instance) {
-      Menu.instance = new Menu(app.app);
-    }
-    return Menu.instance;
-  }
-
-  public async genUpdateMenuPosition() {
-    const instance = await Application.genInstance();
-    this.container.x = -instance.app.stage.x;
-    this.container.y = -instance.app.stage.y;
-  }
-
   public setMenuVisibility(isVisible: boolean) {
     this.container.visible = isVisible;
   }
 }
+
+const menu = new Menu();
+export { menu };
