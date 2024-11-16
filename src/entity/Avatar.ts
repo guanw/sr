@@ -37,6 +37,7 @@ export class Avatar extends Entity {
   private static healthBarContainer = new PIXI.Graphics();
   static healthBar = new PIXI.Graphics();
   public speed = AVATAR_SPEED;
+  public roomName!: string | null;
 
   private constructor(
     isMainAvatar: boolean,

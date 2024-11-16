@@ -75,12 +75,20 @@ class MainLayer implements Plugin {
     const avatar = await Avatar.genInstance();
     const gameEventManager = GameEventManager.getInstance();
 
+    if (ENABLE_MULTI_PLAYER) {
+      const roomName = prompt("Enter the room you want to join:");
+      socketClient.emit("joinRoom", roomName);
+      avatar.roomName = roomName;
+    }
+
     // enemy related events
     timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
       if (!ENABLE_MULTI_PLAYER) {
         gameEventManager.emit(new GenerateNewEnemyEvent());
       } else {
-        socketClient.emit("handleGenerateNewEnemy", {});
+        socketClient.emit("handleGenerateNewEnemy", {
+          roomName: avatar.roomName,
+        });
       }
     });
 
@@ -90,6 +98,7 @@ class MainLayer implements Plugin {
       } else {
         socketClient.emit("handleAvatarAttackEnemies", {
           avatarId: socketClient.getSocketId(),
+          roomName: avatar.roomName,
         });
         new Sword(this.layer, avatar.walkingSprite);
       }
@@ -99,7 +108,9 @@ class MainLayer implements Plugin {
       if (!ENABLE_MULTI_PLAYER) {
         gameEventManager.emit(new EnemiesAttackAvatarEvent());
       } else {
-        socketClient.emit("handleEnemiesAttackAvatar", {});
+        socketClient.emit("handleEnemiesAttackAvatar", {
+          roomName: avatar.roomName,
+        });
       }
     });
 
@@ -117,6 +128,7 @@ class MainLayer implements Plugin {
       } else {
         socketClient.emit("handleCollectItem", {
           avatarId: socketClient.getSocketId(),
+          roomName: avatar.roomName,
         });
       }
     });
@@ -174,6 +186,7 @@ class MainLayer implements Plugin {
       return;
     }
     const gameEventManager = GameEventManager.getInstance();
+    const avatar = await Avatar.genInstance();
     const isGamePaused = globalState.isGamePaused;
     const isGameOver = globalState.isGameOver;
     if (isGamePaused) {
@@ -198,6 +211,7 @@ class MainLayer implements Plugin {
       const socketClient = SocketClient.getInstance();
       socketClient.emit("handleMoveAvatar", {
         avatarId: socketClient.getSocketId(),
+        roomName: avatar.roomName,
       });
     }
 
