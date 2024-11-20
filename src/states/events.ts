@@ -22,6 +22,22 @@ export const globalState = {
   isPlaygroundActive: false,
 };
 
+export function pauseGame() {
+  globalState.isGamePaused = true;
+}
+
+export function resumeGame() {
+  globalState.isGamePaused = false;
+}
+
+export function isGamePaused() {
+  return globalState.isGamePaused;
+}
+
+export function setIsGamePaused(paused: boolean) {
+  globalState.isGamePaused = paused;
+}
+
 async function handleKeyDown(e: KeyboardEvent): Promise<void> {
   const gameEventManager = GameEventManager.getInstance();
   gameEventManager.emit(new KeyDownEvent(e));

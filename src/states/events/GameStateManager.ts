@@ -6,7 +6,12 @@ import { menu } from "../../menu";
 import attackStateManager from "../AttackStateManager";
 import enemiesStateManager from "../EnemyStateManager";
 import { itemsStateManager } from "../ItemsStateManager";
-import { avatarKeys, globalState } from "../events";
+import {
+  avatarKeys,
+  globalState,
+  isGamePaused,
+  setIsGamePaused,
+} from "../events";
 import {
   AvatarInitiateAttackEvent,
   GameEvent,
@@ -45,7 +50,7 @@ export class GameEventManager {
       }
     }
 
-    if (globalState.isGamePaused) {
+    if (isGamePaused()) {
       return;
     }
   }
@@ -146,8 +151,8 @@ export class GameEventManager {
   }
 
   private async handleToggleMenu() {
-    globalState.isGamePaused = !globalState.isGamePaused;
-    menu.setMenuVisibility(globalState.isGamePaused);
+    setIsGamePaused(!isGamePaused());
+    menu.setMenuVisibility(isGamePaused());
   }
 
   private async handleToggleDebugTool() {

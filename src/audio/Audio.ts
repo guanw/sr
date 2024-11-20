@@ -1,3 +1,4 @@
+import { isGamePaused } from "../states/events";
 import { Logger } from "../utils/Logger";
 
 const audioContext: AudioContext = new window.AudioContext();
@@ -11,6 +12,9 @@ export async function loadSound(url: string, key: string) {
 }
 
 export function playSound(key: string) {
+  if (isGamePaused()) {
+    return;
+  }
   const soundBuffer = soundBuffers[key];
   if (soundBuffer === undefined) {
     const logger = Logger.getInstance();

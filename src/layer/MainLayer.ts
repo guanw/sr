@@ -11,7 +11,12 @@ import {
   UpdateAttacksEvent,
 } from "../states/events/GameEvent";
 import { GameEventManager } from "../states/events/GameStateManager";
-import { globalState } from "../states/events";
+import {
+  globalState,
+  isGamePaused,
+  resumeGame,
+  setIsGamePaused,
+} from "../states/events";
 import Application from "../entity/Application";
 import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
 import enemiesStateManager from "../states/EnemyStateManager";
@@ -76,7 +81,7 @@ class MainLayer implements Plugin {
     const gameEventManager = GameEventManager.getInstance();
 
     if (ENABLE_MULTI_PLAYER) {
-      const roomName = prompt("Enter the room you want to join:");
+      const roomName = await this.showRoomSelection();
       socketClient.emit("joinRoom", roomName);
       avatar.roomName = roomName;
     }
@@ -175,10 +180,35 @@ class MainLayer implements Plugin {
     }
   }
 
+  private async showRoomSelection(): Promise<string> {
+    return new Promise((resolve) => {
+      const roomSelection = document.getElementById("room-selection")!;
+      const roomInput = document.getElementById(
+        "room-input"
+      ) as HTMLInputElement;
+      const roomSubmit = document.getElementById("room-submit")!;
+
+      roomSelection.style.display = "flex";
+      const game = document.getElementById("game-canvas")!;
+
+      roomSubmit.addEventListener("click", () => {
+        const roomName = roomInput.value.trim();
+        if (roomName) {
+          roomSelection.style.display = "none";
+          game.style.display = "flex";
+          resumeGame();
+          resolve(roomName);
+        } else {
+          alert("Please enter a room name.");
+        }
+      });
+    });
+  }
+
   /* pause game if gameStopped is true */
   private syncGameState(structuredData: GameStateSnapShot) {
-    globalState.isGamePaused = structuredData.gameStopped;
-    menu.setMenuVisibility(globalState.isGamePaused);
+    setIsGamePaused(structuredData.gameStopped);
+    menu.setMenuVisibility(isGamePaused());
   }
 
   async genUpdate(): Promise<void> {
@@ -187,9 +217,9 @@ class MainLayer implements Plugin {
     }
     const gameEventManager = GameEventManager.getInstance();
     const avatar = await Avatar.genInstance();
-    const isGamePaused = globalState.isGamePaused;
+    const gamePaused = isGamePaused();
     const isGameOver = globalState.isGameOver;
-    if (isGamePaused) {
+    if (gamePaused) {
       return;
     }
     if (isGameOver) {
