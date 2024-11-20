@@ -18,7 +18,10 @@ import {
   setIsGamePaused,
 } from "../states/events";
 import Application from "../entity/Application";
-import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
+import {
+  DISABLE_ENEMY_GENERATION_FOR_DEBUGGING_PURPOSE,
+  ENABLE_MULTI_PLAYER,
+} from "../utils/Knobs";
 import enemiesStateManager from "../states/EnemyStateManager";
 import { SocketClient } from "../utils/SocketClient";
 import { Avatar } from "../entity/Avatar";
@@ -88,6 +91,9 @@ class MainLayer implements Plugin {
 
     // enemy related events
     timedEventsManager.addEvent(ENEMY_APPEAR_INTERVAL, async () => {
+      if (DISABLE_ENEMY_GENERATION_FOR_DEBUGGING_PURPOSE) {
+        return;
+      }
       if (!ENABLE_MULTI_PLAYER) {
         gameEventManager.emit(new GenerateNewEnemyEvent());
       } else {
