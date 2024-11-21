@@ -96,10 +96,10 @@ async function fetchSetupData() {
 
     const data: SetupResponse = await response.json();
 
-    logger.log(`Response from /setup: ${data}`);
+    logger.log(`Response from /setup: ${JSON.stringify(data)}`);
     return data;
   } catch (error) {
-    logger.log(`Error fetching /setup data: ${error}`, "error");
+    logger.log(`Error fetching /setup data: ${JSON.stringify(error)}`, "error");
     return null;
   }
 }

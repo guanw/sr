@@ -85,7 +85,7 @@ class MainLayer implements Plugin {
 
     if (ENABLE_MULTI_PLAYER) {
       const roomName = await this.showRoomSelection();
-      socketClient.emit("joinRoom", roomName);
+      socketClient.emit("joinRoom", { roomName: roomName });
       avatar.roomName = roomName;
     }
 
