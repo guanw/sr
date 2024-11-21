@@ -32,6 +32,14 @@ import {
   ENEMY_ATTACK_INTERVAL,
   ITEM_RANDOM_APPEAR_INTERVAL,
   COLLECT_ITEM_INTERVAL,
+  JOIN_ROOM,
+  HANDLE_GENERATE_NEW_ENEMY,
+  HANDLE_AVATAR_ATTACK_ENEMIES,
+  HANDLE_ENEMIES_ATTACK_AVATAR,
+  HANDLE_GENERATE_NEW_ITEM,
+  HANDLE_COLLECT_ITEM,
+  HANDLE_ENEMIES_MOVE_TOWARDS_AVATAR,
+  HANDLE_MOVE_AVATAR,
 } from "../utils/Constants";
 import { itemsStateManager } from "../states/ItemsStateManager";
 import avatarsStateManager from "../states/AvatarsStateManager";
@@ -85,7 +93,7 @@ class MainLayer implements Plugin {
 
     if (ENABLE_MULTI_PLAYER) {
       const roomName = await this.showRoomSelection();
-      socketClient.emit("joinRoom", { roomName: roomName });
+      socketClient.emit(JOIN_ROOM, { roomName: roomName });
       avatar.roomName = roomName;
     }
 
@@ -97,7 +105,7 @@ class MainLayer implements Plugin {
       if (!ENABLE_MULTI_PLAYER) {
         gameEventManager.emit(new GenerateNewEnemyEvent());
       } else {
-        socketClient.emit("handleGenerateNewEnemy", {
+        socketClient.emit(HANDLE_GENERATE_NEW_ENEMY, {
           roomName: avatar.roomName,
         });
       }
@@ -107,7 +115,7 @@ class MainLayer implements Plugin {
       if (!ENABLE_MULTI_PLAYER) {
         gameEventManager.emit(new AvatarAttackEnemiesEvent());
       } else {
-        socketClient.emit("handleAvatarAttackEnemies", {
+        socketClient.emit(HANDLE_AVATAR_ATTACK_ENEMIES, {
           avatarId: socketClient.getSocketId(),
           roomName: avatar.roomName,
         });
@@ -119,7 +127,7 @@ class MainLayer implements Plugin {
       if (!ENABLE_MULTI_PLAYER) {
         gameEventManager.emit(new EnemiesAttackAvatarEvent());
       } else {
-        socketClient.emit("handleEnemiesAttackAvatar", {
+        socketClient.emit(HANDLE_ENEMIES_ATTACK_AVATAR, {
           roomName: avatar.roomName,
         });
       }
@@ -130,14 +138,14 @@ class MainLayer implements Plugin {
       if (!ENABLE_MULTI_PLAYER) {
         gameEventManager.emit(new GenerateNewItemEvent());
       } else {
-        socketClient.emit("handleGenerateNewItem", {});
+        socketClient.emit(HANDLE_GENERATE_NEW_ITEM, {});
       }
     });
     timedEventsManager.addEvent(COLLECT_ITEM_INTERVAL, async () => {
       if (!ENABLE_MULTI_PLAYER) {
         gameEventManager.emit(new CollectItemEvent());
       } else {
-        socketClient.emit("handleCollectItem", {
+        socketClient.emit(HANDLE_COLLECT_ITEM, {
           avatarId: socketClient.getSocketId(),
           roomName: avatar.roomName,
         });
@@ -238,7 +246,7 @@ class MainLayer implements Plugin {
       gameEventManager.emit(new EnemiesMoveTowardsAvatarEvent());
     } else {
       const socketClient = SocketClient.getInstance();
-      socketClient.emit("handleEnemiesMoveTowardsAvatar", {
+      socketClient.emit(HANDLE_ENEMIES_MOVE_TOWARDS_AVATAR, {
         roomName: avatar.roomName,
       });
     }
@@ -247,7 +255,7 @@ class MainLayer implements Plugin {
       gameEventManager.emit(new MoveAvatarEvent());
     } else {
       const socketClient = SocketClient.getInstance();
-      socketClient.emit("handleMoveAvatar", {
+      socketClient.emit(HANDLE_MOVE_AVATAR, {
         avatarId: socketClient.getSocketId(),
         roomName: avatar.roomName,
       });

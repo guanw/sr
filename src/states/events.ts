@@ -7,6 +7,7 @@ import { GameEventManager } from "../states/events/GameStateManager";
 import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
 import { SocketClient } from "../utils/SocketClient";
 import { Avatar } from "../entity/Avatar";
+import { HANDLE_USER_KEY_DOWN, HANDLE_USER_KEY_UP } from "../utils/Constants";
 
 export const avatarKeys: { [key: string]: boolean } = {
   ArrowLeft: false,
@@ -44,7 +45,7 @@ async function handleKeyDown(e: KeyboardEvent): Promise<void> {
   if (ENABLE_MULTI_PLAYER) {
     const socketClient = SocketClient.getInstance();
     const avatar = await Avatar.genInstance();
-    socketClient.emit("handleUserKeyDown", {
+    socketClient.emit(HANDLE_USER_KEY_DOWN, {
       key: e.key,
       avatarId: socketClient.getSocketId(),
       roomName: avatar.roomName,
@@ -58,7 +59,7 @@ async function handleKeyUp(e: KeyboardEvent): Promise<void> {
   if (ENABLE_MULTI_PLAYER) {
     const socketClient = SocketClient.getInstance();
     const avatar = await Avatar.genInstance();
-    socketClient.emit("handleUserKeyUp", {
+    socketClient.emit(HANDLE_USER_KEY_UP, {
       key: e.key,
       avatarId: socketClient.getSocketId(),
       roomName: avatar.roomName,

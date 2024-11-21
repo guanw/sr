@@ -4,7 +4,7 @@ import {
   GAME_WINDOW_SIZE,
 } from "../utils/Constants";
 import { Avatar } from "./Avatar";
-import { globalState, pauseGame } from "../states/events";
+import { pauseGame } from "../states/events";
 import { ENABLE_MULTI_PLAYER } from "../utils/Knobs";
 
 export type Position = {
