@@ -86,7 +86,11 @@ class DebugTool implements Plugin {
 
     // remove bounding box for tilings
     Object.keys(this.tilingBoundingBoxes).forEach((key) => {
-      this.tilingBoundingBoxes[key].clear();
+      this.tilingBoundingBoxes[key].destroy({
+        children: true,
+        texture: true,
+      });
+      delete this.tilingBoundingBoxes[key];
     });
   }
 

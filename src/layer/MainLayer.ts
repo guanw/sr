@@ -238,7 +238,9 @@ class MainLayer implements Plugin {
       gameEventManager.emit(new EnemiesMoveTowardsAvatarEvent());
     } else {
       const socketClient = SocketClient.getInstance();
-      socketClient.emit("handleEnemiesMoveTowardsAvatar", {});
+      socketClient.emit("handleEnemiesMoveTowardsAvatar", {
+        roomName: avatar.roomName,
+      });
     }
 
     if (!ENABLE_MULTI_PLAYER) {
