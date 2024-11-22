@@ -29,11 +29,12 @@ class EnemiesStateManager {
 
     // update existing enemies with new x,y
     previousEnemiesState.forEach((_, key) => {
-      if (enemies[key] != undefined && previousEnemiesState.has(key)) {
+      const enemy = previousEnemiesState.get(key);
+      if (enemies[key] != undefined) {
         const latestEnemyAbsoluteX = enemies[key].x;
         const latestEnemyAbsoluteY = enemies[key].y;
-        const previousEnemyAbsoluteX = previousEnemiesState.get(key)!.getX();
-        const previousEnemyAbsoluteY = previousEnemiesState.get(key)!.getY();
+        const previousEnemyAbsoluteX = enemy!.getX();
+        const previousEnemyAbsoluteY = enemy!.getY();
 
         const previousAvatarAbsoluteX = avatar.getX();
         const previousAvatarAbsoluteY = avatar.getY();
@@ -49,15 +50,11 @@ class EnemiesStateManager {
           (latestEnemyAbsoluteY - previousEnemyAbsoluteY)
         );
         this.setRelativePos(key, relativeX, relativeY);
+        return;
       }
-    });
 
-    // remove enemies that don't exist in serialization
-    previousEnemiesState.forEach((_, key) => {
-      if (enemies[key] === undefined) {
-        const enemy = previousEnemiesState.get(key);
-        enemy?.destroy(mainLayer.layer);
-      }
+      // remove enemies that don't exist in serialization
+      enemy?.destroy(mainLayer.layer);
     });
 
     // add new enemies from serialization

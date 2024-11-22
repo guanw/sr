@@ -92,9 +92,9 @@ class MainLayer implements Plugin {
     const gameEventManager = GameEventManager.getInstance();
 
     if (ENABLE_MULTI_PLAYER) {
-      const roomName = await this.showRoomSelection();
-      socketClient.emit(JOIN_ROOM, { roomName: roomName });
-      avatar.roomName = roomName;
+      const room = await this.showRoomSelection();
+      socketClient.emit(JOIN_ROOM, { room: room });
+      avatar.room = room;
     }
 
     // enemy related events
@@ -106,7 +106,7 @@ class MainLayer implements Plugin {
         gameEventManager.emit(new GenerateNewEnemyEvent());
       } else {
         socketClient.emit(HANDLE_GENERATE_NEW_ENEMY, {
-          roomName: avatar.roomName,
+          room: avatar.room,
         });
       }
     });
@@ -117,7 +117,7 @@ class MainLayer implements Plugin {
       } else {
         socketClient.emit(HANDLE_AVATAR_ATTACK_ENEMIES, {
           avatarId: socketClient.getSocketId(),
-          roomName: avatar.roomName,
+          room: avatar.room,
         });
         new Sword(this.layer, avatar.walkingSprite);
       }
@@ -128,7 +128,7 @@ class MainLayer implements Plugin {
         gameEventManager.emit(new EnemiesAttackAvatarEvent());
       } else {
         socketClient.emit(HANDLE_ENEMIES_ATTACK_AVATAR, {
-          roomName: avatar.roomName,
+          room: avatar.room,
         });
       }
     });
@@ -147,7 +147,7 @@ class MainLayer implements Plugin {
       } else {
         socketClient.emit(HANDLE_COLLECT_ITEM, {
           avatarId: socketClient.getSocketId(),
-          roomName: avatar.roomName,
+          room: avatar.room,
         });
       }
     });
@@ -206,12 +206,12 @@ class MainLayer implements Plugin {
       const game = document.getElementById("game-canvas")!;
 
       roomSubmit.addEventListener("click", () => {
-        const roomName = roomInput.value.trim();
-        if (roomName) {
+        const room = roomInput.value.trim();
+        if (room) {
           roomSelection.style.display = "none";
           game.style.display = "flex";
           resumeGame();
-          resolve(roomName);
+          resolve(room);
         } else {
           alert("Please enter a room name.");
         }
@@ -247,7 +247,7 @@ class MainLayer implements Plugin {
     } else {
       const socketClient = SocketClient.getInstance();
       socketClient.emit(HANDLE_ENEMIES_MOVE_TOWARDS_AVATAR, {
-        roomName: avatar.roomName,
+        room: avatar.room,
       });
     }
 
@@ -257,7 +257,7 @@ class MainLayer implements Plugin {
       const socketClient = SocketClient.getInstance();
       socketClient.emit(HANDLE_MOVE_AVATAR, {
         avatarId: socketClient.getSocketId(),
-        roomName: avatar.roomName,
+        room: avatar.room,
       });
     }
 

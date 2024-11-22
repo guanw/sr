@@ -48,7 +48,7 @@ async function handleKeyDown(e: KeyboardEvent): Promise<void> {
     socketClient.emit(HANDLE_USER_KEY_DOWN, {
       key: e.key,
       avatarId: socketClient.getSocketId(),
-      roomName: avatar.roomName,
+      room: avatar.room,
     });
   }
 }
@@ -62,7 +62,7 @@ async function handleKeyUp(e: KeyboardEvent): Promise<void> {
     socketClient.emit(HANDLE_USER_KEY_UP, {
       key: e.key,
       avatarId: socketClient.getSocketId(),
-      roomName: avatar.roomName,
+      room: avatar.room,
     });
   }
 }
