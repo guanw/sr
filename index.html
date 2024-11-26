@@ -21,12 +21,26 @@
         border: none;
         border-radius: 5px;
       }
+
+      #game-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        background-color: #000; /* Optional background */
+      }
+
+      canvas {
+        display: block;
+      }
     </style>
     <title>Game SR</title>
     <meta charset="UTF-8" />
   </head>
   <body>
     <script src="src/index.ts"></script>
+    <div id="game-container"></div>
     <div
       id="room-selection"
       style="

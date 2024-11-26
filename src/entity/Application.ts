@@ -29,7 +29,7 @@ class Application {
       });
       const canvas = Application.instance.app.canvas;
       canvas.id = "game-canvas";
-      document.body.appendChild(canvas);
+      document.getElementById("game-container")?.appendChild(canvas);
       if (ENABLE_MULTI_PLAYER) {
         canvas.style.display = "none";
         pauseGame();

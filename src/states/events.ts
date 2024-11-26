@@ -42,6 +42,10 @@ export function setIsGamePaused(paused: boolean) {
 }
 
 async function handleKeyDown(e: KeyboardEvent): Promise<void> {
+  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+    e.preventDefault(); // Prevent default scroll behavior
+  }
+
   const gameEventManager = GameEventManager.getInstance();
   gameEventManager.emit(new KeyDownEvent(e));
   if (ENABLE_MULTI_PLAYER) {
