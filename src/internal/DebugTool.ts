@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Avatar, avatarMetaData } from "../entity/Avatar";
-import { globalState } from "../states/events";
+import { globalState, lastDirection } from "../states/events";
 import { mainLayer } from "../layer/MainLayer";
 import { DEBUG_BOUND_COLOR, GAME_WINDOW_SIZE } from "../utils/Constants";
 import Application from "../entity/Application";
@@ -41,6 +41,7 @@ class DebugTool implements Plugin {
       Stage Position: (${app.app.stage.x}, ${app.app.stage.y})
       HP: ${hp}
       killed enemies: ${avatarMetaData.scoring_sytem.value}
+      lastDirection: ${lastDirection.x}, ${lastDirection.y}
     `;
 
     const tiles = await tilingsStateManager.getTilings();

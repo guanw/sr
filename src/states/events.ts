@@ -16,6 +16,8 @@ export const avatarKeys: { [key: string]: boolean } = {
   ArrowDown: false,
 };
 
+export const lastDirection: { x: number; y: number } = { x: 0.0, y: 0.0 };
+
 export const globalState = {
   isGamePaused: false,
   isGameOver: false,

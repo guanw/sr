@@ -10,6 +10,7 @@ import {
   avatarKeys,
   globalState,
   isGamePaused,
+  lastDirection,
   setIsGamePaused,
 } from "../events";
 import {
@@ -142,18 +143,6 @@ export class GameEventManager {
     await avatar.genPerformAttack(enemies);
   }
 
-  private async handleAvatarMoveKeyDownEvent(e: KeyboardEvent) {
-    if (e.key in avatarKeys) {
-      avatarKeys[e.key] = true;
-    }
-  }
-
-  private async handleAvatarMoveKeyUpEvent(e: KeyboardEvent) {
-    if (e.key in avatarKeys) {
-      avatarKeys[e.key] = false;
-    }
-  }
-
   private async handleToggleMenu() {
     setIsGamePaused(!isGamePaused());
     menu.setMenuVisibility(isGamePaused());
@@ -211,6 +200,18 @@ export class GameEventManager {
     attackStateManager.updateAttacks();
   }
 
+  private async handleAvatarMoveKeyDownEvent(e: KeyboardEvent) {
+    if (e.key in avatarKeys) {
+      avatarKeys[e.key] = true;
+    }
+  }
+
+  private async handleAvatarMoveKeyUpEvent(e: KeyboardEvent) {
+    if (e.key in avatarKeys) {
+      avatarKeys[e.key] = false;
+    }
+  }
+
   public async genHandleMoveUser(avatarKeys: { [key: string]: boolean }) {
     // Move user based on key states
     if (avatarKeys.ArrowLeft) {
@@ -245,6 +246,17 @@ export class GameEventManager {
       }
       await this.genMoveUserDown();
     }
+
+    // calculate latest direction
+    let moveX = 0;
+    let moveY = 0;
+    if (avatarKeys.ArrowUp) moveY -= 1;
+    if (avatarKeys.ArrowDown) moveY += 1;
+    if (avatarKeys.ArrowLeft) moveX -= 1;
+    if (avatarKeys.ArrowRight) moveX += 1;
+    const magnitude: number = Math.sqrt(moveX * moveX + moveY * moveY);
+    lastDirection.x = Math.round((moveX * 1.0) / magnitude);
+    lastDirection.y = Math.round((moveY * 1.0) / magnitude);
   }
 
   private async genMoveUserLeft() {
