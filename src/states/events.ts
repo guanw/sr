@@ -69,14 +69,8 @@ async function handleKeyUp(e: KeyboardEvent): Promise<void> {
   }
 }
 
-export async function genHandleAvatarAttack(e: MouseEvent) {
-  const gameEventManager = GameEventManager.getInstance();
-  gameEventManager.emit(new AvatarInitiateAttackEvent(e));
-}
-
 export async function initEventsListener() {
   // Add event listeners for keydown and keyup events
   window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("keyup", handleKeyUp);
-  window.addEventListener("click", genHandleAvatarAttack);
 }

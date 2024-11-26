@@ -67,10 +67,6 @@ export class UpdateAttacksEvent implements GameEvent {
 
 export class AvatarInitiateAttackEvent implements GameEvent {
   type: EventType = "AVATAR_INITIATE_ATTACK";
-  event: MouseEvent;
-  constructor(event: MouseEvent) {
-    this.event = event;
-  }
 }
 
 export class MoveAvatarEvent implements GameEvent {

@@ -5,6 +5,8 @@ import { Logger } from "../utils/Logger";
 import { mainLayer } from "../layer/MainLayer";
 import { Plugin } from "../PluginManager";
 import { playSound } from "../audio/Audio";
+import { GameEventManager } from "../states/events/GameStateManager";
+import { AvatarInitiateAttackEvent } from "../states/events/GameEvent";
 
 const SKILL_COOLDOWN_TIME = 3000; // Cooldown time in milliseconds
 const RADIUS = 35;
@@ -113,6 +115,9 @@ export default class SkillSlot implements Plugin {
       logger.log(`Triggered skill ${index + 1}`);
       playSound(ATTACK_AUDIO_KEY);
       skill.lastUsed = currentTime;
+
+      const gameEventManager = GameEventManager.getInstance();
+      gameEventManager.emit(new AvatarInitiateAttackEvent());
     } else {
       logger.log(`Skill ${index + 1} is on cooldown`);
     }

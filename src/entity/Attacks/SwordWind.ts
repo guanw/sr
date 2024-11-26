@@ -10,19 +10,16 @@ import {
   WIND_SPEED,
 } from "../../utils/Constants";
 import { resourceLoader, WIND_ASSET } from "../../ResourceLoader";
+import { lastDirection } from "../../states/events";
+import RemoteAttack from "./RemoteAttack";
 
-export class Wind {
+export class SwordWind extends RemoteAttack {
   instance: PIXI.AnimatedSprite;
   speed: number;
   direction: { x: number; y: number };
   isExploded: boolean;
-  private constructor(
-    frames: PIXI.Texture[],
-    x: number,
-    y: number,
-    targetX: number,
-    targetY: number
-  ) {
+  private constructor(frames: PIXI.Texture[], x: number, y: number) {
+    super();
     this.speed = WIND_SPEED;
     this.instance = new PIXI.AnimatedSprite(frames);
     this.instance.animationSpeed = WIND_ANIMATION_SPEED;
@@ -32,15 +29,13 @@ export class Wind {
     this.isExploded = false;
 
     // Calculate the direction vector
-    this.direction = Helper.calculateDirection(x, y, targetX, targetY, 32);
+    this.direction = {
+      x: lastDirection.x,
+      y: lastDirection.y,
+    };
   }
 
-  public static async create(
-    x: number,
-    y: number,
-    targetX: number,
-    targetY: number
-  ) {
+  public static async create(x: number, y: number) {
     const texture = resourceLoader.getResource(WIND_ASSET);
     const frames = [];
     const frameWidth = WIND_FRAME_SIZE; // Width of a single frame in pixels
@@ -58,7 +53,7 @@ export class Wind {
       );
     }
 
-    const wind = new Wind(frames, x, y, targetX, targetY);
+    const wind = new SwordWind(frames, x, y);
     mainLayer.layer.addChild(wind.instance);
     return wind;
   }

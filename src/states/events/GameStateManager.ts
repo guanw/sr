@@ -13,12 +13,7 @@ import {
   lastDirection,
   setIsGamePaused,
 } from "../events";
-import {
-  AvatarInitiateAttackEvent,
-  GameEvent,
-  KeyDownEvent,
-  KeyUpEvent,
-} from "./GameEvent";
+import { GameEvent, KeyDownEvent, KeyUpEvent } from "./GameEvent";
 import { background } from "../../entity/Background";
 import { tilingsStateManager } from "../TilingsStateManager";
 import { skillSlot } from "../../entity/SkillSlot";
@@ -127,8 +122,7 @@ export class GameEventManager {
         break;
       }
       case "AVATAR_INITIATE_ATTACK": {
-        const attackEvent = event as AvatarInitiateAttackEvent;
-        await this.handleAvatarInitiateAttack(attackEvent.event);
+        await this.handleAvatarInitiateAttack();
         break;
       }
       case "MOVE_AVATAR": {
@@ -255,8 +249,10 @@ export class GameEventManager {
     if (avatarKeys.ArrowLeft) moveX -= 1;
     if (avatarKeys.ArrowRight) moveX += 1;
     const magnitude: number = Math.sqrt(moveX * moveX + moveY * moveY);
-    lastDirection.x = Math.round((moveX * 1.0) / magnitude);
-    lastDirection.y = Math.round((moveY * 1.0) / magnitude);
+    if (magnitude !== 0) {
+      lastDirection.x = Math.round((moveX * 1.0) / magnitude);
+      lastDirection.y = Math.round((moveY * 1.0) / magnitude);
+    }
   }
 
   private async genMoveUserLeft() {
@@ -334,8 +330,8 @@ export class GameEventManager {
     });
   }
 
-  private async handleAvatarInitiateAttack(event: MouseEvent): Promise<void> {
-    await attackStateManager.genAddAttack(event.clientX, event.clientY);
+  private async handleAvatarInitiateAttack(): Promise<void> {
+    await attackStateManager.genAddAttack();
     const user: Avatar = await Avatar.genInstance();
     await user.attack();
   }
