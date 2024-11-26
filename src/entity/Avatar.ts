@@ -140,11 +140,6 @@ export class Avatar extends Entity {
     return this.walkingSprite.width;
   }
 
-  async walk() {
-    this.walkingSprite.alpha = 1;
-    this.attackingSprite!.alpha = 0;
-  }
-
   async attack() {
     this.walkingSprite.alpha = 0;
     this.attackingSprite!.alpha = 1;

@@ -145,8 +145,12 @@ export class GameEventManager {
   private async handleAvatarMoveKeyDownEvent(e: KeyboardEvent) {
     if (e.key in avatarKeys) {
       avatarKeys[e.key] = true;
-      const user: Avatar = await Avatar.genInstance();
-      user.walk();
+    }
+  }
+
+  private async handleAvatarMoveKeyUpEvent(e: KeyboardEvent) {
+    if (e.key in avatarKeys) {
+      avatarKeys[e.key] = false;
     }
   }
 
@@ -157,12 +161,6 @@ export class GameEventManager {
 
   private async handleToggleDebugTool() {
     await debugTool.toggle();
-  }
-
-  private async handleAvatarMoveKeyUpEvent(e: KeyboardEvent) {
-    if (e.key in avatarKeys) {
-      avatarKeys[e.key] = false;
-    }
   }
 
   private async handleGenerateNewEnemy() {
